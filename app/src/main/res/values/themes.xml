@@ -1,0 +1,62 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Tema para las Actividades del Login
+    <style name="LoginTheme" parent="Theme.AppCompat">
+        <!- Primary brand color.
+        <item name="colorPrimary">@color/rosa</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!- Secondary brand color.
+        <item name="colorSecondary">@color/rosa</item>
+        <item name="colorSecondaryVariant">@color/rosa</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <item name="android:colorButtonNormal">@color/rosa</item>
+        <item name="colorAccent">@color/rosa</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+    </style>-->
+    <style name="LoginTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/rosa</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/rosa</item>
+        <item name="colorSecondaryVariant">@color/rosa</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <item name="android:colorButtonNormal">@color/rosa</item>
+        <item name="colorAccent">@color/rosa</item>
+
+        <item name="android:statusBarColor">@color/rosa</item>
+
+        <!-- Enlazar el Launch Screen con el Login con una transición -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+    <!-- Tema para el Launch Screen -->
+    <style name="LaunchScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+</resources>
