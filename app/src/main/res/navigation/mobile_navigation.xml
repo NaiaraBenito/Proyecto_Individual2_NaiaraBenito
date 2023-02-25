@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_inicio">
+
+    <fragment
+        android:id="@+id/navigation_inicio"
+        android:name="com.example.proyecto_individual_naiarabenito.ui.inicio.InicioFragment"
+        android:label="@string/title_inicio"
+        tools:layout="@layout/fragment_inicio" />
+
+    <fragment
+        android:id="@+id/navigation_cesta"
+        android:name="com.example.proyecto_individual_naiarabenito.ui.cesta.CestaFragment"
+        android:label="@string/title_cesta"
+        tools:layout="@layout/fragment_cesta" />
+
+    <fragment
+        android:id="@+id/navigation_perfil"
+        android:name="com.example.proyecto_individual_naiarabenito.ui.perfil.PerfilFragment"
+        android:label="@string/title_perfil"
+        tools:layout="@layout/fragment_perfil" />
+
+    <fragment
+        android:id="@+id/navigation_configuracion"
+        android:name="com.example.proyecto_individual_naiarabenito.ui.configuracion.ConfiguracionFragment"
+        android:label="@string/title_configuracion"
+        tools:layout="@layout/fragment_configuracion" />
+</navigation>

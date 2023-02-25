@@ -1,47 +1,37 @@
 package com.example.proyecto_individual_naiarabenito;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.example.proyecto_individual_naiarabenito.databinding.ActivityMenuPrincipalBinding;
 
 public class Menu_Principal extends AppCompatActivity {
 
-    // Variables auxiliares
-    private TextView tv_email;
-    private TextView tv_password;
+    private ActivityMenuPrincipalBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_principal);
 
-        // Obtener los campos en donde imprimiremos la información del usuario
-        tv_email = (TextView) findViewById(R.id.tv_MuestraEmail);
-        tv_password = (TextView) findViewById(R.id.tv_MuestraPassword);
+        binding = ActivityMenuPrincipalBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        // Sacar datos almacenados en el Intent
-        Bundle extras = getIntent().getExtras();
-
-        if(extras != null) {
-            String email = extras.get("emailUsuario").toString();
-            String password = extras.get("passwordUsuario").toString();
-
-            // Imprimir los datos en los campos
-            tv_email.setText(email);
-            tv_password.setText(password);
-        }
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_inicio, R.id.navigation_cesta, R.id.navigation_perfil, R.id.navigation_configuracion)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu_principal);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
-    // Método llamado por el botón Volver que llama a la actividad de Login
-    public void volverLogin(View v){
-
-        // Crear un intent para pasar a la Actividad Registro
-        Intent intent = new Intent(this, Login.class);
-        startActivity(intent);
-        finish();
-    }
 }

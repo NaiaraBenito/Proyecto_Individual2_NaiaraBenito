@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Proyecto_Individual_NaiaraBenito</string>
+    <string name="app_name">¡Dale un Mordisco!</string>
+    <string name="title_activity_menu_principal">Menu_Principal</string>
+    <string name="title_inicio">Inicio</string>
+    <string name="title_cesta">Cesta</string>
+    <string name="title_perfil">Perfil</string>
+    <string name="title_configuracion">Configuracion</string>
 </resources>
