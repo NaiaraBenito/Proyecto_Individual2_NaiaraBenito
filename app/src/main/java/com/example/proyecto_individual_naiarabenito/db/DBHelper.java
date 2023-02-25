@@ -39,27 +39,36 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean verificarUsuarioLogin(String email, String password){
+    public String[] verificarUsuarioLogin(String email, String password){
 
         try{
             // Obtener la base de datos editable para realizar cambios
             SQLiteDatabase db = this.getWritableDatabase();
 
             // Comprobar que el usuario y constraseña se encuentra registrado en la BBDD
-            Cursor fila = db.rawQuery("SELECT email, password FROM t_usuarios WHERE email='" + email + "' AND password='" + password + "'", null);
+            Cursor fila = db.rawQuery("SELECT * FROM t_usuarios WHERE email='" + email + "' AND password='" + password + "'", null);
 
             // Comprobar si ha encontrado al usuario
-            if(fila.moveToFirst()) {     // Si existe --> Devolver true
+            if(fila.moveToFirst()) {     // Si existe --> Devolver la lista con los datos
+                String[] aux = new String[4];
+                aux[0] = fila.getString(0);
+                aux[1]  = fila.getString(1);
+                aux[2] = fila.getString(2);
+                aux[3] = fila.getString(3);
+
+                Log.d("DATOS",aux[0] + " " + aux[1] + " " + aux[2] + " " + aux[3]);
+                //} while(fila.moveToNext());
+
                 db.close();
-                return true;
+                return aux;
             }
             else{
                 db.close();
-                return false;
+                return null;
             }
         } catch (Exception e){     // En caso de excepción
             Log.e("ERROR", e.toString()+"");
-            return false;
+            return null;
         }
     }
 

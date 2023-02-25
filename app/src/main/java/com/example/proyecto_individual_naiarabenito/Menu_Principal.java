@@ -1,7 +1,10 @@
 package com.example.proyecto_individual_naiarabenito;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 
+import com.example.proyecto_individual_naiarabenito.ui.inicio.InicioFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import com.example.proyecto_individual_naiarabenito.databinding.ActivityMenuPrin
 public class Menu_Principal extends AppCompatActivity {
 
     private ActivityMenuPrincipalBinding binding;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,16 @@ public class Menu_Principal extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu_principal);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            email = extras.getString("emailUsuario");
+
+        }
+
+    }
+    public String getInfo(){
+        return email;
     }
 
 }

@@ -60,15 +60,21 @@ public class Login extends AppCompatActivity {
             if (mather.find() == true) {    // El email ingresado es válido
                 // Realizar la verificación del login
                 DBHelper dbHelper = new DBHelper(this);
-                boolean existe = dbHelper.verificarUsuarioLogin(email, password);
+                //boolean existe = dbHelper.verificarUsuarioLogin(email, password);
+                String[] datos = dbHelper.verificarUsuarioLogin(email, password);
+                if(datos != null){ // Si existe --> Ir a Menu_Principal
 
-                if(existe){ // Si existe --> Ir a Menu_Principal
+                    // Obtener todos los datos del usuario
+                    //dbHelper.getDatos(email);
+
                     // Crear un intent para pasar a la Actividad Menu_Principal
                     Intent intent = new Intent(this, Menu_Principal.class);
 
                     // Guardar los datos del usuario
-                    intent.putExtra("emailUsuario", email);
-                    intent.putExtra("passwordUsuario", password);
+                    intent.putExtra("nombreUsuario", datos[0]);
+                    intent.putExtra("apellidoUsuario", datos[1]);
+                    intent.putExtra("emailUsuario", datos[2]);
+                    intent.putExtra("passwordUsuario", datos[3]);
                     startActivity(intent);
                     finish();
                 }

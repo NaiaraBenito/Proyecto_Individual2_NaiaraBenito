@@ -1,4 +1,4 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 public class Categoria {
     public String name;

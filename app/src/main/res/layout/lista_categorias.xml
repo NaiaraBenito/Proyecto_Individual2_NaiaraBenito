@@ -18,18 +18,17 @@
 
         <ImageView
             android:id="@+id/cat_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/confi_menu"/>
 
         <TextView
             android:id="@+id/cat_tv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:text="Pizza"
-            android:textColor="@color/rosa"
             android:textSize="16sp"
             android:textStyle="bold"/>
     </LinearLayout>

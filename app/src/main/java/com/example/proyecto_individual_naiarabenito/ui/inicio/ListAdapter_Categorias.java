@@ -1,8 +1,7 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.proyecto_individual_naiarabenito.R;
 
 import java.util.List;
 
@@ -39,13 +40,10 @@ public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Cat
         return new ViewHolder(view);
     }
 
+    // Método que transfiere la información de la lista de categorias a la vista
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
-        String nombre = lista_cat.get(position).getName();
-        int img = lista_cat.get(position).getImg_id();
         holder.bindData(lista_cat.get(position));
-        holder.name.setText(nombre);
-        holder.img_icon.setImageResource(img);
     }
 
     public void setItems(List<Categoria> items){
@@ -74,8 +72,9 @@ public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Cat
 
         // Método que transfiere la información de la lista de categorias a la vista
         void bindData(final Categoria item){
-            img_icon.setColorFilter(Color.parseColor(item.getColor()), PorterDuff.Mode.SRC_IN);
             name.setText(item.getName());
+            name.setTextColor(Color.parseColor(item.getColor()));
+            img_icon.setImageResource(item.getImg_id());
         }
     }
 }
