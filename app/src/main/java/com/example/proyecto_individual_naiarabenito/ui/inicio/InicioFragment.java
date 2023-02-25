@@ -1,5 +1,9 @@
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PackageManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,10 +82,7 @@ public class InicioFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String nombre = getActivity().getIntent().getStringExtra("nombreUsuario");
-        String email = getActivity().getIntent().getStringExtra("emailUsuario");
-        //String texto = getArguments().getString("emailUsuario");
-        TextView emailUser = (TextView) view.findViewById(R.id.tv_emailUsuario_inicio);
-        emailUser.setText("" + email);
+
         TextView nombreUser = (TextView) view.findViewById(R.id.tv_nombreUsuario_inicio);
         nombreUser.setText("Hola " + nombre);
     }

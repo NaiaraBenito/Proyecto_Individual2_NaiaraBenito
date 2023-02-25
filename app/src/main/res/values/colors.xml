@@ -10,6 +10,7 @@
 
     <!-- Colores del Login -->
     <color name="rosa">#EF46F0</color>
+    <color name="rosa_claro">#FFC8FF</color>
     <color name="negro">#333133</color>
     <color name="gris_claro">#C4B5C4</color>
 

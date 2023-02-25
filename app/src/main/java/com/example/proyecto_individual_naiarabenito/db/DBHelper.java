@@ -57,7 +57,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 aux[3] = fila.getString(3);
 
                 Log.d("DATOS",aux[0] + " " + aux[1] + " " + aux[2] + " " + aux[3]);
-                //} while(fila.moveToNext());
 
                 db.close();
                 return aux;

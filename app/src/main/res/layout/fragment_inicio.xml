@@ -29,13 +29,7 @@
                 android:textSize="23sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_emailUsuario_inicio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="[email]"
-                android:textColor="@color/gris_claro"
-                android:textSize="15sp" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -43,6 +37,14 @@
                 android:text="Pide lo que quieras"
                 android:textColor="@color/gris_claro"
                 android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="llamada"
+                android:text="Tel. 943 466 484"
+                android:textColor="@color/rosa"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <ImageView
@@ -50,8 +52,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginRight="5sp"
-            android:src="@drawable/login_icon" />
-
+            android:src="@drawable/login_icon"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
