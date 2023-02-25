@@ -48,4 +48,8 @@ dependencies {
 
     // Librería para el Login y Registro: android material
     implementation 'com.google.android.material:material:1.1.0'
+
+    // Librerías para el Recyclerview y el CardView
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
