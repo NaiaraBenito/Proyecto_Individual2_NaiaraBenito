@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Registro extends AppCompatActivity {
 
     // Variables auxiliares
@@ -68,13 +71,21 @@ public class Registro extends AppCompatActivity {
             Toast.makeText(this,"Las contraseñas deben coincidir", Toast.LENGTH_LONG).show();
         } else{     // Si se han completado todos los campos
 
-            // Llamada al método que añade al nuevo usuario a la BBDD
-            DBHelper dbHelper = new DBHelper(this);
-            String msg = dbHelper.registrarUsuario(nombre, apellido, email, password1);
-            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
+            // Patrón para validar el email
+            Pattern pattern = Pattern.compile("([a-z0-9]+(\\.?[a-z0-9])*)+@(([a-z]+)\\.([a-z]+))+");
+            Matcher mather = pattern.matcher(email);
 
-            // Volver al Login
-            volverLogin(v);
+            if (mather.find() == true) {    // El email ingresado es válido
+                // Llamada al método que añade al nuevo usuario a la BBDD
+                DBHelper dbHelper = new DBHelper(this);
+                String msg = dbHelper.registrarUsuario(nombre, apellido, email, password1);
+                Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
+
+                // Volver al Login
+                volverLogin(v);
+            } else {     // El email ingresado es inválido
+                Toast.makeText(this, "El email ingresado es inválido", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

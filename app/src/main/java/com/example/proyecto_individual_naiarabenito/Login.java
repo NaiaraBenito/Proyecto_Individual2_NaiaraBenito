@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Login extends AppCompatActivity {
 
     // Variables auxiliares
@@ -51,24 +54,17 @@ public class Login extends AppCompatActivity {
         if(email.equals("")){
             Toast.makeText(this,"Debes ingresar tu email", Toast.LENGTH_LONG).show();
         } else if (password.equals("")) {
-            Toast.makeText(this,"Debes ingresar tu contraseña", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Debes ingresar tu contraseña", Toast.LENGTH_LONG).show();
         } else{
 
-            // Si se han completado todos los campos
-            //try{
+            // Patrón para validar el email
+            Pattern pattern = Pattern.compile("([a-z0-9]+(\\.?[a-z0-9])*)+@(([a-z]+)\\.([a-z]+))+");
+            Matcher mather = pattern.matcher(email);
+
+            if (mather.find() == true) {    // El email ingresado es válido
                 // Realizar la verificación del login
-            DBHelper dbHelper = new DBHelper(this);
-            boolean existe = dbHelper.verificarUsuarioLogin(email, password);
-                /*SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                // Comprobar que el usuario y constraseña se encuentra registrado en la BBDD
-                Cursor fila = db.rawQuery("SELECT email, password FROM t_usuarios WHERE email='" + email + "' AND password='" + password + "'", null);
-
-                // Comprobar si ha encontrado al usuario
-                if(fila.moveToFirst()){     // Si existe --> Ir a Menu_Principal
-
-                    // Cerrar la BBDD
-                    db.close();*/
+                DBHelper dbHelper = new DBHelper(this);
+                boolean existe = dbHelper.verificarUsuarioLogin(email, password);
 
                 if(existe){ // Si existe --> Ir a Menu_Principal
                     // Crear un intent para pasar a la Actividad Menu_Principal
@@ -83,12 +79,10 @@ public class Login extends AppCompatActivity {
                 // Si no existe --> Error
                 else{
                     Toast.makeText(this,"Email o contraseña incorrectos. Intente de nuevo", Toast.LENGTH_LONG).show();
-                    //db.close();
-                }/*
+                }
+            } else {    // El email ingresado es inválido
+                Toast.makeText(this, "El email ingresado es inválido", Toast.LENGTH_LONG).show();
             }
-            catch (Exception e){
-                Toast.makeText(this,"ERROR EN LA BASE DE DATOS", Toast.LENGTH_LONG).show();
-            }*/
         }
     }
 }
