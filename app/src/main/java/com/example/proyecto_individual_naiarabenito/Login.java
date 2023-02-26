@@ -74,7 +74,6 @@ public class Login extends AppCompatActivity {
                     intent.putExtra("nombreUsuario", datos[0]);
                     intent.putExtra("apellidoUsuario", datos[1]);
                     intent.putExtra("emailUsuario", datos[2]);
-                    intent.putExtra("passwordUsuario", datos[3]);
                     startActivity(intent);
                     finish();
                 }

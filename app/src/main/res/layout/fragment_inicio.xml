@@ -85,7 +85,14 @@
         android:background="@color/rosa"
         android:textSize="3sp" />
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lista_productos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fondo_gridwiew"
+        android:layout_marginBottom="60sp"/>
+
+    <!--<GridView
         android:id="@+id/gridView_productos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,7 +100,7 @@
         android:verticalSpacing="4dp"
         android:background="@drawable/fondo_gridwiew"
         android:layout_marginBottom="60sp"
-        android:numColumns="2"/>
+        android:numColumns="2"/> -->
 
 
 </LinearLayout>

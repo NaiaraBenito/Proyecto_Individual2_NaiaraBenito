@@ -1,24 +1,29 @@
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.proyecto_individual_naiarabenito.Detalles_Producto;
 import com.example.proyecto_individual_naiarabenito.R;
 
 import java.util.List;
 
-public class ListAdapter_Productos extends BaseAdapter {
+public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Productos.MyViewHolder> {
 
     private List<Producto> lista_prod;
     private LayoutInflater inflater;    // Describir de que archivo proviene la lista
@@ -26,47 +31,58 @@ public class ListAdapter_Productos extends BaseAdapter {
 
     public ListAdapter_Productos(List<Producto> lista_prod, Context context) {
         this.inflater = LayoutInflater.from(context);
-        this.lista_prod = lista_prod;
         this.context = context;
+        this.lista_prod = lista_prod;
+    }
+
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = inflater.inflate(R.layout.producto_cardview, parent,false);
+        return new MyViewHolder(view);
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        holder.nombre.setText(lista_prod.get(position).getNombre());
+        holder.imagen.setImageResource(lista_prod.get(position).getImg_id());
+
+        // Añadir un Listener para detectar la pulsación al CardView
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, Detalles_Producto.class);
+
+                // Pasarle los datos del producto a la nueva Actividad
+                intent.putExtra("nombreProducto",lista_prod.get(position).getNombre());
+                intent.putExtra("decripProducto",lista_prod.get(position).getDescripcion());
+                intent.putExtra("imgProducto",lista_prod.get(position).getImg_id());
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
         return lista_prod.size();
     }
 
-    public void setItems(List<Producto> items){
-        lista_prod = items;
-    }
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
 
-    @Override
-    public Object getItem(int i) {
-        return lista_prod.get(i);
-    }
+        TextView nombre;
+        ImageView imagen;
+        CardView cardView;
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+        public MyViewHolder(View itemView){
+            super(itemView);
+            nombre = (TextView) itemView.findViewById(R.id.nombre_producto_rv);
+            imagen = (ImageView) itemView.findViewById(R.id.img_producto_rv);
+            cardView = (CardView) itemView.findViewById(R.id.producto_cardview);
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        Producto producto = lista_prod.get(i);
-
-        if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.producto_cardview,viewGroup,false);
         }
-
-        ImageView prod_img = view.findViewById(R.id.img_producto_gridview);
-        TextView prod_nombre = view.findViewById(R.id.nombre_producto_gridview);
-
-        int imagen = producto.getImg_id();
-        String nombre = producto.getNombre();
-
-        prod_img.setImageResource(imagen);
-        prod_nombre.setText(nombre);
-
-        return view;
     }
 
 }

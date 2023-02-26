@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -17,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PackageManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,7 +40,7 @@ public class InicioFragment extends Fragment {
 
     // Variables para mostrar la lista de productos
     List<Producto> lista_prod;
-    GridView gridViewProductos;
+    RecyclerView recyclerViewProductos;
     ListAdapter_Productos adapterProductos;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class InicioFragment extends Fragment {
         mostrarDatosCategorias();
 
         // Cargar la lista de Productos
-        gridViewProductos = view.findViewById(R.id.gridView_productos);
+        recyclerViewProductos = view.findViewById(R.id.lista_productos);
         cargarListaProductos();
         mostrarDatosProductos();
 
@@ -93,8 +97,9 @@ public class InicioFragment extends Fragment {
     }
 
     private void mostrarDatosProductos() {
+        recyclerViewProductos.setLayoutManager(new GridLayoutManager(getContext(),3));
         adapterProductos = new ListAdapter_Productos(lista_prod,getContext());
-        gridViewProductos.setAdapter(adapterProductos);
+        recyclerViewProductos.setAdapter(adapterProductos);
     }
     @Override
     public void onDestroyView() {
