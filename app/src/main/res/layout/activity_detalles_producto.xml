@@ -10,7 +10,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="500dp">
+        android:layout_height="550dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/det_prod_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250sp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/prod_pizza_4quesos" />
 
@@ -38,7 +38,9 @@
             <TextView
                 android:id="@+id/det_prod_descrip"
                 android:layout_width="match_parent"
-                android:layout_height="74dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16sp"
+                android:layout_marginRight="16sp"
                 android:text="4 Quesos"
                 android:textColor="@color/gris_claro"
                 android:textSize="15sp" />
