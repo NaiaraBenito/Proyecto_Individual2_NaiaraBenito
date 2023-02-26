@@ -15,12 +15,12 @@ import com.example.proyecto_individual_naiarabenito.R;
 
 import java.util.List;
 
-public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Categorias.ViewHolder> implements View.OnClickListener{
+public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Categorias.ViewHolder> {//implements View.OnClickListener{
     private List<Categoria> lista_cat;
     private LayoutInflater inflater;    // Describir de que archivo proviene la lista
     private Context context;
 
-    private View.OnClickListener listener;
+    //private View.OnClickListener listener;
 
     public ListAdapter_Categorias(List<Categoria> list_ele, Context context){
         this.inflater = LayoutInflater.from(context);
@@ -33,10 +33,11 @@ public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Cat
         return lista_cat.size();
     }
 
+    //  Método para aplicar el onClick
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        View view = inflater.inflate(R.layout.lista_categorias,parent,false);
-        view.setOnClickListener(this);
+        View view = inflater.inflate(R.layout.categoria_cardview,parent,false);
+        //view.setOnClickListener(this);
         return new ViewHolder(view);
     }
 
@@ -50,6 +51,7 @@ public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Cat
         lista_cat = items;
     }
 
+    /*
     public void setOnClickListener(View.OnClickListener listener){
         this.listener = listener;
     }
@@ -58,7 +60,7 @@ public class ListAdapter_Categorias extends RecyclerView.Adapter<ListAdapter_Cat
         if(listener != null){
             listener.onClick(view);
         }
-    }
+    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView img_icon;
