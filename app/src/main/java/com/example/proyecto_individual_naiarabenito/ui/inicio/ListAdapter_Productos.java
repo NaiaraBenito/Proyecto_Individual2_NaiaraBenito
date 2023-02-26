@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_individual_naiarabenito.Detalles_Producto;
 import com.example.proyecto_individual_naiarabenito.R;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Productos.MyViewHolder> {
 
@@ -29,10 +32,14 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
     private LayoutInflater inflater;    // Describir de que archivo proviene la lista
     private Context context;
 
+    private List<Producto> lista_prod_original;
+
     public ListAdapter_Productos(List<Producto> lista_prod, Context context) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.lista_prod = lista_prod;
+        this.lista_prod_original = new ArrayList<>();
+        this.lista_prod_original.addAll(lista_prod);
     }
 
     @NonNull
@@ -65,6 +72,31 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
         });
     }
 
+    // Método que filtra la lista de productos con el String recibido
+    public void filtrado(String txtBuscar){
+        int l = txtBuscar.length();
+        if(l == 0){
+            this.lista_prod.clear();
+            lista_prod.addAll(lista_prod_original);
+        } else{
+            // Comprobar si la version del dispositivo soporta la operación de filtrado
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                List<Producto> collection = lista_prod.stream().filter(i -> i.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())).collect(Collectors.toList());
+                lista_prod.clear();
+                lista_prod.addAll(collection);
+            }
+            else {      // Si no la soporta, realizaremos el filtrado de otra manera
+                for(Producto prod: lista_prod_original){
+                    if(prod.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())){
+                        lista_prod.add(prod);
+                    }
+                }
+            }
+        }
+        // Indicar que estamos relizando cambios
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return lista_prod.size();
@@ -81,7 +113,6 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
             nombre = (TextView) itemView.findViewById(R.id.nombre_producto_rv);
             imagen = (ImageView) itemView.findViewById(R.id.img_producto_rv);
             cardView = (CardView) itemView.findViewById(R.id.producto_cardview);
-
         }
     }
 

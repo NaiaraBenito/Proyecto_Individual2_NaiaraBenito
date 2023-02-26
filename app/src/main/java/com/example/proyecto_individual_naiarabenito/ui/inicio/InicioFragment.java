@@ -12,10 +12,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PackageManagerCompat;
@@ -29,7 +31,7 @@ import com.example.proyecto_individual_naiarabenito.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InicioFragment extends Fragment {
+public class InicioFragment extends Fragment implements SearchView.OnQueryTextListener{
 
     // Variables para mostrar la lista de categorias
     ListAdapter_Categorias adapterCategorias;
@@ -42,6 +44,8 @@ public class InicioFragment extends Fragment {
     List<Producto> lista_prod;
     RecyclerView recyclerViewProductos;
     ListAdapter_Productos adapterProductos;
+
+    SearchView txtBuscar;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //InicioViewModel inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
@@ -64,6 +68,10 @@ public class InicioFragment extends Fragment {
         recyclerViewProductos = view.findViewById(R.id.lista_productos);
         cargarListaProductos();
         mostrarDatosProductos();
+
+        // Obtener el search View
+        txtBuscar = (SearchView) view.findViewById(R.id.search_view);
+        txtBuscar.setOnQueryTextListener(this);
 
         //return root;
         return view;
@@ -114,5 +122,17 @@ public class InicioFragment extends Fragment {
 
         TextView nombreUser = (TextView) view.findViewById(R.id.tv_nombreUsuario_inicio);
         nombreUser.setText("Hola " + nombre);
+    }
+
+    // Métodos para buscar en tiempo real el texto que pongamos en el SearchView
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        adapterProductos.filtrado(newText);
+        return false;
     }
 }
