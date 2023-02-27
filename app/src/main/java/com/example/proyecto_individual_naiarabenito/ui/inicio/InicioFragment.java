@@ -1,6 +1,7 @@
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,26 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
 
     SearchView txtBuscar;
 
+    String nombreUser;
+    String apellidoUser;
+    String emailUser;
+    String[] datosUser;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_inicio,container,false);
+
+        // Recibir datos del usuario
+        nombreUser = getActivity().getIntent().getExtras().getString("nombreUsuario");
+        apellidoUser = getActivity().getIntent().getExtras().getString("apellidoUsuario");
+        emailUser = getActivity().getIntent().getExtras().getString("emailUsuario");
+
+        datosUser = new String[3];
+        datosUser[0] = nombreUser;
+        datosUser[1] = apellidoUser;
+        datosUser[2] = emailUser;
+
+        Log.e("USER",nombreUser + " " + apellidoUser + ": " + emailUser);
 
         // Cargar la lista de Promociones
         recyclerViewPromociones = view.findViewById(R.id.lista_promociones);
@@ -81,7 +99,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
 
         lista_prod.add(new Producto("Hamburguesa Vacuno con Piña","La integración de la piña con carne es más común en América que en Europa. El resultado final de tal combinación bien merece ser probado, pues aporta una jugosidad al conjunto que difícilmente se consigue con otras recetas. Algunos de sus ingredientes son: Carne ternera, Jamón serrano loncheado, Piña natural, Queso Gouda, Aceite de oliva virgen, Sal y Pimienta negra molida.",R.drawable.prod_ham_pina));
         lista_prod.add(new Producto("Hamburquesa Shack burger de queso","Una de las hamburguesas más famosas de Nueva York. La hamburguesa clásica de Shake Shack, en presentación individual o doble. Todas las hamburguesas de este tipo son de carne de ternera y para acompañarla, las famosas patatas fritas rizadas.",R.drawable.prod_ham_shack));
-        lista_prod.add(new Producto("Hamburgusa Clásica","Carne picada de ternera, pan humedecido en leche, huevo, tocineta de cerdo y otros condimentos constituyen la base de un excelente sabor. Esta es una hamburguesa súper jugosa que siempre va a triunfar entre quienes la prueban. Dentro de los ingredientes de esta delicia encontramos: Pan de molde, Carne de ternera, Hierbas provenzales, Mostaza de Dijon, Pimienta negra molida y aceite de oliva virgen.",R.drawable.prod_ham_clasica));
+        lista_prod.add(new Producto("Hamburguesa Clásica","Carne picada de ternera, pan humedecido en leche, huevo, tocineta de cerdo y otros condimentos constituyen la base de un excelente sabor. Esta es una hamburguesa súper jugosa que siempre va a triunfar entre quienes la prueban. Dentro de los ingredientes de esta delicia encontramos: Pan de molde, Carne de ternera, Hierbas provenzales, Mostaza de Dijon, Pimienta negra molida y aceite de oliva virgen.",R.drawable.prod_ham_clasica));
         lista_prod.add(new Producto("Hamburguesa a la Ranchera","Si prefieres carnes blancas en vez de rojas, entonces puedes elegir una hamburguesa de pollo. Algunos piensan que éstas, en comparación con las de ternera, quedan demasiado “dulces” o en algunos casos incluso algo insípidas. Por eso, tienes que probar la hamburguesa de pollo a la ranchera, ya que es de todo menos dulce o sin sabor. La acompaña buena salsa de tomate y cebolla sofritos, además de unos frijoles y varias tiras de bacon.",R.drawable.prod_ham_ranchera));
 
         lista_prod.add(new Producto("Bocadillo de Calamares","El bocata de calamares es uno de los platos más representativos de la cocina madrileña. Junto con los callos a la madrileña y el cocido madrileño, es el mejor plato que podemos encontrar en Madrid.",R.drawable.prod_boc_calamar));
@@ -90,7 +108,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private void mostrarDatosProductos() {
         recyclerViewProductos.setLayoutManager(new GridLayoutManager(getContext(),3));
-        adapterProductos = new ListAdapter_Productos(lista_prod,getContext());
+        adapterProductos = new ListAdapter_Productos(lista_prod,getContext(),datosUser);
         recyclerViewProductos.setAdapter(adapterProductos);
     }
     @Override

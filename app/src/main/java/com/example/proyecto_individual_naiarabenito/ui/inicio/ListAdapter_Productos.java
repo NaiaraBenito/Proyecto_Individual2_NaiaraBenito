@@ -34,12 +34,15 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
 
     private List<Producto> lista_prod_original;
 
-    public ListAdapter_Productos(List<Producto> lista_prod, Context context) {
+    private String[] datosUser;
+
+    public ListAdapter_Productos(List<Producto> lista_prod, Context context, String[] datosUser) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.lista_prod = lista_prod;
         this.lista_prod_original = new ArrayList<>();
         this.lista_prod_original.addAll(lista_prod);
+        this.datosUser = datosUser;
     }
 
     @NonNull
@@ -52,6 +55,7 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
 
         holder.nombre.setText(lista_prod.get(position).getNombre());
         holder.imagen.setImageResource(lista_prod.get(position).getImg_id());
@@ -67,6 +71,13 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
                 intent.putExtra("nombreProducto",lista_prod.get(position).getNombre());
                 intent.putExtra("decripProducto",lista_prod.get(position).getDescripcion());
                 intent.putExtra("imgProducto",lista_prod.get(position).getImg_id());
+
+                Log.e("USER","ADAPTER: " + datosUser[0] + " " + datosUser[1] + " " + datosUser[2]);
+                // Pasarle los datos del usuario a la nueva Actividad
+                intent.putExtra("nombreUsuario", datosUser[0]);
+                intent.putExtra("apellidoUsuario", datosUser[1]);
+                intent.putExtra("emailUsuario", datosUser[2]);
+
                 context.startActivity(intent);
             }
         });

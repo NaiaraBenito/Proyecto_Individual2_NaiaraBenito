@@ -15,7 +15,10 @@ public class Detalles_Producto extends AppCompatActivity {
     TextView nombre;
     TextView descrip;
     ImageView img;
+
     String nUser;
+    String aUser;
+    String eUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +35,22 @@ public class Detalles_Producto extends AppCompatActivity {
             String n = extras.getString("nombreProducto");
             String descripcion = extras.getString("decripProducto");
             int imagen = extras.getInt("imgProducto");
-
             nombre.setText(n);
             descrip.setText(descripcion);
             img.setImageResource(imagen);
+
+            nUser = extras.getString("nombreUsuario");
+            aUser = extras.getString("apellidoUsuario");
+            eUser = extras.getString("emailUsuario");
         }
     }
 
     // Método que te devuelve al inicio
     public void btn_aceptar (View v){
         Intent intent = new Intent(this, Menu_Principal.class);
+        intent.putExtra("nombreUsuario", nUser);
+        intent.putExtra("apellidoUsuario", aUser);
+        intent.putExtra("emailUsuario", eUser);
         startActivity(intent);
         finish();
     }
