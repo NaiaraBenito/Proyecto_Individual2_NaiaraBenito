@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class DBHelper extends SQLiteOpenHelper {
 
     // Valiables auxiliares
@@ -16,6 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //Nombre de la BBDD y de la tabla
     private static final String DATABASE_NOMBRE = "daleUnMordisco.db";  // Nombre de la BBDD
     private static final String TABLE_USUARIOS = "t_usuarios";  // Nombre de la tabla que almacena los usuarios registrados
+    private static final String TABLE_ORDENES = "t_orden";  // Nombre de la tabla que almacena los usuarios registrados
 
     // Constructor: Este helper crea la BBDD
     public DBHelper(@Nullable Context context) {
@@ -30,12 +33,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 "apellido TEXT NOT NULL," +
                 "email TEXT PRIMARY KEY," +
                 "password TEXT NOT NULL)");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_ORDENES + "(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "nombreProd TEXT NOT NULL," +
+                "precioProd NUMERIC NOT NULL," +
+                "cantidadProd NUMERIC NOT NULL," +
+                "emailUsuario TEXT NOT NULL," +
+                "FOREIGN KEY (emailUsuario) REFERENCES "+ TABLE_USUARIOS + "(email))");
     }
 
     // Este método se ejecuta cuando se cambia la versión de la BBDD (cambiar a estructura: añadir, quitar o editar una tabla...)
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE " + TABLE_USUARIOS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_USUARIOS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDENES);
         onCreate(sqLiteDatabase);
     }
 
@@ -46,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
 
             // Comprobar que el usuario y constraseña se encuentra registrado en la BBDD
-            Cursor fila = db.rawQuery("SELECT * FROM t_usuarios WHERE email='" + email + "' AND password='" + password + "'", null);
+            Cursor fila = db.rawQuery("SELECT * FROM " + TABLE_USUARIOS + " WHERE email='" + email + "' AND password='" + password + "'", null);
 
             // Comprobar si ha encontrado al usuario
             if(fila.moveToFirst()) {     // Si existe --> Devolver la lista con los datos
@@ -79,7 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
 
             // Comprobar que el usuario se encuentra registrado en la BBDD
-            Cursor fila = db.rawQuery("SELECT email FROM t_usuarios WHERE email='" + pEmail + "'", null);
+            Cursor fila = db.rawQuery("SELECT email FROM " + TABLE_USUARIOS + " WHERE email='" + pEmail + "'", null);
 
             // Comprobar si ha encontrado al usuario
             if(fila.moveToFirst()){     // Si existe --> Error
@@ -95,25 +107,67 @@ public class DBHelper extends SQLiteOpenHelper {
                 datosUsuario.put("email", pEmail);
                 datosUsuario.put("password", pPassword);
 
-                try{
-                    // Añadir en la tabla de usuarios los datos del nuevo usuario
-                    db.insert("t_usuarios",null, datosUsuario);
-                    db.close();
+                // Añadir en la tabla de usuarios los datos del nuevo usuario
+                db.insert(TABLE_USUARIOS,null, datosUsuario);
+                db.close();
 
-                    // Mensaje de información
-                    return "Usuario "+ pNombre + " ingresado con exito";
-                    //Toast.makeText(this,"Usuario "+ pNombre + " ingresado con exito", Toast.LENGTH_LONG).show();
-
-                } catch (Exception e){      // En caso de excepción
-                    db.close();
-                    return "ERROR  BASE DE DATOS";
-                    //Toast.makeText(this,"ERROR  BASE DE DATOS", Toast.LENGTH_LONG).show();
-                }
+                // Mensaje de información
+                return "Usuario "+ pNombre + " ingresado con exito";
+                //Toast.makeText(this,"Usuario "+ pNombre + " ingresado con exito", Toast.LENGTH_LONG).show();
             }
         }
         catch (Exception e){     // En caso de excepción
             return "ERROR  BASE DE DATOS";
             //Toast.makeText(this,"ERROR  BASE DE DATOS", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public boolean anadirOrden(String producto, double precio, int cantidad, String email){
+
+        try{
+            // Obtener una BBDD editable
+            //DBHelper dbHelper = new DBHelper(this);
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            // Comprobar que el usuario se encuentra registrado en la BBDD
+            Cursor fila = db.rawQuery("SELECT cantidadProd FROM " + TABLE_ORDENES + " WHERE nombreProd='" + producto + "' AND emailUsuario='" + email + "'", null);
+
+            // Comprobar si ha encontrado el producto
+            if(fila.moveToFirst()){     // Si existe --> Actualizar cantidad
+                int cantidadAux = Integer.parseInt(fila.getString(0)) + cantidad;
+                //db.rawQuery("UPDATE " + TABLE_ORDENES + " SET cantidadProd=" + cantidadAux + " WHERE nombreProd='" + producto + "' AND emailUsuario='" + email + "'", null);
+                Log.d("CANTIDAD NUEVA: ",String.valueOf(cantidadAux));
+
+                ContentValues datosOrden = new ContentValues();
+                datosOrden.put("cantidadProd", cantidadAux);
+                db.update(TABLE_ORDENES, datosOrden,"nombreProd='" + producto + "' AND emailUsuario='" + email + "'",null);
+
+                db.close();
+                return true;
+            }
+            else {     // Si no existe --> Crea la nueva orden
+
+                ContentValues datosOrden = new ContentValues();
+                datosOrden.put("nombreProd", producto);
+                datosOrden.put("precioProd", precio);
+                datosOrden.put("cantidadProd", cantidad);
+                datosOrden.put("emailUsuario", email);
+
+                // Añadir en la tabla de ordenes los datos de la nueva orden
+                long id = db.insert(TABLE_ORDENES, null, datosOrden);
+                db.close();
+
+                if (id <= 0) {
+                    System.out.println("EXCEPCIÓN: ID < 0");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+        } catch (Exception e){     // En caso de excepción
+            System.out.println("EXCEPCIÓN: " + e.toString());
+            return false;
         }
     }
 }

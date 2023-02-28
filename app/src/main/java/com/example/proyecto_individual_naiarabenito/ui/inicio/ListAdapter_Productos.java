@@ -2,16 +2,11 @@ package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.Image;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.proyecto_individual_naiarabenito.Detalles_Producto;
 import com.example.proyecto_individual_naiarabenito.R;
 
 import java.util.ArrayList;
@@ -67,10 +61,11 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
 
                 Intent intent = new Intent(context, Detalles_Producto.class);
 
-                // Pasarle los datos del producto a la nueva Actividad
+                // Pasarle el producto a la nueva Actividad
                 intent.putExtra("nombreProducto",lista_prod.get(position).getNombre());
                 intent.putExtra("decripProducto",lista_prod.get(position).getDescripcion());
                 intent.putExtra("imgProducto",lista_prod.get(position).getImg_id());
+                intent.putExtra("precioProducto",lista_prod.get(position).getPrecio());
 
                 Log.e("USER","ADAPTER: " + datosUser[0] + " " + datosUser[1] + " " + datosUser[2]);
                 // Pasarle los datos del usuario a la nueva Actividad
@@ -90,7 +85,7 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
             this.lista_prod.clear();
             lista_prod.addAll(lista_prod_original);
         } else{
-            // Comprobar si la version del dispositivo soporta la operación de filtrado
+            // Comprobar si la version del dispositivo soporta la operación de filtrado Nougat
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
                 List<Producto> collection = lista_prod.stream().filter(i -> i.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())).collect(Collectors.toList());
                 lista_prod.clear();
