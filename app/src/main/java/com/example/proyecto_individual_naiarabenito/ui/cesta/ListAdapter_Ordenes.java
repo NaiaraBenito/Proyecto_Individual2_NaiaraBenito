@@ -1,0 +1,124 @@
+package com.example.proyecto_individual_naiarabenito.ui.cesta;
+
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.proyecto_individual_naiarabenito.R;
+import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+import com.example.proyecto_individual_naiarabenito.ui.inicio.Detalles_Producto;
+import com.example.proyecto_individual_naiarabenito.ui.inicio.Promocion;
+
+import java.util.List;
+
+public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder> {
+    private List<Orden> lista_orden;
+    private LayoutInflater inflater;    // Describir de que archivo proviene la lista
+    private Context context;
+    private String[] datosUser;
+
+    public ListAdapter_Ordenes(List<Orden> list_ele, Context context, String[] datosUser){
+        this.inflater = LayoutInflater.from(context);
+        this.context = context;
+        this.lista_orden = list_ele;
+        this.datosUser = datosUser;
+    }
+    public List<Orden> getListaOrden(){return lista_orden;}
+
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+        View view = inflater.inflate(R.layout.orden_cardview,parent,false);
+        return new ViewHolder(view);
+    }
+
+    // Método que transfiere la información de la lista de promociones a la vista
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position){
+        holder.bindData(lista_orden.get(position));
+        holder.minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int cantidad = Integer.parseInt(holder.cantidad.getText().toString());
+                if(cantidad > 0){
+                    String producto = holder.nombre.getText().toString();
+                    int nuevaCantidad = cantidad - 1;
+                    if (nuevaCantidad <= 0){
+                        lista_orden.remove(position);
+                        DBHelper dbHelper = new DBHelper(context);
+                        dbHelper.borrarOrden(producto, datosUser[2]);
+                        dbHelper.close();
+                    }
+                    else{
+                        lista_orden.get(position).setCantidadProd(nuevaCantidad);
+                        DBHelper dbHelper = new DBHelper(context);
+                        dbHelper.actualizarOrden(producto, -1, datosUser[2]);
+                        dbHelper.close();
+                    }
+                    notifyDataSetChanged();
+                }
+            }
+        });
+
+        holder.plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String producto = holder.nombre.getText().toString();
+
+                int cantidad = Integer.parseInt(holder.cantidad.getText().toString()) + 1;
+                lista_orden.get(position).setCantidadProd(cantidad);
+                notifyDataSetChanged();
+
+                DBHelper dbHelper = new DBHelper(context);
+                System.out.println("CANTIDAD: " + String.valueOf(cantidad));
+                dbHelper.actualizarOrden(producto, 1, datosUser[2]);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount(){
+        return lista_orden.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView img;
+        TextView nombre;
+        Button minus;
+        Button plus;
+        TextView cantidad;
+        TextView precioUnidad;
+        TextView precioTotal;
+
+        ViewHolder(View itemView){
+            super(itemView);
+            img = itemView.findViewById(R.id.orden_img);
+            nombre = itemView.findViewById(R.id.orden_nombre);
+            cantidad = itemView.findViewById(R.id.orden_cantidad);
+            precioUnidad = itemView.findViewById(R.id.orden_precio_uniProd);
+            precioTotal = itemView.findViewById(R.id.orden_precio_totProd);
+            minus = (Button) itemView.findViewById(R.id.orden_minus);
+            plus = (Button) itemView.findViewById(R.id.orden_plus);
+        }
+
+        // Método que transfiere la información de la lista de promociones a la vista
+        void bindData(final Orden item){
+            img.setImageResource(item.getImagenProd());
+            nombre.setText(item.getNombreProd());
+            cantidad.setText(String.valueOf(item.getCantidadProd()));
+            precioUnidad.setText(String.valueOf(item.getPrecioProd()));
+            //double tot = Math.round((item.getCantidadProd() * item.getPrecioProd() * 100))/100;
+            double tot = Math.round(item.getCantidadProd() * item.getPrecioProd() * 100.0) / 100.0;
+            precioTotal.setText(String.valueOf(tot));
+        }
+    }
+}

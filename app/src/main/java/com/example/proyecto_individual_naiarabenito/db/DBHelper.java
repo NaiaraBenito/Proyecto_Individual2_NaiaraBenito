@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.proyecto_individual_naiarabenito.ui.cesta.Orden;
+
 import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -38,6 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "nombreProd TEXT NOT NULL," +
                 "precioProd NUMERIC NOT NULL," +
+                "imagenProd NUMERIC NOT NULL," +
                 "cantidadProd NUMERIC NOT NULL," +
                 "emailUsuario TEXT NOT NULL," +
                 "FOREIGN KEY (emailUsuario) REFERENCES "+ TABLE_USUARIOS + "(email))");
@@ -122,7 +125,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean anadirOrden(String producto, double precio, int cantidad, String email){
+    public boolean anadirOrden(String producto, double precio, int imagen, int cantidad, String email){
 
         try{
             // Obtener una BBDD editable
@@ -135,7 +138,6 @@ public class DBHelper extends SQLiteOpenHelper {
             // Comprobar si ha encontrado el producto
             if(fila.moveToFirst()){     // Si existe --> Actualizar cantidad
                 int cantidadAux = Integer.parseInt(fila.getString(0)) + cantidad;
-                //db.rawQuery("UPDATE " + TABLE_ORDENES + " SET cantidadProd=" + cantidadAux + " WHERE nombreProd='" + producto + "' AND emailUsuario='" + email + "'", null);
                 Log.d("CANTIDAD NUEVA: ",String.valueOf(cantidadAux));
 
                 ContentValues datosOrden = new ContentValues();
@@ -150,6 +152,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 ContentValues datosOrden = new ContentValues();
                 datosOrden.put("nombreProd", producto);
                 datosOrden.put("precioProd", precio);
+                datosOrden.put("imagenProd", imagen);
                 datosOrden.put("cantidadProd", cantidad);
                 datosOrden.put("emailUsuario", email);
 
@@ -170,4 +173,77 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+
+    public ArrayList<Orden> getOrdenes(String email) {
+        ArrayList<Orden> lista_ordenes = new ArrayList<>();
+
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            // Obtener todas las ordenes del usuario
+            Cursor fila = db.rawQuery("SELECT id,nombreProd,precioProd,imagenProd,cantidadProd,emailUsuario FROM " + TABLE_ORDENES + " WHERE emailUsuario='" + email + "'", null);
+
+            // Comprobar si ha encontrado al usuario
+            if(fila.moveToFirst()) {     // Si existe --> Devolver la lista con los datos
+                do {
+                    Orden orden = new Orden();
+                    orden.setId(fila.getInt(0));
+                    orden.setNombreProd(fila.getString(1));
+                    orden.setPrecioProd(fila.getDouble(2));
+                    orden.setImagenProd(fila.getInt(3));
+                    orden.setCantidadProd(fila.getInt(4));
+                    orden.setEmailUsuario(fila.getString(5));
+                    lista_ordenes.add(orden);
+                } while (fila.moveToNext());
+            }
+            fila.close();
+            db.close();
+            return lista_ordenes;
+
+        } catch (Exception e) {     // En caso de excepción
+            System.out.println("EXCEPCIÓN: " + e.toString());
+            return null;
+        }
+    }
+
+    public void actualizarOrden(String producto, int cantidad, String email){
+
+        try{
+            // Obtener una BBDD editable
+            //DBHelper dbHelper = new DBHelper(this);
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            // Comprobar que el usuario se encuentra registrado en la BBDD
+            Cursor fila = db.rawQuery("SELECT cantidadProd FROM " + TABLE_ORDENES + " WHERE nombreProd='" + producto + "' AND emailUsuario='" + email + "'", null);
+
+            // Comprobar si ha encontrado el producto
+            if(fila.moveToFirst()){     // Si existe --> Actualizar cantidad
+                int cantidadAux = Integer.parseInt(fila.getString(0)) + cantidad;
+                Log.d("CANTIDAD NUEVA: ",String.valueOf(cantidadAux));
+
+                ContentValues datosOrden = new ContentValues();
+                datosOrden.put("cantidadProd", cantidadAux);
+                db.update(TABLE_ORDENES, datosOrden,"nombreProd='" + producto + "' AND emailUsuario='" + email + "'",null);
+                fila.close();
+                db.close();
+            }
+        } catch (Exception e){     // En caso de excepción
+            System.out.println("EXCEPCIÓN: " + e.toString());
+        }
+    }
+    public void borrarOrden(String producto, String email){
+
+        try{
+            // Obtener una BBDD editable
+            //DBHelper dbHelper = new DBHelper(this);
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            db.execSQL("DELETE FROM " + TABLE_ORDENES +  " WHERE nombreProd='" + producto + "' AND emailUsuario='" + email + "'");
+            db.close();
+
+        } catch (Exception e){     // En caso de excepción
+            System.out.println("EXCEPCIÓN: " + e.toString());
+        }
+    }
+
 }

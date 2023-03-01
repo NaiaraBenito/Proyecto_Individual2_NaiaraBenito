@@ -32,6 +32,7 @@ public class Detalles_Producto extends AppCompatActivity {
     Button plus;
     TextView cantidadProd;
     int cantidad = 1;
+    int imagen;
     Producto producto;
 
 
@@ -63,18 +64,12 @@ public class Detalles_Producto extends AppCompatActivity {
         if(extras != null){
             String n = extras.getString("nombreProducto");
             String descripcion = extras.getString("decripProducto");
-            int imagen = extras.getInt("imgProducto");
+            imagen = extras.getInt("imgProducto");
             double precio = extras.getDouble("precioProducto");
             nombreProd.setText(n);
             descripProd.setText(descripcion);
             imgProd.setImageResource(imagen);
             precioProd.setText(String.valueOf(precio));
-
-            /*nombreProd.setText(producto.getNombre());
-            descripProd.setText(producto.getDescripcion());
-            imgProd.setImageResource(producto.getImg_id());
-            precioProd.setText(producto.getPrecio() + "€");
-            cantidadProd.setText(String.valueOf(cantidad));*/
 
             nUser = extras.getString("nombreUsuario");
             aUser = extras.getString("apellidoUsuario");
@@ -96,6 +91,7 @@ public class Detalles_Producto extends AppCompatActivity {
         DBHelper dbHelper = new DBHelper(this);
         boolean insertado = dbHelper.anadirOrden(nombreProd.getText().toString(),
                 Double.parseDouble(precioProd.getText().toString()),
+                imagen,
                 Integer.parseInt(cantidadProd.getText().toString()),
                 eUser);
 
