@@ -1,5 +1,6 @@
 package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_individual_naiarabenito.R;
@@ -20,11 +23,58 @@ import com.example.proyecto_individual_naiarabenito.ui.inicio.Promocion;
 
 import java.util.List;
 
-public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder> {
+//public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder> implements ConfirmarBorradoOrdenDialog.ListenerDialogo, CestaFragment.ListenerCesta{
+class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder>{
+
+    private ListAdapter_Ordenes.ListenerCesta listener;
+    public interface ListenerCesta {
+        void actualizarDatos();
+    }
+
+    /*@Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            listener = (ListenerCesta) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(this.toString() + " debe implementar ListenerCesta");
+        }
+    }*/
+
+
+    /*private ListAdapter_Ordenes.ListenerAdaptador listener;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try{
+            listener = (ListAdapter_Ordenes.ListenerAdaptador) this;
+        }catch (ClassCastException e){
+            throw new ClassCastException(this.toString() + " debe implementar ListenerCesta");
+        }
+    }
+
+    @Override
+    public void setPositiveButton(String producto, int position) {
+        lista_orden.remove(position);
+        DBHelper dbHelper = new DBHelper(context);
+        dbHelper.borrarOrden(producto, datosUser[2]);
+        dbHelper.close();
+    }
+
+    @Override
+    public FragmentManager actualizarDatos() {
+        return null;
+    }
+
+    public interface ListenerAdaptador{
+        FragmentManager obtenerDialogo();
+    }*/
+
     private List<Orden> lista_orden;
     private LayoutInflater inflater;    // Describir de que archivo proviene la lista
     private Context context;
     private String[] datosUser;
+
 
     public ListAdapter_Ordenes(List<Orden> list_ele, Context context, String[] datosUser){
         this.inflater = LayoutInflater.from(context);
@@ -32,6 +82,7 @@ public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordene
         this.lista_orden = list_ele;
         this.datosUser = datosUser;
     }
+
     public List<Orden> getListaOrden(){return lista_orden;}
 
     @Override
@@ -43,25 +94,34 @@ public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordene
     // Método que transfiere la información de la lista de promociones a la vista
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
+
         holder.bindData(lista_orden.get(position));
         holder.minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int cantidad = Integer.parseInt(holder.cantidad.getText().toString());
                 if(cantidad > 0){
+
                     String producto = holder.nombre.getText().toString();
                     int nuevaCantidad = cantidad - 1;
                     if (nuevaCantidad <= 0){
+                        //ConfirmarBorradoOrdenDialog dialogo = new ConfirmarBorradoOrdenDialog(producto, position, inflater.getContext());
+                        //dialogo.show(listener.obtenerDialogo(),"EliminarProd");
                         lista_orden.remove(position);
                         DBHelper dbHelper = new DBHelper(context);
                         dbHelper.borrarOrden(producto, datosUser[2]);
                         dbHelper.close();
+                        //listener = (ListenerCesta) view.findViewById(R.id.total).getContext();
+                        //listener.actualizarDatos();
                     }
                     else{
                         lista_orden.get(position).setCantidadProd(nuevaCantidad);
                         DBHelper dbHelper = new DBHelper(context);
                         dbHelper.actualizarOrden(producto, -1, datosUser[2]);
                         dbHelper.close();
+                        //listener = (ListenerCesta) view.getContext();
+                        //listener.actualizarDatos();
+
                     }
                     notifyDataSetChanged();
                 }
@@ -89,6 +149,7 @@ public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordene
     public int getItemCount(){
         return lista_orden.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView img;

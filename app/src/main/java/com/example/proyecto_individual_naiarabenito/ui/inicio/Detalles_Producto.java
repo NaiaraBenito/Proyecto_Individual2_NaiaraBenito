@@ -83,7 +83,8 @@ public class Detalles_Producto extends AppCompatActivity {
         intent.putExtra("nombreUsuario", nUser);
         intent.putExtra("apellidoUsuario", aUser);
         intent.putExtra("emailUsuario", eUser);
-        startActivity(intent);
+        onNewIntent(intent);
+        //startActivity(intent);
         finish();
     }
 

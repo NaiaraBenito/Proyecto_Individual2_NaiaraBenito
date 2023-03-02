@@ -44,6 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "cantidadProd NUMERIC NOT NULL," +
                 "emailUsuario TEXT NOT NULL," +
                 "FOREIGN KEY (emailUsuario) REFERENCES "+ TABLE_USUARIOS + "(email))");
+
     }
 
     // Este método se ejecuta cuando se cambia la versión de la BBDD (cambiar a estructura: añadir, quitar o editar una tabla...)

@@ -67,6 +67,12 @@
             android:src="@drawable/login_icon"/>
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/rosa_claro"
+        android:textSize="3sp" />
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
