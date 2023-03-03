@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="My Carrito"
+                android:text="Mi Carrito"
                 android:layout_marginTop="32dp"
                 android:background="@color/rosa"
                 android:textColor="@color/white"

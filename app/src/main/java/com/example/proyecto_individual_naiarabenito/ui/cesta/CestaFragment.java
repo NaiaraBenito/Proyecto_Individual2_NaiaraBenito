@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+import com.example.proyecto_individual_naiarabenito.ui.cesta.SiActNotificacion;
 
 import java.util.List;
 
@@ -83,6 +84,20 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getContext(), "Compra confirmada", Toast.LENGTH_LONG).show();crearNotificationChannel();
                         crearNotificacion();
+
+                        // Eliminar productos comprados de la BBDD
+                        DBHelper dbHelper = new DBHelper(getContext());
+
+                        for(int i = 0; i < lista_ordenes.size(); i++){
+                            Orden o = lista_ordenes.get(i);
+                            dbHelper.borrarOrden(o.getNombreProd(), datosUser[2]);
+                        }
+                        // Borrar lista
+                        while(!lista_ordenes.isEmpty()){
+                            lista_ordenes.remove(0);
+                        }
+                        // Actualizar lista del recyclerView
+                        adapterOrdenes.setListaOrden(lista_ordenes);
                     }
                 });
 
@@ -143,7 +158,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         // Le decimos de dónde a dónde vamos
         Intent i = new Intent(getContext(), Menu_Principal.class);
         // Para cuando el usuario pulse back, te lleva al MainActivity (opcional)
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
         stackBuilder.addParentStack(Menu_Principal.class);
         stackBuilder.addNextIntent(i);
         // Esto no funciona si no se lo pones en el manifest
@@ -155,7 +170,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         // Le decimos de dónde a dónde vamos
         Intent i = new Intent(getContext(), SiActNotificacion.class);
         // Para cuando el usuario pulse back, te lleva al MainActivity (opcional)
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
         //stackBuilder.addParentStack(SiActNotificacion.class);
         stackBuilder.addParentStack(getActivity());
         stackBuilder.addNextIntent(i);
@@ -173,7 +188,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         // Le decimos de dónde a dónde vamos
         Intent i = new Intent(getContext(), NoActNotificacion.class);
         // Para cuando el usuario pulse back, te lleva al MainActivity (opcional)
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
         stackBuilder.addParentStack(getActivity());
         stackBuilder.addNextIntent(i);
 

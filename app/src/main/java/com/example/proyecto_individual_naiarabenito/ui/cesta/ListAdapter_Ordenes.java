@@ -84,6 +84,10 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     }
 
     public List<Orden> getListaOrden(){return lista_orden;}
+    public void setListaOrden(List<Orden> lista){
+        lista_orden=lista;
+        notifyDataSetChanged();
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
