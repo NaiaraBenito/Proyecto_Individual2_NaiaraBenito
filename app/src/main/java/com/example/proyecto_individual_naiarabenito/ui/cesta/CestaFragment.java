@@ -1,5 +1,6 @@
 package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,9 +10,17 @@ import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +33,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,8 +42,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-import com.example.proyecto_individual_naiarabenito.ui.cesta.SiActNotificacion;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class CestaFragment extends Fragment implements ListAdapter_Ordenes.ListenerCesta {
@@ -49,6 +61,9 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
     TextView impuestos;
     TextView total;
     Button pagar;
+
+    String tituloPDF;
+    String descripcionPDF;
 
     // Gestores de lo que sucede al tocar la notificación
     private PendingIntent pendingIntent;
@@ -74,40 +89,54 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         pagar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder confirmacion = new AlertDialog.Builder(view.getContext());
-                confirmacion.setTitle("Confirmar pedido");
-                confirmacion.setMessage("¿Seguro que has terminado tu pedido?");
+                if(lista_ordenes.isEmpty()){
+                    Toast.makeText(getContext(), "No tienes productos en la cesta", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    AlertDialog.Builder confirmacion = new AlertDialog.Builder(view.getContext());
+                    confirmacion.setTitle("Confirmar pedido");
+                    confirmacion.setMessage("¿Seguro que has terminado tu pedido?");
 
-                confirmacion.setCancelable(false);
-                confirmacion.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "Compra confirmada", Toast.LENGTH_LONG).show();crearNotificationChannel();
-                        crearNotificacion();
+                    confirmacion.setCancelable(false);
+                    confirmacion.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getContext(), "Compra confirmada", Toast.LENGTH_LONG).show();
+                            crearNotificationChannel();
+                            crearNotificacion();
 
-                        // Eliminar productos comprados de la BBDD
-                        DBHelper dbHelper = new DBHelper(getContext());
+                            if(!comprobarPermiso()){
+                                pedirPermisos();
+                            }
+                            crearPDF();
 
-                        for(int i = 0; i < lista_ordenes.size(); i++){
-                            Orden o = lista_ordenes.get(i);
-                            dbHelper.borrarOrden(o.getNombreProd(), datosUser[2]);
+                            // Eliminar productos comprados de la BBDD
+                            DBHelper dbHelper = new DBHelper(getContext());
+
+                            for(int i = 0; i < lista_ordenes.size(); i++){
+                                Orden o = lista_ordenes.get(i);
+                                dbHelper.borrarOrden(o.getNombreProd(), datosUser[2]);
+                            }
+                            // Borrar lista
+                            while(!lista_ordenes.isEmpty()){
+                                lista_ordenes.remove(0);
+                            }
+                            // Actualizar lista del recyclerView
+                            adapterOrdenes.setListaOrden(lista_ordenes);
+
+
+
                         }
-                        // Borrar lista
-                        while(!lista_ordenes.isEmpty()){
-                            lista_ordenes.remove(0);
-                        }
-                        // Actualizar lista del recyclerView
-                        adapterOrdenes.setListaOrden(lista_ordenes);
-                    }
-                });
+                    });
 
-                confirmacion.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getContext(), "Compra rechazada", Toast.LENGTH_LONG).show();
-                    }
-                });
-                confirmacion.create().show();
+                    confirmacion.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getContext(), "Compra rechazada", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    confirmacion.create().show();
+                }
             }
         });
 
@@ -222,50 +251,55 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 
     private void cargarResumen(View view) {
 
-        double precioTotProd = calcularPrecioTotProductos(view);
-        double envio = calcularEnvio(view, precioTotProd);
-        double impuestos = calcularImpuestos(view, precioTotProd);
-        calcularTotal(view, precioTotProd, impuestos, envio);
+        precioProd = (TextView) view.findViewById(R.id.total_prod_carrito);
+        double precioTotProd = calcularPrecioTotProductos();
+        precioProd.setText(String.valueOf(precioTotProd) + "€");
+
+        envio = (TextView) view.findViewById(R.id.total_envio_carrito);
+        double env = calcularEnvio(precioTotProd);
+        envio.setText(String.valueOf(env) + "€");
+
+        impuestos = (TextView) view.findViewById(R.id.total_impuesto_carrito);
+        double imp = calcularImpuestos(precioTotProd);
+        impuestos.setText(String.valueOf(imp) + "€");
+
+        total = (TextView) view.findViewById(R.id.total_carrito);
+        double tot = calcularTotal(precioTotProd, imp, env);
+        total.setText(String.valueOf(tot) + "€");
     }
 
-    public double calcularPrecioTotProductos(View view){
-        precioProd = (TextView) view.findViewById(R.id.total_prod_carrito);
-
+    public double calcularPrecioTotProductos(){
         double total = 0.00;
         for(int i = 0; i < adapterOrdenes.getItemCount(); i++){
             double auxPrecio = (double) Math.round(adapterOrdenes.getListaOrden().get(i).getCantidadProd() * adapterOrdenes.getListaOrden().get(i).getPrecioProd() * 100.0) / 100.0;
             total = Math.round((total + auxPrecio) * 100.0) / 100.0;
         }
-        precioProd.setText(String.valueOf(total) + "€");
         return total;
     }
 
-    public double calcularImpuestos(View view, double precio){
-        impuestos = (TextView) view.findViewById(R.id.total_impuesto_carrito);
+    public double calcularImpuestos(double precio){
+
         double auxImp = 0;
         auxImp = Math.round(((precio * 0.1) * 100.0))/100.0;
-        //auxImp = precio * 0.1;
-        impuestos.setText(String.valueOf(auxImp) + "€");
         return auxImp;
     }
 
-    public double calcularEnvio(View view, double precio){
-        envio = (TextView) view.findViewById(R.id.total_envio_carrito);
+    public double calcularEnvio(double precio){
 
         double auxenvio = 0.00;
 
         if (precio > 0){
             auxenvio = 3.00;
         }
-        envio.setText(String.valueOf(auxenvio) + "€");
+
         return auxenvio;
     }
-    public void calcularTotal(View view, double precioProd, double impuestos, double envio){
-        total = (TextView) view.findViewById(R.id.total_carrito);
+    public double calcularTotal(double precioProd, double impuestos, double envio){
+
         double auxTotal = 0;
         auxTotal = Math.round((precioProd + impuestos + envio) * 100.0) / 100.0;
+        return auxTotal;
 
-        total.setText(String.valueOf(auxTotal) + "€");
     }
 
     @Override
@@ -277,4 +311,98 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
     public FragmentManager obtenerDialogo() {
         return getActivity().getSupportFragmentManager();
     }*/
+
+    public void crearPDF(){
+        tituloPDF = "Factura de " + datosUser[0] + " " + datosUser[1];
+
+        descripcionPDF = "";
+        System.out.println("TAMAÑO: " + String.valueOf(lista_ordenes.size()));
+        for(int i = 0; i < lista_ordenes.size(); i++){
+            Orden orden = lista_ordenes.get(i);
+            String nombre = orden.getNombreProd();
+            int cantidad = orden.getCantidadProd();
+            double precioTot = Math.round(cantidad * orden.getPrecioProd() * 100.0) / 100.0;
+
+            descripcionPDF = descripcionPDF + "Producto: " + nombre + "   Cantidad: " + String.valueOf(cantidad) + "  Precio: " + String.valueOf(precioTot) + "€\n";
+        }
+        double pTotProd = calcularPrecioTotProductos();
+        double imp = calcularImpuestos(pTotProd);
+        double env = calcularEnvio(pTotProd);
+        double tot = calcularTotal(pTotProd,imp,env);
+
+        descripcionPDF = descripcionPDF + "\n\nTotal en productos: " + String.valueOf(pTotProd) + "€";
+        descripcionPDF = descripcionPDF + "\nCostes de envío: " + String.valueOf(env) + "€";
+        descripcionPDF = descripcionPDF + "\nImpuestos: " + String.valueOf(imp) + "€";
+        descripcionPDF = descripcionPDF + "\n--------------------------------------------------------------------------";
+        descripcionPDF = descripcionPDF + "\nTotal: " + String.valueOf(tot) + "€";
+
+        PdfDocument pdfDocument = new PdfDocument();
+        Paint paint = new Paint();
+        TextPaint titulo = new TextPaint();
+        TextPaint descripcion = new TextPaint();
+
+        Bitmap bitmap, bitmapEscala;
+
+        PdfDocument.PageInfo paginaInfo = new PdfDocument.PageInfo.Builder(816,1054,1).create();
+        PdfDocument.Page pagina = pdfDocument.startPage(paginaInfo);
+
+        Canvas canvas = pagina.getCanvas();
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        bitmapEscala = Bitmap.createScaledBitmap(bitmap, 250, 250, false);
+        canvas.drawBitmap(bitmapEscala, 500,15,paint);
+        titulo.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        titulo.setTextSize(25);
+        canvas.drawText(tituloPDF, 10, 180, titulo);
+
+        descripcion.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        descripcion.setTextSize(14);
+
+        String[] arrDescripcion = descripcionPDF.split("\n");
+
+        int y = 237;
+        for(int i = 0; i<arrDescripcion.length; i++){
+            canvas.drawText(arrDescripcion[i],10,y,descripcion);
+            System.out.println(arrDescripcion[i]);
+            y +=  15;
+        }
+
+        pdfDocument.finishPage(pagina);
+
+        File file = new File(Environment.getExternalStorageDirectory(),"Factura_" + datosUser[0] +"_"+ datosUser[1] +".pdf");
+        try {
+            pdfDocument.writeTo(new FileOutputStream(file));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        pdfDocument.close();
+    }
+
+    public boolean comprobarPermiso(){
+        int permisoEsc = ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int permisoLec = ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), READ_EXTERNAL_STORAGE);
+        return permisoEsc == PackageManager.PERMISSION_GRANTED && permisoLec == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void pedirPermisos(){
+        ActivityCompat.requestPermissions(getActivity(),new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},200);
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if(requestCode == 200){
+            if (grantResults.length >0){
+                boolean writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                boolean readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+                if(writeStorage && readStorage){
+                    Toast.makeText(getContext(),"Permiso concedido",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(),"Permiso denegado",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 }

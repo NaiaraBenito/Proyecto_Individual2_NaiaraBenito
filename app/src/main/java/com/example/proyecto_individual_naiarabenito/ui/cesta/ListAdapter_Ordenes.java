@@ -1,5 +1,6 @@
 package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,9 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     private ListAdapter_Ordenes.ListenerCesta listener;
     public interface ListenerCesta {
         void actualizarDatos();
+
+        @SuppressLint("MissingSuperCall")
+        void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
     }
 
     /*@Override
