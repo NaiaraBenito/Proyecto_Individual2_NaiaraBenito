@@ -9,6 +9,7 @@
     tools:context=".Login">
 
     <LinearLayout
+        android:id="@+id/login"
         android:layout_width="411dp"
         android:layout_height="612dp"
         android:background="@color/white"
@@ -36,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="Inicia sesión para continuar"
-            android:textColor="@color/gris_claro"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -57,7 +58,7 @@
                     android:id="@+id/et_emailLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -94,6 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¿Eres nuevo?  "
+                    android:textColor="@color/black"
                     android:textSize="15sp" />
 
                 <TextView

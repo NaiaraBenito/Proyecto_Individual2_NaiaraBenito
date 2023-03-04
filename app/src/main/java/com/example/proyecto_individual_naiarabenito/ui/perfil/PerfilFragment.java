@@ -1,7 +1,10 @@
 package com.example.proyecto_individual_naiarabenito.ui.perfil;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,8 @@ public class PerfilFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
+        cargar_configuracion(view);
+
         datosUser = new String[3];
         datosUser[0] = getActivity().getIntent().getExtras().getString("nombreUsuario");
         datosUser[1] = getActivity().getIntent().getExtras().getString("apellidoUsuario");
@@ -51,5 +56,26 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    private void cargar_configuracion(View view){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+        if(modoOscuro){
+            view.setBackgroundColor(getResources().getColor(R.color.black));
+        } else{
+            view.setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        String ori = sp.getString("orientacion","false");
+        if("1".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else if("2".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if("3".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 }

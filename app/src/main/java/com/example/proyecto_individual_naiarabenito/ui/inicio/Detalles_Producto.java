@@ -3,7 +3,10 @@ package com.example.proyecto_individual_naiarabenito.ui.inicio;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +42,9 @@ public class Detalles_Producto extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cargar_configuracion();
         setContentView(R.layout.activity_detalles_producto);
+
 
         // Gestionar funcionamiento del carrito
 
@@ -120,5 +125,26 @@ public class Detalles_Producto extends AppCompatActivity {
             cantidad--;
         }
         cantidadProd.setText(String.valueOf(cantidad));
+    }
+
+    private void cargar_configuracion(){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+        if(modoOscuro){
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
+        } else{
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        String ori = sp.getString("orientacion","false");
+        if("1".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else if("2".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if("3".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 }

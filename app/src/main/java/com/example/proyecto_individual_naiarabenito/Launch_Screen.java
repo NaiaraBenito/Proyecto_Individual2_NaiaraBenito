@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +23,7 @@ public class Launch_Screen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        cargar_configuracion();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_screen);
 
@@ -66,5 +70,28 @@ public class Launch_Screen extends AppCompatActivity {
                 }
             }
         }, 5000); // Esperar 5s
+    }
+
+    private void cargar_configuracion(){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+
+        if(modoOscuro){
+
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
+        } else{
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        String ori = sp.getString("orientacion","false");
+        if("1".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else if("2".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if("3".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 }

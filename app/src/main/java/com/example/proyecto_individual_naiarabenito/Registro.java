@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
@@ -30,6 +34,7 @@ public class Registro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+        cargar_configuracion();
 
         // Obtener datos metidos por el usuario
         et_nombre = (EditText) findViewById(R.id.et_nombreRegistro);
@@ -88,4 +93,27 @@ public class Registro extends AppCompatActivity {
             }
         }
     }
+    private void cargar_configuracion(){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+        LinearLayout l = (LinearLayout) findViewById(R.id.registro);
+        if(modoOscuro){
+
+            l.setBackgroundColor(getResources().getColor(R.color.gris_claro));
+        } else{
+            l.setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        String ori = sp.getString("orientacion","false");
+        if("1".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else if("2".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if("3".equals(ori)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+    }
+
 }

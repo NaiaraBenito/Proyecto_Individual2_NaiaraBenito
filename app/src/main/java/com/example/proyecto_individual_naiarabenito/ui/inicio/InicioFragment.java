@@ -1,6 +1,9 @@
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_inicio,container,false);
+        cargar_configuracion(view);
 
         // Recibir datos del usuario
         datosUser = new String[3];
@@ -63,7 +67,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
         // Obtener el search View
         txtBuscar = (SearchView) view.findViewById(R.id.search_view);
         txtBuscar.setOnQueryTextListener(this);
-
+        cargar_configuracion(view);
         return view;
     }
 
@@ -131,5 +135,26 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
     public boolean onQueryTextChange(String newText) {
         adapterProductos.filtrado(newText);
         return false;
+    }
+
+    private void cargar_configuracion(View view){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+        if(modoOscuro){
+            view.setBackgroundColor(getResources().getColor(R.color.black));
+        } else{
+            view.setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        String ori = sp.getString("orientacion","false");
+        if("1".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else if("2".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if("3".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 }

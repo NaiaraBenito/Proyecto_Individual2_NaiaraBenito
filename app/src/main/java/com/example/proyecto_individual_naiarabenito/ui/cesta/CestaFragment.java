@@ -9,6 +9,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,7 @@ import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -38,11 +40,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
@@ -74,6 +74,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cesta, container, false);
+        cargar_configuracion(view);
 
         // Recibir datos del usuario
         datosUser = new String[3];
@@ -403,6 +404,27 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
                     Toast.makeText(getContext(),"Permiso denegado",Toast.LENGTH_LONG).show();
                 }
             }
+        }
+    }
+    private void cargar_configuracion(View view){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+        if(modoOscuro){
+            view.setBackgroundColor(getResources().getColor(R.color.black));
+        } else{
+            view.setBackgroundColor(getResources().getColor(R.color.white));
+        }
+
+        String ori = sp.getString("orientacion","false");
+        System.out.println(ori);
+        if("1".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else if("2".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if("3".equals(ori)){
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 }

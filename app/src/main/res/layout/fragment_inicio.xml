@@ -76,6 +76,7 @@
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
+        android:hint="Buscar"
         android:layout_height="wrap_content" />
 
     <TextView

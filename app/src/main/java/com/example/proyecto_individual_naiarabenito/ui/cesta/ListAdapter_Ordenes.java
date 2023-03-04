@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 import com.example.proyecto_individual_naiarabenito.ui.inicio.Detalles_Producto;
@@ -96,6 +100,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View view = inflater.inflate(R.layout.orden_cardview,parent,false);
+        cargar_configuracion(view);
         return new ViewHolder(view);
     }
 
@@ -119,6 +124,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                         DBHelper dbHelper = new DBHelper(context);
                         dbHelper.borrarOrden(producto, datosUser[2]);
                         dbHelper.close();
+
                         //listener = (ListenerCesta) view.findViewById(R.id.total).getContext();
                         //listener.actualizarDatos();
                     }
@@ -188,6 +194,18 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
             //double tot = Math.round((item.getCantidadProd() * item.getPrecioProd() * 100))/100;
             double tot = Math.round(item.getCantidadProd() * item.getPrecioProd() * 100.0) / 100.0;
             precioTotal.setText(String.valueOf(tot));
+        }
+    }
+
+    private void cargar_configuracion(View view){
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+
+        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
+        if(modoOscuro){
+            view.setBackgroundColor(context.getResources().getColor(R.color.black));
+        } else{
+            view.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
     }
 }
