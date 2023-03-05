@@ -38,12 +38,12 @@ public class Registro extends AppCompatActivity {
 
 /*  Método onCreate:
     ----------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (Bundle) savedInstanceState: Contiene el diseño predeterminado del Activity.
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta la primera vez que se crea el Activity y crea la vista del
+                Este método se ejecuta la primera vez que se crea el Activity y crea la vista del
                 registro
 */
     @Override
@@ -67,12 +67,12 @@ public class Registro extends AppCompatActivity {
 
 /*  Método volverLogin:
     -------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (View) v: Vista asociada al Activity actual
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta al pulsar el texto "Ya tengo cuenta". Redirige la ejecución
+                Este método se ejecuta al pulsar el texto "Ya tengo cuenta". Redirige la ejecución
                 del programa al Activity Login sin registrar al usuario.
 */
     public void volverLogin(View v){
@@ -87,12 +87,12 @@ public class Registro extends AppCompatActivity {
 
 /*  Método registrarUsuario:
     ------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (View) v: Vista asociada al Activity actual
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando el usuario pulsa el botón "REGISTRAR".
+                Este método se ejecuta cuando el usuario pulsa el botón "REGISTRAR".
                 Valida la entrada de datos:
                     - Si los datos son válidos: Registra al usuario y redirige la ejecución al Login.
                     - Si los datos no son válidos: Muestra un mensaje de error.
@@ -147,11 +147,11 @@ public class Registro extends AppCompatActivity {
 
 /*  Método cargar_configuracion:
     ----------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método carga las preferencias configuradas por el usuario (modo oscuro,
+                Este método carga las preferencias configuradas por el usuario (modo oscuro,
                 orientación de la pantalla...).
 */
     private void cargar_configuracion(){

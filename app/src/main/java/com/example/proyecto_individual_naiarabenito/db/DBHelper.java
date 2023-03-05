@@ -45,13 +45,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método onCreate:
     ----------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (SQLiteDatabase) sqLiteDatabase: BBDD local de la aplicación sobre la que
                    trabajaremos.
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta la primera vez que se crea la BBDD.
+                Este método se ejecuta la primera vez que se crea la BBDD.
                 Crea las tablas que almacenan los datos de los usuarios registrados (t_usuarios)
                 y la información de los productos que tienen añadidos en la cesta (t_orden).
 */
@@ -79,7 +79,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método onUpgrade:
     -----------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (SQLiteDatabase) sqLiteDatabase: BBDD local de la aplicación sobre la que
                     trabajaremos.
                 2) (int) oldVersion: Versión vieja de la BBDD
@@ -87,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando es necesario actualizar la BBDD, como podría ser
+                Este método se ejecuta cuando es necesario actualizar la BBDD, como podría ser
                 al añadir, quitar o editar la estructura de una tabla.
                 Crea las tablas que almacenan los datos de los usuarios registrados (t_usuarios)
                 y la información de los productos que tienen añadidos en la cesta (t_orden).
@@ -106,13 +106,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método verificarUsuarioLogin:
     -----------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (String) pEmail: Email del usuario que intenta loguearse en la aplicación.
                 2) (String) pPassword: Contraseña del usuario que intenta loguearse en la aplicación.
         *) Parámetro (Output):
                 (String[]) datosUsuario: Lista con toda la información del usuario.
         *) Descripción:
-                Éste método se ejecuta cuando el usuario intenta loguearse en la aplicación.
+                Este método se ejecuta cuando el usuario intenta loguearse en la aplicación.
                 Se comprueba que el usuario se encuentre registrado en la BBDD.
                     - Si está registrado: Devuelve una lista de Strings con toda la información del
                       usuario.
@@ -159,7 +159,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método registrarUsuario:
     -----------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (String) pNombre: Nombre del usuario que intenta registrarse en la aplicación.
                 2) (String) pApellido: Apellido del usuario que intenta registrarse.
                 3) (String) pEmail: Email del usuario que intenta registrarse.
@@ -167,7 +167,7 @@ public class DBHelper extends SQLiteOpenHelper {
         *) Parámetro (Output):
                 (String) msg: Texto informativo sobre el estado del proceso de registro.
         *) Descripción:
-                Éste método se ejecuta cuando el usuario intenta registrarse en la aplicación.
+                Este método se ejecuta cuando el usuario intenta registrarse en la aplicación.
                 Se comprueba que el usuario no se encuentre registrado en la BBDD.
                     - Si está registrado: Devuelve "ERROR: Este usuario ya se encuentra registrado".
                     - Si no está registrado: Añade el nuevo usuario a la BBDD y devuelve "El usuario
@@ -219,7 +219,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método anadirOrden:
     -------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (String) pProducto: Nombre del producto que se desea añadir a la cesta.
                 2) (double) pPrecio: Precio del producto que se desea añadir.
                 3) (int) pImagen: Foto del producto que se desea añadir.
@@ -228,7 +228,7 @@ public class DBHelper extends SQLiteOpenHelper {
         *) Parámetro (Output):
                 (Boolean) anadido: Booleano que informa del estado del registro de la orden.
         *) Descripción:
-                Éste método se ejecuta cuando el usuario intenta añadir algún producto al carrito.
+                Este método se ejecuta cuando el usuario intenta añadir algún producto al carrito.
                 Se comprueba si el producto ya se encontraba en la cesta.
                     - Si está registrado: Actualiza la cantidad de dicho producto.
                     - Si no está registrado: Añade el nuevo pedido a la BBDD.
@@ -299,13 +299,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método getOrdenes:
     ------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (String) pEmail: Email del usuario logueado.
         *) Parámetro (Output):
                 (ArrayList<Orden>) lista_ordenes: Lista con todas la información del pedido del
                 usuario
         *) Descripción:
-                Éste método se ejecuta cuando el usuario accede a la vista del carrito.
+                Este método se ejecuta cuando el usuario accede a la vista del carrito.
                 Se realiza una petición a la tabla que contiene los datos de todas las órdenes y
                 sólo devuelve los pedidos del usuario actual.
 */
@@ -353,7 +353,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método actualizarOrden:
     ------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (String) pProducto: Nombre del producto que se desea actualizar en la cesta.
                 2) (int) pCantidad:
                     - Positiva: Unidades que se desea aumentar la cantidad del producto.
@@ -362,7 +362,7 @@ public class DBHelper extends SQLiteOpenHelper {
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando el usuario cambia el pedido desde a la vista del
+                Este método se ejecuta cuando el usuario cambia el pedido desde a la vista del
                 carrito.
                 Se comprueba que el producto se encuentre registrado:
                     - Si está registrado: Actualiza la cantidad del producto
@@ -398,13 +398,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
 /*  Método borrarOrden:
     ------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (String) pProducto: Nombre del producto que se desea eliminar de la cesta.
                 2) (String) pEmail: Email del usuario logueado.
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando el usuario elimina un producto del carrito.
+                Este método se ejecuta cuando el usuario elimina un producto del carrito.
                 Se comprueba que el producto se encuentre registrado:
                     - Si está registrado: Borra el producto
 */

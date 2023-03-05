@@ -18,7 +18,7 @@ import com.example.proyecto_individual_naiarabenito.Login;
 import com.example.proyecto_individual_naiarabenito.R;
 
 
-/* ###################################### CLASE PERFIL_FRAGMENT #####################################
+/* ###################################### CLASE PERFIL_FRAGMENT ####################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar la configuración del perfil de usuario.
 
@@ -34,7 +34,7 @@ public class PerfilFragment extends Fragment {
 
 /*  Método onCreateView:
     --------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (LayoutInflater) inflater: Se utiliza para enlazar el fragmento con su vista.
                 2) (ViewGroup) container: Contiene la vista principal a la que se debe adjuntar la
                    vista del fragmento.
@@ -42,7 +42,7 @@ public class PerfilFragment extends Fragment {
         *) Parámetro (Output):
                 (View) view: Vista asociada al Fragment actual.
         *) Descripción:
-                Éste método se ejecuta cuando el usuario se ha logueado correctamente y accede al
+                Este método se ejecuta cuando el usuario se ha logueado correctamente y accede al
                 apartado Perfil del menú.
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class PerfilFragment extends Fragment {
         // Obtener los Objetos de la vista
         btn_cerrarSesion = view.findViewById(R.id.btn_logout);
 
-        // Asignar acción al pulsar el botón "Cerrar Sesión"
+        // Asignar acción al pulsar el botón "CERRAR SESIÓN"
         btn_cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,11 +76,11 @@ public class PerfilFragment extends Fragment {
 
 /*  Método cerrarSesion:
     --------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando el usuario pulsa el botón "Cerrar Sesión". Redirige al
+                Este método se ejecuta cuando el usuario pulsa el botón "Cerrar Sesión". Redirige al
                 usuario al Login sin guardar sus datos.
 */
     private void cerrarSesion(){
@@ -98,7 +98,7 @@ public class PerfilFragment extends Fragment {
             *) Parámetro (Output):
                     void
             *) Descripción:
-                    Éste método se ejecuta cuando se cierra el fragmento y borra la vista
+                    Este método se ejecuta cuando se cierra el fragmento y borra la vista
     */
     @Override
     public void onDestroyView() {
@@ -110,11 +110,11 @@ public class PerfilFragment extends Fragment {
 
 /*  Método cargar_configuracion:
     ----------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método carga las preferencias configuradas por el usuario (modo oscuro,
+                Este método carga las preferencias configuradas por el usuario (modo oscuro,
                 orientación de la pantalla...).
 */
     private void cargar_configuracion(View view){

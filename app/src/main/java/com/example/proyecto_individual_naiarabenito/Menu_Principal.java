@@ -38,12 +38,12 @@ public class Menu_Principal extends AppCompatActivity {
 
 /*  Método onCreate:
     ----------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (Bundle) savedInstanceState: Contiene el diseño predeterminado del Activity.
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando el usuario se ha logueado correctamente. Gestiona los
+                Este método se ejecuta cuando el usuario se ha logueado correctamente. Gestiona los
                 fragmentos del menú
 */
     @Override
@@ -71,12 +71,12 @@ public class Menu_Principal extends AppCompatActivity {
 
 /*  Método llamada:
     -------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
             1) (View) v: Vista asociada al Activity actual
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta cuando el usuario pulsa el número de teléfono del inicio.
+                Este método se ejecuta cuando el usuario pulsa el número de teléfono del inicio.
                 Comprueba el permiso de llamada:
                     - Si tiene el permiso: Realiza la llamada al número.
                     - Si no tiene el permiso: Pide permiso para realizar llamadas.
@@ -96,11 +96,11 @@ public class Menu_Principal extends AppCompatActivity {
 
 /*  Método cargar_configuracion:
     ----------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método carga las preferencias configuradas por el usuario (modo oscuro,
+                Este método carga las preferencias configuradas por el usuario (modo oscuro,
                 orientación de la pantalla...).
 */
     private void cargar_configuracion(){

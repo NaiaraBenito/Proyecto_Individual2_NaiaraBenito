@@ -43,12 +43,12 @@ public class Launch_Screen extends AppCompatActivity {
 
 /*  Método onCreate:
     ----------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
                 1) (Bundle) savedInstanceState: Contiene el diseño predeterminado del Activity.
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método se ejecuta la primera vez que se crea el Activity.
+                Este método se ejecuta la primera vez que se crea el Activity.
                 Crea la vista y el funcionamiento de la animación que aparece al entrar en la
                 aplicación.
 */
@@ -71,11 +71,11 @@ public class Launch_Screen extends AppCompatActivity {
 
 /*  Método cargarAnimacion:
     -----------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método añade las animaciones a la vista.
+                Este método añade las animaciones a la vista.
 */
     private void cargarAnimacion(){
 
@@ -102,11 +102,11 @@ public class Launch_Screen extends AppCompatActivity {
 
 /*  Método cargarLogin:
     -------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método realiza el cambio Activity a la pantalla del Login con un retraso de 5s
+                Este método realiza el cambio Activity a la pantalla del Login con un retraso de 5s
                 para darle tiempo de cargar a las animaciones.
 */
     private void cargarLogin(){
@@ -138,11 +138,11 @@ public class Launch_Screen extends AppCompatActivity {
 
 /*  Método cargar_configuracion:
     ----------------------------
-        *) Parámetos (Input):
+        *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Éste método carga las preferencias configuradas por el usuario (modo oscuro,
+                Este método carga las preferencias configuradas por el usuario (modo oscuro,
                 orientación de la pantalla...).
 */
     private void cargar_configuracion(){
