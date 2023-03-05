@@ -111,6 +111,7 @@ public class PerfilFragment extends Fragment {
 /*  Método cargar_configuracion:
     ----------------------------
         *) Parámetros (Input):
+                (View) view: Vista asociada al fragmento.
         *) Parámetro (Output):
                 void
         *) Descripción:

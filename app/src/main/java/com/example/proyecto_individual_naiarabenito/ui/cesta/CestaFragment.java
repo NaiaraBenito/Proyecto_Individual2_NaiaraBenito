@@ -692,6 +692,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 /*  Método cargar_configuracion:
     ----------------------------
         *) Parámetros (Input):
+                (View) view: Vista asociada al fragmento.
         *) Parámetro (Output):
                 void
         *) Descripción:
