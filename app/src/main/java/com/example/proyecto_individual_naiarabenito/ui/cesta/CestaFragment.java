@@ -707,12 +707,13 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         // Comprobar el estado de la preferencia del modo oscuro
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
-        if(modoOscuro){        // Si el modo oscuro está activado: Pintar el fondo de gris
+        if(modoOscuro){        // Si el modo oscuro está activado: Pintar el fondo de negro
             view.setBackgroundColor(getResources().getColor(R.color.black));
         } else{                // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             view.setBackgroundColor(getResources().getColor(R.color.white));
         }
 
+        // Comprobar el estado de la preferencia de la orientación
         String ori = sp.getString("orientacion","false");
         switch (ori) {
             case "1":        // Si la orientación es 1: Desbloquear el giro automático de la app
