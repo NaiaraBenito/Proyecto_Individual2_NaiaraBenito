@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -69,7 +68,7 @@ public class Login extends AppCompatActivity {
                 void
         *) Descripción:
                 Este método se ejecuta cuando el usuario pulsa el texto "¡Regístrate!". Se encarga
-                de redirir la ejecución al Activity Registro.
+                de redirigir la ejecución al Activity Registro.
 */
     public void crearCuenta(View v){
 
