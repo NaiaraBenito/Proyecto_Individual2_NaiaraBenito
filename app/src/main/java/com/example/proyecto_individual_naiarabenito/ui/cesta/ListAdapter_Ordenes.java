@@ -80,9 +80,9 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
 // ___________________________________________ Variables ___________________________________________
     private List<Orden> lista_orden;    // Lista con los productos de la cesta
-    private LayoutInflater inflater;    // Describir de que archivo proviene la lista
-    private Context context;            // Contexto de CestaFragment
-    private String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
+    private final LayoutInflater inflater;    // Describir de que archivo proviene la lista
+    private final Context context;            // Contexto de CestaFragment
+    private final String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
 
 
 // __________________________________________ Constructor __________________________________________
@@ -241,14 +241,14 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
     *) Tipo: RecyclerView ViewHolder
 */
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        private ImageView img;          // ImageView con la foto del producto de la cesta
-        private TextView nombre;        // TextView con el nombre del producto de la cesta
-        private Button minus;           // Button para reducir la cantidad del producto
-        private Button plus;            // Button para aumentar la cantidad del producto
-        private TextView cantidad;      // TextView con la cantidad del producto de la cesta
-        private TextView precioUnidad;  // TextView con el precio por unidad del producto de la cesta
-        private TextView precioTotal;   // TextView con el precio total del producto de la cesta
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        private final ImageView img;          // ImageView con la foto del producto de la cesta
+        private final TextView nombre;        // TextView con el nombre del producto de la cesta
+        private final Button minus;           // Button para reducir la cantidad del producto
+        private final Button plus;            // Button para aumentar la cantidad del producto
+        private final TextView cantidad;      // TextView con la cantidad del producto de la cesta
+        private final TextView precioUnidad;  // TextView con el precio por unidad del producto de la cesta
+        private final TextView precioTotal;   // TextView con el precio total del producto de la cesta
 
         ViewHolder(View itemView){
             super(itemView);
