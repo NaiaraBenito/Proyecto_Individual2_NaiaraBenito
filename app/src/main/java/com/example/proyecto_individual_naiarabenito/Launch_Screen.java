@@ -29,15 +29,15 @@ import android.widget.TextView;
 */
 public class Launch_Screen extends AppCompatActivity {
 
-    // ___________________________________________ Variables ___________________________________________
-    ImageView circulo;      // ImageView con la imagen circulo_rosa.png
-    ImageView mancha;       // ImageView con la imagen mancha.png
-    ImageView logo;         // ImageView con la imagen logo.png
-    TextView hecho_por;     // TextView que contiene el mensaje "Hecho por:"
-    TextView autora;        // TextView que contiene el mensaje "Naiara Benito Balbás"
+// ___________________________________________ Variables ___________________________________________
+    private ImageView circulo;      // ImageView con la imagen circulo_rosa.png
+    private ImageView mancha;       // ImageView con la imagen mancha.png
+    private ImageView logo;         // ImageView con la imagen logo.png
+    private TextView hecho_por;     // TextView que contiene el mensaje "Hecho por:"
+    private TextView autora;        // TextView que contiene el mensaje "Naiara Benito Balbás"
 
-    Animation animacion1;   // Animación que realiza un desplazamiento ascendente
-    Animation animacion2;   // Animación que realiza un desplazamiento descendente
+    private Animation animacion1;   // Animación que realiza un desplazamiento ascendente
+    private Animation animacion2;   // Animación que realiza un desplazamiento descendente
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -84,11 +84,11 @@ public class Launch_Screen extends AppCompatActivity {
         animacion2 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
 
         // Obtener los objetos de la vista a los se les añadirán las animaciones
-        circulo = (ImageView) findViewById(R.id.cir_rosa);
-        mancha = (ImageView) findViewById(R.id.mancha_rosa);
-        logo = (ImageView) findViewById(R.id.logo_anim);
-        hecho_por = (TextView) findViewById(R.id.de_anim);
-        autora = (TextView) findViewById(R.id.autora_anim);
+        circulo = findViewById(R.id.cir_rosa);
+        mancha = findViewById(R.id.mancha_rosa);
+        logo = findViewById(R.id.logo_anim);
+        hecho_por = findViewById(R.id.de_anim);
+        autora = findViewById(R.id.autora_anim);
 
         // Asignar animaciones a cada Objeto de la vista
         circulo.setAnimation(animacion1);
@@ -110,29 +110,26 @@ public class Launch_Screen extends AppCompatActivity {
                 para darle tiempo de cargar a las animaciones.
 */
     private void cargarLogin(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Crear el intent para pasar al Activity del Login
-                Intent intent = new Intent(Launch_Screen.this, Login.class);
+        new Handler().postDelayed(() -> {
+            // Crear el intent para pasar al Activity del Login
+            Intent intent = new Intent(Launch_Screen.this, Login.class);
 
-                // Conectar el este Activity (Launch Screen) con el Login mediante una animación
-                Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair<View, String>(logo, "logoImageTrans");
-                pairs[1] = new Pair<View, String>(autora, "textTrans");
+            // Conectar el este Activity (Launch Screen) con el Login mediante una animación
+            Pair[] pairs = new Pair[2];
+            pairs[0] = new Pair<View, String>(logo, "logoImageTrans");
+            pairs[1] = new Pair<View, String>(autora, "textTrans");
 
-                /* Comprobar que la versión del dispositivo sea igual o superior a Lollipop, ya que
-                las transiciones solo sirven con dichas versiones */
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){ // Si soporta animaciones
-                    // Cargar el Login con una animación
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Launch_Screen.this, pairs);
-                    startActivity(intent, options.toBundle());
-                    finish();
-                } else {    // Si no soporta animaciones
-                    // Cargar el Login sin animaciones
-                    startActivity(intent);
-                    finish();
-                }
+            /* Comprobar que la versión del dispositivo sea igual o superior a Lollipop, ya que
+            las transiciones solo sirven con dichas versiones */
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){ // Si soporta animaciones
+                // Cargar el Login con una animación
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Launch_Screen.this, pairs);
+                startActivity(intent, options.toBundle());
+                finish();
+            } else {    // Si no soporta animaciones
+                // Cargar el Login sin animaciones
+                startActivity(intent);
+                finish();
             }
         }, 5000); // Esperar 5s
     }
@@ -158,18 +155,22 @@ public class Launch_Screen extends AppCompatActivity {
 
         if(modoOscuro){     // Si el modo oscuro está activado: Pintar el fondo de gris
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.gris_claro));
-        } else{             // Si el modo oscuro está activado: Pintar el fondo de blanco
+        } else{             // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
         }
 
         // Comprobar el estado de la preferencia de la orientación
         String ori = sp.getString("orientacion","false");
-        if("1".equals(ori)){    // Si la orientación es 1: Desbloquear el giro automático de la app
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        } else if("2".equals(ori)){    // Si la orientación es 2: Bloquear la orientacion vertical
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else if("3".equals(ori)){    // Si la orientación es 3: Bloquear la orientacion horizontal
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        switch (ori) {
+            case "1":     // Si la orientación es 1: Desbloquear el giro automático de la app
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                break;
+            case "2":     // Si la orientación es 2: Bloquear la orientacion vertical
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case "3":     // Si la orientación es 3: Bloquear la orientacion horizontal
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
         }
     }
 }

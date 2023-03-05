@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,112 +19,171 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-/* ###################################### CLASE LOGIN ######################################
+/* ########################################## CLASE LOGIN ##########################################
     *) Descripción:
-        La función de esta clase es mostrar una animación al abrir la aplicación donde se muestra el
-        logo y el nombre de la autora de la aplicación.
+        La función de esta clase es mostrar y gestionar el proceso de logueo de los usuarios en la
+        aplicación.
 
     *) Tipo: Activity
 */
 public class Login extends AppCompatActivity {
 
-    // Variables auxiliares
+// ___________________________________________ Variables ___________________________________________
+    // EditText que contiene el email del usuario que intenta loguearse
     private EditText et_email;
+
+    // EditText que contiene la contraseña del usuario que intenta loguearse
     private EditText et_password;
 
+// ____________________________________________ Métodos ____________________________________________
+
+/*  Método onCreate:
+    ----------------
+        *) Parámetos (Input):
+                1) (Bundle) savedInstanceState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método se ejecuta la primera vez que se crea el Activity y crea la vista del
+                login
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        // Crear la vista
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Obtener los objetos de la vista editados por el usuario
+        et_email = findViewById(R.id.et_emailLogin);
+        et_password = findViewById(R.id.et_passwordLogin);
 
-        // Obtener los campos que editan los usuarios
-        //et_nombre = (EditText) findViewById(R.id.et_nombreLogin);
-        et_email = (EditText) findViewById(R.id.et_emailLogin);
-        et_password = (EditText) findViewById(R.id.et_passwordLogin);
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
     }
 
-    // Método llamado por el texto Crear cuenta que llama a la actividad de Registro
+// _________________________________________________________________________________________________
+
+/*  Método crearCuenta:
+    -------------------
+        *) Parámetos (Input):
+            1) (View) v: Vista asociada al Activity actual
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método se ejecuta cuando el usuario pulsa el texto "¡Regístrate!". Se encarga
+                de redirir la ejecución al Activity Registro.
+*/
     public void crearCuenta(View v){
 
-        // Crear un intent para pasar a la Actividad Registro
+        // Crear el intent que redirige la ejecución al Registro
         Intent intent = new Intent(this, Registro.class);
         startActivity(intent);
         finish();
     }
 
-    // Método llamado por el botón Ingresar que verifica que los datos sean correctos e inicia la actividad del Menú Principal
+// _________________________________________________________________________________________________
+
+/*  Método ingresar:
+    -------------------
+        *) Parámetos (Input):
+            1) (View) v: Vista asociada al Activity actual
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método se ejecuta cuando el usuario pulsa el botón "INGRESAR".
+                Validar la entrada de datos_
+                    - Si los datos son válidos: Redirige la ejecución al Activity Menu_Principal.
+                    - Si los datos no son válidos: Muestra un mensaje de error.
+*/
     public void ingresar(View v){
 
-        // Obtener los datos introducidos por el usuario (eliminando los espacios en blanco del comienzo)
-        String email = et_email.getText().toString().replaceAll("^\\s*","");;
-        String password = et_password.getText().toString().replaceAll("^\\s*","");;
+        // Obtener los datos introducidos por el usuario + eliminar espacios en blanco del comienzo
+        String email = et_email.getText().toString().replaceAll("^\\s*","");
+        String password = et_password.getText().toString().replaceAll("^\\s*","");
 
         // Comprobar que los campos no se encuentren vacíos
-        if(email.equals("")){
+        if(email.equals("")){               // Si el email está vacío: Escribir un mensaje de error
             Toast.makeText(this,"Debes ingresar tu email", Toast.LENGTH_LONG).show();
-        } else if (password.equals("")) {
+        } else if (password.equals("")) {   // Si la contraseña está vacía: Escribir un mensaje de error
             Toast.makeText(this, "Debes ingresar tu contraseña", Toast.LENGTH_LONG).show();
         } else{
 
-            // Patrón para validar el email
-            Pattern pattern = Pattern.compile("([a-z0-9]+(\\.?[a-z0-9])*)+@(([a-z]+)\\.([a-z]+))+");
+            // Crear un patrón para validar el email
+            Pattern pattern = Pattern.compile("([a-z\\d]+(\\.?[a-z\\d])*)+@(([a-z]+)\\.([a-z]+))+");
             Matcher mather = pattern.matcher(email);
 
-            if (mather.find() == true) {    // El email ingresado es válido
-                // Realizar la verificación del login
-                DBHelper dbHelper = new DBHelper(this);
-                //boolean existe = dbHelper.verificarUsuarioLogin(email, password);
-                String[] datos = dbHelper.verificarUsuarioLogin(email, password);
-                if(datos != null){ // Si existe --> Ir a Menu_Principal
+            // Comprobar que el email sea válido
+            if (mather.find()) {    // El email ingresado es válido
+                // Comprobar que el usuario que intenta loguearse esté registrado en la BBDD
+                try {
+                    DBHelper dbHelper = new DBHelper(this);
+                    String[] datos = dbHelper.verificarUsuarioLogin(email, password);
 
-                    // Obtener todos los datos del usuario
-                    //dbHelper.getDatos(email);
+                    if(datos != null){ // Si está registrado: Ir a Menu_Principal
+                        // Crear un intent para pasar a la Actividad Menu_Principal
+                        Intent intent = new Intent(this, Menu_Principal.class);
 
-                    // Crear un intent para pasar a la Actividad Menu_Principal
-                    Intent intent = new Intent(this, Menu_Principal.class);
+                        // Guardar los datos del usuario (para mantener la sesión)
+                        intent.putExtra("nombreUsuario", datos[0]);
+                        intent.putExtra("apellidoUsuario", datos[1]);
+                        intent.putExtra("emailUsuario", datos[2]);
 
-                    // Guardar los datos del usuario
-                    intent.putExtra("nombreUsuario", datos[0]);
-                    intent.putExtra("apellidoUsuario", datos[1]);
-                    intent.putExtra("emailUsuario", datos[2]);
-                    startActivity(intent);
-                    finish();
+                        // Cargar el Menú Principal
+                        startActivity(intent);
+                        finish();
+                    } else{      // Si no está registrado: Imprimir mensaje de error
+                        Toast.makeText(this,"Email o contraseña incorrectos. Intente de nuevo", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e){        // En caso de excepción
+                    // Escribir el error en el registro Log
+                    Log.e("ERROR BBDD", e.toString());
                 }
-                // Si no existe --> Error
-                else{
-                    Toast.makeText(this,"Email o contraseña incorrectos. Intente de nuevo", Toast.LENGTH_LONG).show();
-                }
-            } else {    // El email ingresado es inválido
+            } else {        // El email ingresado es inválido: Imprimir mensaje de error
                 Toast.makeText(this, "El email ingresado es inválido", Toast.LENGTH_LONG).show();
             }
         }
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método cargar_configuracion:
+    ----------------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método carga las preferencias configuradas por el usuario (modo oscuro,
+                orientación de la pantalla...).
+*/
     private void cargar_configuracion(){
 
+        // Obtener las preferencias configuradas por el usuario
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // Comprobar el estado de la preferencia del modo oscuro
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
-        LinearLayout l = (LinearLayout) findViewById(R.id.login);
+        LinearLayout l = findViewById(R.id.login);
 
-        if(modoOscuro){
+        if(modoOscuro){     // Si el modo oscuro está activado: Pintar el fondo de gris
             l.setBackgroundColor(getResources().getColor(R.color.gris_claro));
 
-        } else{
+        } else{             // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             l.setBackgroundColor(getResources().getColor(R.color.white));
         }
 
-        String ori = sp.getString("orientacion","1");
-        if("1".equals(ori)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        } else if("2".equals(ori)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else if("3".equals(ori)){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        // Comprobar el estado de la preferencia de la orientación
+        String ori = sp.getString("orientacion","false");
+
+        switch (ori) {
+            case "1":     // Si la orientación es 1: Desbloquear el giro automático de la app
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                break;
+            case "2":     // Si la orientación es 2: Bloquear la orientacion vertical
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case "3":     // Si la orientación es 3: Bloquear la orientacion horizontal
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
         }
     }
 }

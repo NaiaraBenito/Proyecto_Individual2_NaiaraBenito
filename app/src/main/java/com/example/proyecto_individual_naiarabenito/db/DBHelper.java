@@ -46,7 +46,8 @@ public class DBHelper extends SQLiteOpenHelper {
 /*  Método onCreate:
     ----------------
         *) Parámetos (Input):
-                1) SQLiteDatabase: BBDD local de la aplicación sobre la que trabajaremos.
+                1) (SQLiteDatabase) sqLiteDatabase: BBDD local de la aplicación sobre la que
+                   trabajaremos.
         *) Parámetro (Output):
                 void
         *) Descripción:
