@@ -29,11 +29,9 @@ import java.util.regex.Pattern;
 public class Login extends AppCompatActivity {
 
 // ___________________________________________ Variables ___________________________________________
-    // EditText que contiene el email del usuario que intenta loguearse
-    private EditText et_email;
 
-    // EditText que contiene la contraseña del usuario que intenta loguearse
-    private EditText et_password;
+    private EditText et_email;      // EditText que contiene el email del usuario que intenta loguearse
+    private EditText et_password;   // EditText que contiene la contraseña del usuario que intenta loguearse
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -53,12 +51,12 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Cargar las preferencias configuradas por el usuario
+        cargar_configuracion();
+
         // Obtener los objetos de la vista editados por el usuario
         et_email = findViewById(R.id.et_emailLogin);
         et_password = findViewById(R.id.et_passwordLogin);
-
-        // Cargar las preferencias configuradas por el usuario
-        cargar_configuracion();
     }
 
 // _________________________________________________________________________________________________
@@ -66,7 +64,7 @@ public class Login extends AppCompatActivity {
 /*  Método crearCuenta:
     -------------------
         *) Parámetos (Input):
-            1) (View) v: Vista asociada al Activity actual
+                1) (View) v: Vista asociada al Activity actual
         *) Parámetro (Output):
                 void
         *) Descripción:
@@ -91,7 +89,7 @@ public class Login extends AppCompatActivity {
                 void
         *) Descripción:
                 Éste método se ejecuta cuando el usuario pulsa el botón "INGRESAR".
-                Validar la entrada de datos_
+                Valida la entrada de datos:
                     - Si los datos son válidos: Redirige la ejecución al Activity Menu_Principal.
                     - Si los datos no son válidos: Muestra un mensaje de error.
 */
@@ -115,28 +113,23 @@ public class Login extends AppCompatActivity {
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
                 // Comprobar que el usuario que intenta loguearse esté registrado en la BBDD
-                try {
-                    DBHelper dbHelper = new DBHelper(this);
-                    String[] datos = dbHelper.verificarUsuarioLogin(email, password);
+                DBHelper dbHelper = new DBHelper(this);
+                String[] datos = dbHelper.verificarUsuarioLogin(email, password);
 
-                    if(datos != null){ // Si está registrado: Ir a Menu_Principal
-                        // Crear un intent para pasar a la Actividad Menu_Principal
-                        Intent intent = new Intent(this, Menu_Principal.class);
+                if(datos != null){ // Si está registrado: Ir a Menu_Principal
+                    // Crear un intent para pasar a la Actividad Menu_Principal
+                    Intent intent = new Intent(this, Menu_Principal.class);
 
-                        // Guardar los datos del usuario (para mantener la sesión)
-                        intent.putExtra("nombreUsuario", datos[0]);
-                        intent.putExtra("apellidoUsuario", datos[1]);
-                        intent.putExtra("emailUsuario", datos[2]);
+                    // Guardar los datos del usuario (para mantener la sesión)
+                    intent.putExtra("nombreUsuario", datos[0]);
+                    intent.putExtra("apellidoUsuario", datos[1]);
+                    intent.putExtra("emailUsuario", datos[2]);
 
-                        // Cargar el Menú Principal
-                        startActivity(intent);
-                        finish();
-                    } else{      // Si no está registrado: Imprimir mensaje de error
-                        Toast.makeText(this,"Email o contraseña incorrectos. Intente de nuevo", Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e){        // En caso de excepción
-                    // Escribir el error en el registro Log
-                    Log.e("ERROR BBDD", e.toString());
+                    // Cargar el Menú Principal
+                    startActivity(intent);
+                    finish();
+                } else{      // Si no está registrado: Imprimir mensaje de error
+                    Toast.makeText(this,"Email o contraseña incorrectos. Intente de nuevo", Toast.LENGTH_LONG).show();
                 }
             } else {        // El email ingresado es inválido: Imprimir mensaje de error
                 Toast.makeText(this, "El email ingresado es inválido", Toast.LENGTH_LONG).show();
