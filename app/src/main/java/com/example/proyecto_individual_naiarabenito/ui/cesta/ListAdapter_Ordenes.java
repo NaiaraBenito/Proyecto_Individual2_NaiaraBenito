@@ -138,7 +138,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                 (ViewHolder) viewholder: Vista con el producto de la posición viewType.
         *) Descripción:
                 Este método se ejecuta al crear el RecyclerView con los pedidos del usuario para
-                cada elemento. Transfiere la información de la lista de órdenes a la vista
+                cada elemento. Transfiere la información de la lista de órdenes a la vista.
 */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
@@ -265,16 +265,15 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
 // ____________________________________________ Métodos ____________________________________________
 
-    /*  Método bindData:
-        --------------------
-            *) Parámetros (Input):
-                    (Orden) item: Contiene la Orden de un elemento de la cesta.
-            *) Parámetro (Output):
-                    void
-            *) Descripción:
-                    Cargar la lista de pedidos en la vista.
-    */
-        // Método que transfiere la información de la lista de promociones a la vista
+/*  Método bindData:
+    --------------------
+        *) Parámetros (Input):
+                (Orden) item: Contiene la Orden de un elemento de la cesta.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Cargar la lista de pedidos en la vista.
+*/
         void bindData(final Orden item){
             img.setImageResource(item.getImagenProd());
             nombre.setText(item.getNombreProd());
