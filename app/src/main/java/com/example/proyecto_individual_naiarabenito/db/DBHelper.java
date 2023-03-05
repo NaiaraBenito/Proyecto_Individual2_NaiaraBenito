@@ -110,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 1) (String) pEmail: Email del usuario que intenta loguearse en la aplicación.
                 2) (String) pPassword: Contraseña del usuario que intenta loguearse en la aplicación.
         *) Parámetro (Output):
-                String[] datosUsuario: Lista con toda la información del usuario.
+                (String[]) datosUsuario: Lista con toda la información del usuario.
         *) Descripción:
                 Éste método se ejecuta cuando el usuario intenta loguearse en la aplicación.
                 Se comprueba que el usuario se encuentre registrado en la BBDD.
@@ -165,7 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 3) (String) pEmail: Email del usuario que intenta registrarse.
                 4) (String) pPassword: Contraseña del usuario que intenta registrarse.
         *) Parámetro (Output):
-                String msg: Texto informativo sobre el estado del proceso de registro.
+                (String) msg: Texto informativo sobre el estado del proceso de registro.
         *) Descripción:
                 Éste método se ejecuta cuando el usuario intenta registrarse en la aplicación.
                 Se comprueba que el usuario no se encuentre registrado en la BBDD.
@@ -226,7 +226,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 4) (int) pCantidad: Número de unidades  que se desea añadir del producto.
                 5) (String) pEmail: Email del usuario logueado.
         *) Parámetro (Output):
-                Boolean anadido: Booleano que informa del estado del registro de la orden.
+                (Boolean) anadido: Booleano que informa del estado del registro de la orden.
         *) Descripción:
                 Éste método se ejecuta cuando el usuario intenta añadir algún producto al carrito.
                 Se comprueba si el producto ya se encontraba en la cesta.
@@ -302,7 +302,7 @@ public class DBHelper extends SQLiteOpenHelper {
         *) Parámetos (Input):
                 1) (String) pEmail: Email del usuario logueado.
         *) Parámetro (Output):
-                ArrayList<Orden> lista_ordenes: Lista con todas la información del pedido del
+                (ArrayList<Orden>) lista_ordenes: Lista con todas la información del pedido del
                 usuario
         *) Descripción:
                 Éste método se ejecuta cuando el usuario accede a la vista del carrito.
