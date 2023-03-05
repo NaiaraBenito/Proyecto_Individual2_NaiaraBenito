@@ -1,23 +1,30 @@
+
+// _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
 package com.example.proyecto_individual_naiarabenito;
 
+// ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/* ###################################### CLASE LOGIN ######################################
+    *) Descripción:
+        La función de esta clase es mostrar una animación al abrir la aplicación donde se muestra el
+        logo y el nombre de la autora de la aplicación.
+
+    *) Tipo: Activity
+*/
 public class Login extends AppCompatActivity {
 
     // Variables auxiliares
@@ -35,6 +42,7 @@ public class Login extends AppCompatActivity {
         //et_nombre = (EditText) findViewById(R.id.et_nombreLogin);
         et_email = (EditText) findViewById(R.id.et_emailLogin);
         et_password = (EditText) findViewById(R.id.et_passwordLogin);
+        // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
     }
 
@@ -109,7 +117,7 @@ public class Login extends AppCompatActivity {
             l.setBackgroundColor(getResources().getColor(R.color.white));
         }
 
-        String ori = sp.getString("orientacion","false");
+        String ori = sp.getString("orientacion","1");
         if("1".equals(ori)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else if("2".equals(ori)){

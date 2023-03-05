@@ -75,7 +75,7 @@ public class Menu_Principal extends AppCompatActivity {
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
         }
 
-        String ori = sp.getString("orientacion","false");
+        String ori = sp.getString("orientacion","1");
         if("1".equals(ori)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else if("2".equals(ori)){

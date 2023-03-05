@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- _________________________________ UTILIZAR PERMISOS: __________________________________ -->
+    <!-- WRITE_EXTERNAL_STORAGE: Para crear las facturas de las compras en formato PDF -->
+    <!-- READ_EXTERNAL_STORAGE: Para crear las facturas de las compras en formato PDF -->
+    <!-- CALL_PHONE: Para llamar al teléfono de atención al cliente de las empresa -->
+    <!-- POST_NOTIFICATIONS: Para las notificaciones que agradecen la compra -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- ____________________________ COMPONENTES DE LA APLICACIÓN _____________________________ -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,46 +23,52 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.inicio.Detalles_Producto"
             android:exported="false"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ui.cesta.SiActNotificacion"
             android:exported="false"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ui.cesta.NoActNotificacion"
             android:exported="false"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".Menu_Principal"
             android:exported="false"
             android:label="@string/title_activity_menu_principal"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ui.configuracion.ConfiguracionActivity"
             android:exported="false"
             android:theme="@style/LaunchScreenTheme"/>
+
         <activity
             android:name=".Launch_Screen"
             android:exported="true"
             android:theme="@style/LaunchScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Registro"
             android:exported="false"
             android:theme="@style/LoginTheme" />
+
         <activity
             android:name=".Login"
             android:exported="false"
             android:theme="@style/LoginTheme" />
     </application>
-
 </manifest>

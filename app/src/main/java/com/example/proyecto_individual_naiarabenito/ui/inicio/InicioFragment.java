@@ -148,7 +148,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
             view.setBackgroundColor(getResources().getColor(R.color.white));
         }
 
-        String ori = sp.getString("orientacion","false");
+        String ori = sp.getString("orientacion","1");
         if("1".equals(ori)){
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else if("2".equals(ori)){

@@ -1,70 +1,135 @@
+
+// _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
 package com.example.proyecto_individual_naiarabenito;
 
+// ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Pair;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+/* ###################################### CLASE LAUNCH_SCREEN ######################################
+    *) Descripción:
+        La función de esta clase es mostrar una animación al abrir la aplicación donde se muestra el
+        logo y el nombre de la autora de la aplicación.
+
+    *) Tipo: Activity
+*/
 public class Launch_Screen extends AppCompatActivity {
 
+    // ___________________________________________ Variables ___________________________________________
+    ImageView circulo;      // ImageView con la imagen circulo_rosa.png
+    ImageView mancha;       // ImageView con la imagen mancha.png
+    ImageView logo;         // ImageView con la imagen logo.png
+    TextView hecho_por;     // TextView que contiene el mensaje "Hecho por:"
+    TextView autora;        // TextView que contiene el mensaje "Naiara Benito Balbás"
+
+    Animation animacion1;   // Animación que realiza un desplazamiento ascendente
+    Animation animacion2;   // Animación que realiza un desplazamiento descendente
+
+// ____________________________________________ Métodos ____________________________________________
+
+/*  Método onCreate:
+    ----------------
+        *) Parámetos (Input):
+                1) (Bundle) savedInstanceState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método se ejecuta la primera vez que se crea el Activity.
+                Crea la vista y el funcionamiento de la animación que aparece al entrar en la
+                aplicación.
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
+
+        // Crear la vista
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch_screen);
 
-        // Agregar animaciones
-        Animation animacion1 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
-        Animation animacion2 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
+        // Cargar las animaciones
+        cargarAnimacion();
+        cargarLogin();
+    }
 
-        // Obtener los objetos de la vista
-        ImageView cir = (ImageView) findViewById(R.id.cir_rosa);
-        ImageView manch = (ImageView) findViewById(R.id.mancha_rosa);
-        ImageView logo = (ImageView) findViewById(R.id.logo_anim);
-        TextView de = (TextView) findViewById(R.id.de_anim);
-        TextView aut = (TextView) findViewById(R.id.autora_anim);
+// _________________________________________________________________________________________________
 
-        // Asignar animaciones a cada Objeto
-        cir.setAnimation(animacion1);
-        manch.setAnimation(animacion1);
+/*  Método cargarAnimacion:
+    -----------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método añade las animaciones a la vista.
+*/
+    private void cargarAnimacion(){
+
+        // Cargar animaciones
+        animacion1 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
+        animacion2 = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
+
+        // Obtener los objetos de la vista a los se les añadirán las animaciones
+        circulo = (ImageView) findViewById(R.id.cir_rosa);
+        mancha = (ImageView) findViewById(R.id.mancha_rosa);
+        logo = (ImageView) findViewById(R.id.logo_anim);
+        hecho_por = (TextView) findViewById(R.id.de_anim);
+        autora = (TextView) findViewById(R.id.autora_anim);
+
+        // Asignar animaciones a cada Objeto de la vista
+        circulo.setAnimation(animacion1);
+        mancha.setAnimation(animacion1);
         logo.setAnimation(animacion2);
-        de.setAnimation(animacion2);
-        aut.setAnimation(animacion2);
+        hecho_por.setAnimation(animacion2);
+        autora.setAnimation(animacion2);
+    }
 
-        // Método que tras un retraso de 5s cambiará a la actividad del Login con una animación
+// _________________________________________________________________________________________________
+
+/*  Método cargarLogin:
+    -------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método realiza el cambio Activity a la pantalla del Login con un retraso de 5s
+                para darle tiempo de cargar a las animaciones.
+*/
+    private void cargarLogin(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Crear el intent para pasar a la actividad del Login
+                // Crear el intent para pasar al Activity del Login
                 Intent intent = new Intent(Launch_Screen.this, Login.class);
 
-                // Hacer el arreglo para que se conecten el Launch Screen con el Login mediante una animación
+                // Conectar el este Activity (Launch Screen) con el Login mediante una animación
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair<View, String>(logo, "logoImageTrans");
-                pairs[1] = new Pair<View, String>(aut, "textTrans");
+                pairs[1] = new Pair<View, String>(autora, "textTrans");
 
-                // Las transiciones solo sirven con versiones igual o superiores a Lollipop
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                /* Comprobar que la versión del dispositivo sea igual o superior a Lollipop, ya que
+                las transiciones solo sirven con dichas versiones */
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){ // Si soporta animaciones
                     // Cargar el Login con una animación
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Launch_Screen.this, pairs);
                     startActivity(intent, options.toBundle());
                     finish();
-                } else {
-                    // Si tiene una versión inferior a Lollipop cargar el Login sin animaciones
+                } else {    // Si no soporta animaciones
+                    // Cargar el Login sin animaciones
                     startActivity(intent);
                     finish();
                 }
@@ -72,25 +137,38 @@ public class Launch_Screen extends AppCompatActivity {
         }, 5000); // Esperar 5s
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método cargar_configuracion:
+    ----------------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Éste método carga las preferencias configuradas por el usuario (modo oscuro,
+                orientación de la pantalla...).
+*/
     private void cargar_configuracion(){
 
+        // Obtener las preferencias configuradas por el usuario
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // Comprobar el estado de la preferencia del modo oscuro
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
-        if(modoOscuro){
-
-            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
-        } else{
+        if(modoOscuro){     // Si el modo oscuro está activado: Pintar el fondo de gris
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.gris_claro));
+        } else{             // Si el modo oscuro está activado: Pintar el fondo de blanco
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
         }
 
+        // Comprobar el estado de la preferencia de la orientación
         String ori = sp.getString("orientacion","false");
-        if("1".equals(ori)){
+        if("1".equals(ori)){    // Si la orientación es 1: Desbloquear el giro automático de la app
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        } else if("2".equals(ori)){
+        } else if("2".equals(ori)){    // Si la orientación es 2: Bloquear la orientacion vertical
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else if("3".equals(ori)){
+        } else if("3".equals(ori)){    // Si la orientación es 3: Bloquear la orientacion horizontal
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
