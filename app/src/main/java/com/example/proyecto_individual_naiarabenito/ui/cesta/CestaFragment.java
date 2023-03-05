@@ -139,7 +139,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 /*  Método cargarListaOrdenes:
     --------------------------
         *) Parámetros (Input):
-            1) (View) v: Vista asociada al Activity actual.
+            1) (View) v: Vista asociada al Fragment actual.
         *) Parámetro (Output):
                 void
         *) Descripción:
@@ -730,8 +730,8 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 
 // _________________________________________________________________________________________________
 
-/*  Método onDestroyView:
-    ---------------------
+/*  Método onRequestPermissionResult:
+    ---------------------------------
         *) Parámetos (Input):
                 (int) requestCode: Contiene el código de la petición (identificador).
                 (String[]) permissions: Contiene la lista de los permisos que se piden.

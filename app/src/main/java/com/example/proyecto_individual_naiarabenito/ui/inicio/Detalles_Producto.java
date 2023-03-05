@@ -1,3 +1,5 @@
+
+// _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 import androidx.appcompat.app.AppCompatActivity;

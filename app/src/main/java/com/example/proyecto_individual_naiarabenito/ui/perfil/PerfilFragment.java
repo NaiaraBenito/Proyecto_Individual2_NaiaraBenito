@@ -126,7 +126,7 @@ public class PerfilFragment extends Fragment {
         // Comprobar el estado de la preferencia del modo oscuro
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
-        if(modoOscuro){         // Si el modo oscuro está activado: Pintar el fondo de gris
+        if(modoOscuro){         // Si el modo oscuro está activado: Pintar el fondo de negro
             view.setBackgroundColor(getResources().getColor(R.color.black));
         } else{                 // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             view.setBackgroundColor(getResources().getColor(R.color.white));

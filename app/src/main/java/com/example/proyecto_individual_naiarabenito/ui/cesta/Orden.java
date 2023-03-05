@@ -34,14 +34,6 @@ public class Orden {
 
 // _______________________________________ Getters y Setters _______________________________________
 
-/*  Método getId:
-    -------------
-        *) Parámetros (Input):
-        *) Parámetro (Output):
-                (int) id: Id de la orden del pedido.
-        *) Descripción:
-                Getter del id de la orden del pedido.
-*/
     public int getId() {
         return id;
     }
