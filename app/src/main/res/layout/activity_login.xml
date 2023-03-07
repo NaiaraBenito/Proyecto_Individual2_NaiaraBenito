@@ -26,7 +26,7 @@
             android:layout_width="293dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="¡Bienvenido a\n Dale un Mordisco!"
+            android:text="@string/l_etiqBienvenido"
             android:textColor="@color/rosa"
             android:textSize="23sp"
             android:textStyle="bold"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Inicia sesión para continuar"
+            android:text="@string/l_etiqIniciaSesion"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Email">
+                android:hint="@string/l_etiqEmail">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_emailLogin"
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Contraseña"
+                android:hint="@string/l_etiqPassword"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="25dp"
                 android:onClick="ingresar"
-                android:text="ingresar" />
+                android:text="@string/l_btnIngresar" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¿Eres nuevo?  "
+                    android:text="@string/l_etiqEresNuevo"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
@@ -102,8 +102,53 @@
                     android:id="@+id/tv_registrarLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
                     android:onClick="crearCuenta"
-                    android:text="¡Regístrate!"
+                    android:text="@string/l_etiqRegistrate"
+                    android:textColor="@color/rosa"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text=""
+                android:background="@color/rosa"
+                android:textSize="5sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btn_EspanolLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/l_etiqEspanol"
+                    android:onClick="cambiarIdiomaEsp"
+                    android:textColor="@color/rosa"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_EspanolLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="/"
+                    android:textColor="@color/rosa"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/btn_InglesLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:onClick="cambiarIdiomaIng"
+                    android:text="@string/l_etiqIngles"
                     android:textColor="@color/rosa"
                     android:textSize="15sp" />
             </LinearLayout>

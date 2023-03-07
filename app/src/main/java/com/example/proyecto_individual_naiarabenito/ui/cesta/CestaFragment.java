@@ -14,18 +14,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +37,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 
 
@@ -352,6 +342,9 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 */
     private void gestionarNotificacion(){
 
+        // Crear el contenido de la factura de la compra realizada por el usuario
+        disenarFactura();
+
         // Crear un canal para una notificación
         crearNotificationChannel();
 
@@ -362,9 +355,6 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         if(!comprobarPermiso()){        // Si no tiene permiso: Pide los permisos
             pedirPermisos();
         }
-
-        // Crear la factura de la compra realizada por el usuario
-        crearPDF();
 
         // Eliminar los productos comprados de la BBDD
         DBHelper dbHelper = new DBHelper(getContext());
@@ -417,7 +407,10 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Este método crea una notificación para agradecerle al usuario el pedido.
+                Este método crea una notificación para agradecerle al usuario el pedido y
+                preguntarle si desea obtener la factura del pedido.
+                    - Si el usuario pulsa "Si, por favor": Se le descargará la factura en la SD.
+                    - Si el usuario pulsa "No, gracias": La notificación desaparecerá sin hacer nada.
 */
     private void crearNotificacion() {
 
@@ -430,7 +423,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity().getApplicationContext(), CHANNEL_ID);
         notif.setSmallIcon(R.drawable.icon_notif);      // Asignar icono
         notif.setContentTitle("Compra finalizada");     // Asignar título
-        notif.setContentText("Gracias por pedir en  ¡Dale un Mordisco!\nNos vemos pronto"); // Asignar contenido
+        notif.setContentText("Gracias por su pedido. ¿Desea la factura?"); // Asignar contenido
         notif.setColor(Color.rgb(239, 70, 240));     // Asignar color
         notif.setPriority(NotificationCompat.PRIORITY_DEFAULT);     // Asignar prioridad
         notif.setLights(Color.rgb(239, 70, 240), 1000, 1000);   // Asignar luces
@@ -441,8 +434,8 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         notif.setContentIntent(pendingIntent);
 
         // Asignar botones con acciones: Elegir icono + texto que aparece + pendingIntent
-        notif.addAction(R.drawable.icon_notif, "Empezar", siPendingIntent);
-        notif.addAction(R.drawable.icon_notif, "Finalizar", noPendingIntent);
+        notif.addAction(R.drawable.icon_notif, "Si, por favor", siPendingIntent);
+        notif.addAction(R.drawable.icon_notif, "No, gracias", noPendingIntent);
 
         //Solicitar permiso para crear una notificación
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) { // Si no tiene permiso
@@ -468,16 +461,14 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
 */
     private void setPendingIntent(){
 
-        // Crear el intent que redirige la ejecución al Menú Principal
+        // Crear el intent que redirige la ejecución al NoActNotificacion
         Intent i = new Intent(getContext(), Menu_Principal.class);
+        // Pasarle la información del usuario (mantener la sesión)
+        i.putExtra("nombreUsuario", datosUser[0]);
+        i.putExtra("apellidoUsuario", datosUser[1]);
+        i.putExtra("emailUsuario", datosUser[2]);
 
-        // Redirigir al usuario al Menú Principal en el caso de que pulse "Back"
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-        stackBuilder.addParentStack(Menu_Principal.class);
-        stackBuilder.addNextIntent(i);
-
-        // Asignar configuración al estado de espera
-        pendingIntent = stackBuilder.getPendingIntent(1,PendingIntent.FLAG_IMMUTABLE);
+        pendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 // _________________________________________________________________________________________________
@@ -494,23 +485,18 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
     */
     private void setSiPendingIntent(){
 
-        // Crear el intent que redirige la ejecución al SiActNotificacion
+        // Crear el intent que redirige la ejecución al NoActNotificacion
         Intent i = new Intent(getContext(), SiActNotificacion.class);
+        // Pasarle la información del usuario (mantener la sesión)
+        i.putExtra("nombreUsuario", datosUser[0]);
+        i.putExtra("apellidoUsuario", datosUser[1]);
+        i.putExtra("emailUsuario", datosUser[2]);
 
-        // Redirigir al usuario al Menú Principal en el caso de que pulse "Back"
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-        //stackBuilder.addParentStack(SiActNotificacion.class);
-        stackBuilder.addParentStack(getActivity());
-        stackBuilder.addNextIntent(i);
+        // Pasarle los datos necesarios para crear la fatura
+        i.putExtra("tituloFactura", tituloPDF);
+        i.putExtra("descripcionFactura", descripcionPDF);
 
-        // Asignar configuración al estado de confirmación
-        siPendingIntent = stackBuilder.getPendingIntent(1,PendingIntent.FLAG_IMMUTABLE);
-
-        // Configurar la desaparición de la notificación
-        NotificationManagerCompat nmc = NotificationManagerCompat.from(getContext().getApplicationContext());
-
-        // Cancelar la notificación con el NOTIFICATION_ID
-        nmc.cancel(NOTIFICACION_ID);
+        siPendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 // _________________________________________________________________________________________________
@@ -529,32 +515,26 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         // Crear el intent que redirige la ejecución al NoActNotificacion
         Intent i = new Intent(getContext(), NoActNotificacion.class);
 
-        // Redirigir al usuario al Menú Principal en el caso de que pulse "Back"
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-        stackBuilder.addParentStack(getActivity());
-        stackBuilder.addNextIntent(i);
+        // Pasarle la información del usuario (mantener la sesión)
+        i.putExtra("nombreUsuario", datosUser[0]);
+        i.putExtra("apellidoUsuario", datosUser[1]);
+        i.putExtra("emailUsuario", datosUser[2]);
 
-        // Asignar configuración al estado de rechazo
-        noPendingIntent = stackBuilder.getPendingIntent(1,PendingIntent.FLAG_IMMUTABLE);
-
-        // Configurar la desaparición de la notificación
-        NotificationManagerCompat nmc = NotificationManagerCompat.from(getContext().getApplicationContext());
-
-        // Cancelar la notificación con el NOTIFICATION_ID
-        nmc.cancel(NOTIFICACION_ID);
+        noPendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 // _________________________________________________________________________________________________
 
-/*  Método crearPDF:
-    ----------------
+/*  Método disenarFactura:
+    ----------------------
         *) Parámetros (Input):
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Este método crea la factura de la compra realizada por el usuario en formato PDF.
+                Este método guarda la informaición necesaria para realizar la factura del peddido
+                realizado por el usuario.
 */
-    private void crearPDF(){
+    private void disenarFactura(){
 
         // Asignar el título de la factura
         tituloPDF = "Factura de " + datosUser[0] + " " + datosUser[1];
@@ -592,63 +572,6 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         descripcionPDF = descripcionPDF + "\nImpuestos: " + String.valueOf(imp) + "€";
         descripcionPDF = descripcionPDF + "\n--------------------------------------------------------------------------";
         descripcionPDF = descripcionPDF + "\nTotal: " + String.valueOf(tot) + "€";
-
-        // Crear PDF
-        PdfDocument pdfDocument = new PdfDocument();
-
-        // Crear herramienta para editar el documento
-        Paint paint = new Paint();
-
-        // Escribir en el documento
-        TextPaint titulo = new TextPaint();
-        TextPaint descripcion = new TextPaint();
-
-        // Obtener Bitmaps para dibujar el logo en la factura
-        Bitmap bitmap, bitmapEscala;
-
-        // Añadir especificaciones del documento (dimensiones de la página)
-        PdfDocument.PageInfo paginaInfo = new PdfDocument.PageInfo.Builder(816,1054,1).create();
-        PdfDocument.Page pagina = pdfDocument.startPage(paginaInfo);
-
-        // Obtener página
-        Canvas canvas = pagina.getCanvas();
-
-        // Escalar el logo
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
-        bitmapEscala = Bitmap.createScaledBitmap(bitmap, 250, 250, false);
-
-        // Pintar el logo en el documento
-        canvas.drawBitmap(bitmapEscala, 500,15,paint);
-
-        // Escribir el título en el documento
-        titulo.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
-        titulo.setTextSize(25);
-        canvas.drawText(tituloPDF, 10, 180, titulo);
-
-        // Escribir el contenido en el documento
-        descripcion.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        descripcion.setTextSize(14);
-        String[] arrDescripcion = descripcionPDF.split("\n");
-
-        int y = 237;    // Coordenada Y en la que comenzar a escribir el texto
-        for(int i = 0; i<arrDescripcion.length; i++){
-            canvas.drawText(arrDescripcion[i],10,y,descripcion);
-            y +=  15;
-        }
-
-        // Finalizar la página
-        pdfDocument.finishPage(pagina);
-
-        // Exportar el documento PDF de la factura (sdcard/Factura_[nombre]_[apellido].pdf)
-        File file = new File(Environment.getExternalStorageDirectory(),"Factura_" + datosUser[0] +"_"+ datosUser[1] +".pdf");
-        try {
-            pdfDocument.writeTo(new FileOutputStream(file));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        // Cerrar documento
-        pdfDocument.close();
     }
 
 // _________________________________________________________________________________________________

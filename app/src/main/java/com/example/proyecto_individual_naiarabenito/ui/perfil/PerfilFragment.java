@@ -3,9 +3,11 @@
 package com.example.proyecto_individual_naiarabenito.ui.perfil;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.proyecto_individual_naiarabenito.Login;
 import com.example.proyecto_individual_naiarabenito.R;
+
+import java.util.Locale;
 
 
 /* ###################################### CLASE PERFIL_FRAGMENT ####################################
@@ -69,6 +73,60 @@ public class PerfilFragment extends Fragment {
                 cerrarSesion();
             }
         });
+
+        //----------------------
+        Button bot_eng = view.findViewById(R.id.btn_en);
+        // Cambiar idioma al Inglés --> Funcionamiento del botón English
+        bot_eng.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Forzar la localización de la aplicación al inglés
+                Locale nuevaloc = new Locale("en");
+                Locale.setDefault(nuevaloc);
+
+                // Crear una configuración para la localización inglesa
+                Configuration configuration = getActivity().getBaseContext().getResources().getConfiguration();
+                configuration.setLocale(nuevaloc);
+                configuration.setLayoutDirection(nuevaloc);
+                Context context = getActivity().getBaseContext().createConfigurationContext(configuration);
+
+                // Actualizar todos los recursos de la aplicación
+                getActivity().getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+                // Regargar de nuevo la actividad:
+                //   - finish() -> Finalizar la instancia en curso
+                //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+                getActivity().finish();
+                startActivity(getActivity().getIntent());
+            }
+        });
+
+        Button bot_esp = view.findViewById(R.id.btn_es);
+        // Cambiar idioma al Inglés --> Funcionamiento del botón English
+        bot_esp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Forzar la localización de la aplicación al inglés
+                Locale nuevaloc = new Locale("es");
+                Locale.setDefault(nuevaloc);
+
+                // Crear una configuración para la localización inglesa
+                Configuration configuration = getActivity().getBaseContext().getResources().getConfiguration();
+                configuration.setLocale(nuevaloc);
+                configuration.setLayoutDirection(nuevaloc);
+                Context context = getActivity().getBaseContext().createConfigurationContext(configuration);
+
+                // Actualizar todos los recursos de la aplicación
+                getActivity().getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+                // Regargar de nuevo la actividad:
+                //   - finish() -> Finalizar la instancia en curso
+                //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+                getActivity().finish();
+                startActivity(getActivity().getIntent());
+            }
+        });
+        //----------------------
         return view;
     }
 

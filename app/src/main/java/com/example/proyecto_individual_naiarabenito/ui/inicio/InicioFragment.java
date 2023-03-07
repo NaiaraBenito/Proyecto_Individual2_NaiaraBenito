@@ -72,7 +72,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Añadir el nombre del usuario en la vista de la aplicación
         TextView nombreUser = view.findViewById(R.id.tv_nombreUsuario_inicio);
-        nombreUser.setText("Hola " + datosUser[0]);
+        nombreUser.setText(datosUser[0]);
 
         // Cargar la lista de Promociones
         cargarListaPromociones(view);

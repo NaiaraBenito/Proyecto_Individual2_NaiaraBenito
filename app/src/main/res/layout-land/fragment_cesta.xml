@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Mi Carrito"
+                android:text="@string/cf_etiqMiCarrrito"
                 android:layout_marginTop="32dp"
                 android:background="@color/rosa"
                 android:textColor="@color/white"
@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Precio de productos en total:"
+                    android:text="@string/cf_etiqPrecioProd"
                     android:textStyle="bold"
                     android:textColor="@color/gris_claro"
                     android:textSize="18sp"/>
@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Costes de Envío:"
+                    android:text="@string/cf_etiqCosteEnvio"
                     android:textStyle="bold"
                     android:textColor="@color/gris_claro"
                     android:textSize="18sp"/>
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Impuestos:"
+                    android:text="@string/cf_etiqImpuestos"
                     android:textStyle="bold"
                     android:textColor="@color/gris_claro"
                     android:textSize="18sp"/>
@@ -162,7 +162,7 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="25dp"
                 android:onClick="terminarCompras"
-                android:text="Pagar" />
+                android:text="@string/cf_btnPagar" />
 
         </LinearLayout>
     </ScrollView>

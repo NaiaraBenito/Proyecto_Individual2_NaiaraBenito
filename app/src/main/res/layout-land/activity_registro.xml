@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¡Únete a la familia!"
+                android:text="@string/r_etiqUneteFamilia"
                 android:textColor="@color/rosa"
                 android:textSize="23sp"
                 android:textStyle="bold" />
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Registra tus datos"
+                android:text="@string/r_etiqRegTusDatos"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:onClick="volverLogin"
-                android:text="Ya tengo cuenta"
+                android:text="@string/r_etiqTengoCuenta"
                 android:textSize="15sp" />
 
 
@@ -64,7 +64,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:hint="Nombre">
+                android:hint="@string/r_etiqNombre">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_nombreRegistro"
@@ -77,7 +77,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:hint="Apellido">
+                android:hint="@string/r_etiqApellido">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_apellidoRegistro"
@@ -90,7 +90,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:hint="Email">
+                android:hint="@string/r_etiqEmail">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_emailRegistro"
@@ -103,7 +103,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:hint="Contraseña"
+                android:hint="@string/r_etiqPassword"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -117,7 +117,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:hint="Repite tu contraseña"
+                android:hint="@string/r_etiqPassword2"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:onClick="registrarUsuario"
-                android:text="Registrar" />
+                android:text="@string/r_btnRegistrar" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

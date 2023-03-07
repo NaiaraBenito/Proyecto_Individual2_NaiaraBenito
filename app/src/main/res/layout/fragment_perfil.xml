@@ -13,6 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="Cerrar Sesión" />
+        android:text="@string/pf_btnCerrarSesion" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_en"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/pf_btnEnglish" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_es"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/pf_btnEspanol" />
 
 </LinearLayout>

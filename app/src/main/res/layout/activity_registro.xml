@@ -37,7 +37,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¡Únete a la familia!"
+                    android:text="@string/r_etiqUneteFamilia"
                     android:textColor="@color/rosa"
                     android:textSize="23sp"
                     android:textStyle="bold" />
@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Registra tus datos"
+                    android:text="@string/r_etiqRegTusDatos"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -63,7 +63,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre">
+                android:hint="@string/r_etiqNombre">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_nombreRegistro"
@@ -76,7 +76,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Apellido">
+                android:hint="@string/r_etiqApellido">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_apellidoRegistro"
@@ -89,7 +89,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email">
+                android:hint="@string/r_etiqEmail">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_emailRegistro"
@@ -102,7 +102,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Contraseña"
+                android:hint="@string/r_etiqPassword"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -116,7 +116,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Repite tu contraseña"
+                android:hint="@string/r_etiqPassword2"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -132,71 +132,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:onClick="registrarUsuario"
-                android:text="Registrar" />
+                android:text="@string/r_btnRegistrar" />
 
             <TextView
                 android:id="@+id/tv_volverRegistro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="volverLogin"
-                android:text="Ya tengo cuenta"
+                android:text="@string/r_etiqTengoCuenta"
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
-
-    <!--<EditText
-        android:id="@+id/et_nombreRegistro"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="Nombre"
-        android:inputType="text" />
-
-    <EditText
-        android:id="@+id/et_apellidoRegistro"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="Apellido"
-        android:inputType="text" />
-
-    <EditText
-        android:id="@+id/et_emailRegistro"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="Email"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/et_passwordRegistro1"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="Contraseña"
-        android:inputType="text"/>
-    <EditText
-        android:id="@+id/et_passwordRegistro2"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="Contraseña"
-        android:inputType="text"/>
-
-    <Button
-        android:id="@+id/btn_registrarRegistro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="registrarUsuario"
-        android:text="Registrar" />
-
-    <Button
-        android:id="@+id/btn_volverRegistro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="volverLogin"
-        android:text="Volver" />-->
-
 </LinearLayout>

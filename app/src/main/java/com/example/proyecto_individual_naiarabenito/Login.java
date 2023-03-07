@@ -4,16 +4,23 @@ package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -177,5 +184,48 @@ public class Login extends AppCompatActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+    //-------------------------
+    public void cambiarIdiomaEsp(View v){
+        // Forzar la localización de la aplicación al inglés
+        Locale nuevaloc = new Locale("es");
+        Locale.setDefault(nuevaloc);
+
+        // Crear una configuración para la localización inglesa
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+        Context context = getBaseContext().createConfigurationContext(configuration);
+
+        // Actualizar todos los recursos de la aplicación
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+        // Regargar de nuevo la actividad:
+        //   - finish() -> Finalizar la instancia en curso
+        //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+        finish();
+        startActivity(getIntent());
+    }
+    //-----------------------------
+    public void cambiarIdiomaIng(View v){
+        // Forzar la localización de la aplicación al inglés
+        Locale nuevaloc = new Locale("en");
+        Locale.setDefault(nuevaloc);
+
+        // Crear una configuración para la localización inglesa
+        Configuration configuration = getBaseContext().getResources().getConfiguration();
+        configuration.setLocale(nuevaloc);
+        configuration.setLayoutDirection(nuevaloc);
+        Context context = getBaseContext().createConfigurationContext(configuration);
+
+        // Actualizar todos los recursos de la aplicación
+        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+
+        // Regargar de nuevo la actividad:
+        //   - finish() -> Finalizar la instancia en curso
+        //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+        finish();
+        startActivity(getIntent());
     }
 }

@@ -43,7 +43,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:fontFamily="casual"
-        android:text="Hecho por:"
+        android:text="@string/ls_etiqHechoPor"
         android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold|italic"

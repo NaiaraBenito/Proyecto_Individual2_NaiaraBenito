@@ -5,4 +5,63 @@
     <string name="title_cesta">Cesta</string>
     <string name="title_perfil">Perfil</string>
     <string name="title_configuracion">Configuracion</string>
+
+
+    <!-- Detalles Producto -->
+    <string name="dp_etiqPrecio">Precio (€):</string>
+    <string name="dp_btnAnadirCarrito">Añadir al carrito</string>
+    <string name="dp_btnRegresar">Regresar</string>
+
+    <!-- Launch Screen -->
+    <string name="ls_etiqHechoPor">Hecho por:</string>
+
+    <!-- Login -->
+    <string name="l_etiqBienvenido">¡Bienvenido a\n Dale un Mordisco!</string>
+    <string name="l_etiqIniciaSesion">Inicia sesión para continuar</string>
+    <string name="l_etiqEmail">Email</string>
+    <string name="l_etiqPassword">Contraseña</string>
+    <string name="l_btnIngresar">Ingresar</string>
+    <string name="l_etiqEresNuevo">¿Eres nuevo?</string>
+    <string name="l_etiqRegistrate">¡Regístrate!</string>
+    <string name="l_etiqEspanol">Español</string>
+    <string name="l_etiqIngles">Inglés</string>
+
+    <!-- Registro -->
+    <string name="r_etiqUneteFamilia">¡Únete a la familia!</string>
+    <string name="r_etiqRegTusDatos">Registra tus datos</string>
+    <string name="r_etiqNombre">Nombre</string>
+    <string name="r_etiqApellido">Apellido</string>
+    <string name="r_etiqEmail">Email</string>
+    <string name="r_etiqPassword">Contraseña</string>
+    <string name="r_etiqPassword2">Repite tu contraseña</string>
+    <string name="r_btnRegistrar">Registrar</string>
+    <string name="r_etiqTengoCuenta">Ya tengo cuenta</string>
+
+    <!-- Cesta -->
+    <string name="cf_etiqMiCarrrito">Mi Carrito</string>
+    <string name="cf_etiqPrecioProd">Coste en productos:</string>
+    <string name="cf_etiqCosteEnvio">Costes de Envío:</string>
+    <string name="cf_etiqImpuestos">Impuestos:</string>
+    <string name="cf_btnPagar">Pagar</string>
+
+    <!-- Perfil -->
+    <string name="pf_btnCerrarSesion">Cerrar Sesión</string>
+    <string name="pf_btnEnglish">Inglés</string>
+    <string name="pf_btnEspanol">Español</string>
+
+    <!-- Inicio -->
+    <string name="if_etiqHola">Hola</string>
+    <string name="if_etiqPideLoQueQuieras">Pide lo que quieras</string>
+
+    <!-- Preferences -->
+    <string name="p_etiqModoOscuro">Modo oscuro</string>
+    <string name="p_etiqModoOscuroOn">Modo oscuro activado</string>
+    <string name="p_etiqModoOscuroOff">Modo oscuro desactivado</string>
+    <string name="p_etiqOrientacion">Orientación</string>
+    <string name="p_etiqOrientacionDes">Configura la orientación de la aplicación</string>
+    <string name="p_etiqGuardar">Guardar</string>
+    <string name="p_etiqPantalla">Pantalla</string>
+    <string name="p_etiqGuardarConfi">Guardar configuración</string>
+
+
 </resources>
