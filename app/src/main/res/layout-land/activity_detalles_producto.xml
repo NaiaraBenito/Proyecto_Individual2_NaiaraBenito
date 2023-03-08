@@ -42,7 +42,7 @@
                 android:layout_marginLeft="16sp"
                 android:layout_marginRight="16sp"
                 android:text="4 Quesos"
-                android:textColor="@color/gris_claro"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView

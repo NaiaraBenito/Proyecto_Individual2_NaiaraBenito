@@ -47,7 +47,7 @@
                     android:layout_weight="1"
                     android:text="@string/cf_etiqPrecioProd"
                     android:textStyle="bold"
-                    android:textColor="@color/gris_claro"
+                    android:textColor="@color/black"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_weight="1"
                     android:text="@string/cf_etiqCosteEnvio"
                     android:textStyle="bold"
-                    android:textColor="@color/gris_claro"
+                    android:textColor="@color/black"
                     android:textSize="18sp"/>
 
                 <TextView
@@ -103,7 +103,7 @@
                     android:layout_weight="1"
                     android:text="@string/cf_etiqImpuestos"
                     android:textStyle="bold"
-                    android:textColor="@color/gris_claro"
+                    android:textColor="@color/black"
                     android:textSize="18sp"/>
 
                 <TextView

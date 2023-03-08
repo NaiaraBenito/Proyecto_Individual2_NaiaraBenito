@@ -266,7 +266,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
         if(modoOscuro){     // Si el modo oscuro está activado: Pintar el fondo de gris
-            view.setBackgroundColor(context.getResources().getColor(R.color.black));
+            view.setBackgroundColor(context.getResources().getColor(R.color.gris_claro));
         } else{             // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             view.setBackgroundColor(context.getResources().getColor(R.color.white));
         }

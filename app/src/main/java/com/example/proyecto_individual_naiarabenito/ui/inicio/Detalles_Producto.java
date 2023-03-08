@@ -235,7 +235,7 @@ public class Detalles_Producto extends AppCompatActivity {
         // Comprobar el estado de la preferencia del modo oscuro
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
         if(modoOscuro){         // Si el modo oscuro está activado: Pintar el fondo de negro
-            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.gris_claro));
         } else{                 // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
         }
