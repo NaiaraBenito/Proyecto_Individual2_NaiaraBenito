@@ -28,69 +28,25 @@ import java.util.List;
 //public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder> implements ConfirmarBorradoOrdenDialog.ListenerDialogo, CestaFragment.ListenerCesta{
 class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder>{
 
-// ___________________________________________ Interfaz ____________________________________________
-    private ListAdapter_Ordenes.ListenerCesta listener;
-
-    // Interfaz para gestionar la actualización del resumen del pedido
-    public interface ListenerCesta {
-        void actualizarDatos();
-
-        @SuppressLint("MissingSuperCall")
-        void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
-    }
-
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try{
-            listener = (ListenerCesta) context;
-        }catch (ClassCastException e){
-            throw new ClassCastException(this.toString() + " debe implementar ListenerCesta");
-        }
-    }*/
-
-
-    /*private ListAdapter_Ordenes.ListenerAdaptador listener;
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try{
-            listener = (ListAdapter_Ordenes.ListenerAdaptador) this;
-        }catch (ClassCastException e){
-            throw new ClassCastException(this.toString() + " debe implementar ListenerCesta");
-        }
-    }
-
-    @Override
-    public void setPositiveButton(String producto, int position) {
-        lista_orden.remove(position);
-        DBHelper dbHelper = new DBHelper(context);
-        dbHelper.borrarOrden(producto, datosUser[2]);
-        dbHelper.close();
-    }
-
-    @Override
-    public FragmentManager actualizarDatos() {
-        return null;
-    }
-
-    public interface ListenerAdaptador{
-        FragmentManager obtenerDialogo();
-    }*/
-
 // ___________________________________________ Variables ___________________________________________
     private List<Orden> lista_orden;    // Lista con los productos de la cesta
     private final LayoutInflater inflater;    // Describir de que archivo proviene la lista
     private final Context context;            // Contexto de CestaFragment
     private final String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
 
+    private InterfazBorradoAlert listenerBorrado;
+
+    private InterfazActualizarCesta listenerActualizado;
+
 
 // __________________________________________ Constructor __________________________________________
-    public ListAdapter_Ordenes(List<Orden> pList_ele, Context pContext, String[] pDatosUser){
+    public ListAdapter_Ordenes(List<Orden> pList_ele, Context pContext, String[] pDatosUser,InterfazBorradoAlert listenerBorrado, InterfazActualizarCesta listenerActualizado){
         this.inflater = LayoutInflater.from(pContext);
         this.context = pContext;
         this.lista_orden = pList_ele;
         this.datosUser = pDatosUser;
+        this.listenerBorrado = listenerBorrado;
+        this.listenerActualizado = listenerActualizado;
     }
 
 // _______________________________________ Getter y Setter _________________________________________
@@ -165,18 +121,19 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                     // Comprobar si se ha agotado la cantidad del producto
                     if (nuevaCantidad <= 0){ // Si se ha agotado: Eliminar producto de la cesta
 
-                        //ConfirmarBorradoOrdenDialog dialogo = new ConfirmarBorradoOrdenDialog(producto, position, inflater.getContext());
-                        //dialogo.show(listener.obtenerDialogo(),"EliminarProd");
+                        listenerBorrado.notificarBorrado(position);
 
-                        // Eliminar producto de la lista
+                        /*// Eliminar producto de la lista
                         lista_orden.remove(position);
 
                         // Eliminar producto de la BBDD
                         DBHelper dbHelper = new DBHelper(context);
-                        dbHelper.borrarOrden(producto, datosUser[2]);
+                        dbHelper.borrarOrden(producto, datosUser[2]);*/
 
                         //listener = (ListenerCesta) view.findViewById(R.id.total).getContext();
                         //listener.actualizarDatos();
+
+
                     }
                     else{   // Si no se ha agotado: Actualizar cantidad del producto de la cesta
 
@@ -194,6 +151,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
                     // Notificar al RecyclerView que la lista ha sido modificada
                     notifyDataSetChanged();
+                    listenerActualizado.notificarCambios();
                 }
             }
         });
@@ -212,6 +170,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
                 // Notificar al RecyclerView que la lista ha sido modificada
                 notifyDataSetChanged();
+                listenerActualizado.notificarCambios();
 
                 // Actualizar la BBDD
                 DBHelper dbHelper = new DBHelper(context);
@@ -311,5 +270,20 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         } else{             // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             view.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
+    }
+
+    public void eliminar(int position){
+        String producto = lista_orden.get(position).getNombreProd();
+        // Eliminar producto de la lista
+        lista_orden.remove(position);
+
+        // Eliminar producto de la BBDD
+        DBHelper dbHelper = new DBHelper(context);
+        dbHelper.borrarOrden(producto, datosUser[2]);
+
+        // Notificar al RecyclerView que la lista ha sido modificada
+        notifyDataSetChanged();
+        listenerActualizado.notificarCambios();
+
     }
 }

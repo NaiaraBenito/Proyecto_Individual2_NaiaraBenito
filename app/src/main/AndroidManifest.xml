@@ -47,11 +47,6 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".ui.configuracion.ConfiguracionActivity"
-            android:exported="false"
-            android:theme="@style/LaunchScreenTheme"/>
-
-        <activity
             android:name=".Launch_Screen"
             android:exported="true"
             android:theme="@style/LaunchScreenTheme">

@@ -48,9 +48,9 @@ public class ConfiguracionFragment extends Fragment {
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion(view);
 
-        // Crear el intent que redirige la ejecución a la Actividad de Configuración
+        /*// Crear el intent que redirige la ejecución a la Actividad de Configuración
         Intent intent = new Intent(getContext(), ConfiguracionActivity.class);
-        startActivity(intent);
+        startActivity(intent);*/
         return view;
     }
 
@@ -75,7 +75,7 @@ public class ConfiguracionFragment extends Fragment {
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
         if(modoOscuro){        // Si el modo oscuro está activado: Pintar el fondo de negro
-            view.setBackgroundColor(getResources().getColor(R.color.black));
+            view.setBackgroundColor(getResources().getColor(R.color.gris_claro));
         } else{                // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             view.setBackgroundColor(getResources().getColor(R.color.white));
         }

@@ -46,7 +46,7 @@ import java.util.List;
 
     *) Tipo: Fragment
 */
-public class CestaFragment extends Fragment implements ListAdapter_Ordenes.ListenerCesta {
+public class CestaFragment extends Fragment implements InterfazBorradoAlert, InterfazActualizarCesta {
 
 // ___________________________________________ Variables ___________________________________________
     private String[] datosUser; // Lista que contiene los datos del usuario para mantener la sesión
@@ -144,7 +144,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         // Cargar las lista en el RecyclerView
         recyclerViewOrdenes = view.findViewById(R.id.lista_carrito);
         recyclerViewOrdenes.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser);
+        adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser,this, this);
         recyclerViewOrdenes.setAdapter(adapterOrdenes);
     }
 
@@ -651,41 +651,7 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
         }
     }
 
-// _________________________________________________________________________________________________
 
-/*  Método onRequestPermissionResult:
-    ---------------------------------
-        *) Parámetos (Input):
-                (int) requestCode: Contiene el código de la petición (identificador).
-                (String[]) permissions: Contiene la lista de los permisos que se piden.
-                (int[]) grantResults: Contiene el resultado de las peticiones.
-        *) Parámetro (Output):
-                void
-        *) Descripción:
-                Este método se ejecuta cuando se ha realizado la petición de permisos de la
-                aplicación.
-*/
-    @Override
-    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-
-        // Comprobar que el código de la petición de los permisos sea el de lectura y escritura
-        if(requestCode == 200){
-            // Comprobar que se ha recibido la respuesta a las 2 peticiones
-            if (grantResults.length >0){
-                // Comprobar si se han concedido los permisos
-                boolean writeStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                boolean readStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                if(writeStorage && readStorage){    // Si se han concedido ambos permisos
-                    // Informar de que se han concedido los permisos
-                    Toast.makeText(getContext(),"Permiso concedido",Toast.LENGTH_LONG).show();
-                } else {    // Si se ha rechazado alguno de los permisos
-                    // Informar de que se han denegado los permisos
-                    Toast.makeText(getContext(),"Permiso denegado",Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
 
 // _________________________________________________________________________________________________
 
@@ -704,13 +670,42 @@ public class CestaFragment extends Fragment implements ListAdapter_Ordenes.Liste
     }
 
 //---------------------------------------
+
     @Override
-    public void actualizarDatos() {
-        cargarResumen(this.getView());
+    public void notificarBorrado(int pos) {
+        // Crear Diálogo de confirmación
+        AlertDialog.Builder confirmacion = new AlertDialog.Builder(getActivity());
+        confirmacion.setTitle("¡Espera!");      // Asignar el título
+        confirmacion.setMessage("¿Seguro que deseas eliminar el producto de la cesta?");    // Asignar el contenido
+        confirmacion.setCancelable(false);  // Indicar que no se pueda cancelar
+
+        // Añadir y gestionar el botón "Si"
+        confirmacion.setPositiveButton("Seguro", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+                // Notificar que se ha confirmado la compra
+                adapterOrdenes.eliminar(pos);
+                Toast.makeText(getContext(), "Pedido eliminado", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        // Añadir y gestionar el botón "No"
+        confirmacion.setNegativeButton("Me he arrepentido", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Notificar que se ha rechazado la compra
+                Toast.makeText(getContext(), "No se ha eliminado", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Crear y mostrar el diálogo
+        confirmacion.create().show();
     }
-/*
+
     @Override
-    public FragmentManager obtenerDialogo() {
-        return getActivity().getSupportFragmentManager();
-    }*/
+    public void notificarCambios() {
+        cargarResumen(getView());
+    }
 }
