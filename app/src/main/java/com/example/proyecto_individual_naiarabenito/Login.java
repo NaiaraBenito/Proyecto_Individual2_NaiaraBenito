@@ -107,9 +107,11 @@ public class Login extends AppCompatActivity {
 
         // Comprobar que los campos no se encuentren vacíos
         if(email.equals("")){               // Si el email está vacío: Escribir un mensaje de error
-            Toast.makeText(this,"Debes ingresar tu email", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_ingresaEmail);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else if (password.equals("")) {   // Si la contraseña está vacía: Escribir un mensaje de error
-            Toast.makeText(this, "Debes ingresar tu contraseña", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_ingresaPassword);
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         } else{
 
             // Crear un patrón para validar el email
@@ -135,10 +137,12 @@ public class Login extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else{      // Si no está registrado: Imprimir mensaje de error
-                    Toast.makeText(this,"Email o contraseña incorrectos. Intente de nuevo", Toast.LENGTH_LONG).show();
+                    String msg = getResources().getString(R.string.t_loginIncorrecto);
+                    Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
                 }
             } else {        // El email ingresado es inválido: Imprimir mensaje de error
-                Toast.makeText(this, "El email ingresado es inválido", Toast.LENGTH_LONG).show();
+                String msg = getResources().getString(R.string.t_emailInvalido);
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             }
         }
     }

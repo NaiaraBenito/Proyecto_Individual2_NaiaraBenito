@@ -159,9 +159,11 @@ public class Detalles_Producto extends AppCompatActivity {
 
         // Comprobar si el pedido se ha añadido correctamente
         if(insertado){      // Si se ha añadido: Imprimir mensaje informativo
-            Toast.makeText(this,"Tu compra se ha añadido al carrito", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_pedidoAnadido);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else{             // Si no se ha añadido: Imprimir mensaje de error
-            Toast.makeText(this,"ERROR BASE DE DATOS", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_errorBBDD);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         }
 
         // Crear el intent que redirige la ejecución al Menú Principal

@@ -173,10 +173,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     - Si no está registrado: Añade el nuevo usuario a la BBDD y devuelve "El usuario
                       [nombre] ha sido registrado con exito".
 */
-    public String registrarUsuario(String pNombre, String pApellido, String pEmail, String pPassword){
+    public int registrarUsuario(String pNombre, String pApellido, String pEmail, String pPassword){
         try{
             // Variable de retorno
-            String msg;
+            int msg;
 
             // Obtener la BBDD
             SQLiteDatabase db = this.getWritableDatabase();
@@ -186,7 +186,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             if(cursor.moveToFirst()){     // Si existe: Devuelve mensaje de error
                 // Mensaje de error
-                msg = "ERROR: Este usuario ya se encuentra registrado";
+                msg = 1;
             }
             else{                         // Si no existe: Crea el nuevo usuario
                 // Guardar la información introducida por del usuario en la BBDD (t_usuarios)
@@ -199,7 +199,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.insert(TABLE_USUARIOS,null, datosUsuario);
 
                 // Mensaje de información
-                msg = "El usuario "+ pNombre + " ha sido registrado con exito";
+                msg = 2;
             }
             // Cerrar la BBDD
             db.close();
@@ -211,7 +211,7 @@ public class DBHelper extends SQLiteOpenHelper {
         catch (Exception e){        // En caso de excepción
             // Escribir el error en el registro Log
             Log.e("ERROR BBDD", e.toString());
-            return "ERROR: Ha ocurrido un problema con la BBDD";
+            return 0;
         }
     }
 

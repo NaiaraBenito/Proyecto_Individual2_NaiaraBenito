@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/p_etiqPantalla">
+
+        <SwitchPreference
+        android:defaultValue="false"
+        android:key="modo_oscuro"
+        android:summaryOff="@string/p_etiqModoOscuroOff"
+        android:summaryOn="@string/p_etiqModoOscuroOn"
+        android:title="@string/p_etiqModoOscuro"/>
+
+        <ListPreference
+            android:defaultValue="false"
+            android:key="orientacion"
+            android:summary="@string/p_etiqOrientacionDes"
+            android:entries="@array/list_ori"
+            android:entryValues="@array/list_ori_valores"
+            android:title="@string/p_etiqOrientacion"/>
+    </PreferenceCategory>
+</PreferenceScreen>

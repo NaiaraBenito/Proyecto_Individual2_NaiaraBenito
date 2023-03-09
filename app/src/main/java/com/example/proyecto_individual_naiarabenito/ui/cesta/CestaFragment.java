@@ -114,7 +114,8 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
 
                 // Comprobar que la lista de pedidos no esté vacía
                 if(lista_ordenes.isEmpty()){    // Si está vacía: Imprimir mensaje de error
-                    Toast.makeText(getContext(), "No tienes productos en la cesta", Toast.LENGTH_LONG).show();
+                    String msg = getResources().getString(R.string.t_cestaVacia);
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
                 } else{     // Si no está vacía: Sacar diálogo de confirmación
                     // Gestionar el diálogo de confirmación del pedido
                     gestionarDialogo(view);
@@ -299,17 +300,24 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
 
         // Crear Diálogo de confirmación
         AlertDialog.Builder confirmacion = new AlertDialog.Builder(view.getContext());
-        confirmacion.setTitle("Confirmar pedido");      // Asignar el título
-        confirmacion.setMessage("¿Seguro que has terminado tu pedido?");    // Asignar el contenido
+
+        String dTitulo = getResources().getString(R.string.d_confirmarPedido);
+        String dContenido = getResources().getString(R.string.d_confirmarPedidoMsg);
+
+        confirmacion.setTitle(dTitulo);      // Asignar el título
+        confirmacion.setMessage(dContenido);    // Asignar el contenido
         confirmacion.setCancelable(false);  // Indicar que no se pueda cancelar
 
         // Añadir y gestionar el botón "Si"
-        confirmacion.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        String dSi = getResources().getString(R.string.d_si);
+        String dNo = getResources().getString(R.string.d_no);
+        confirmacion.setPositiveButton(dSi, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
 
                 // Notificar que se ha confirmado la compra
-                Toast.makeText(getContext(), "Compra confirmada", Toast.LENGTH_LONG).show();
+                String msg = getResources().getString(R.string.t_confirmarCompra);
+                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
                 // Crear y gestionar la notificación de agradecimiento
                 gestionarNotificacion();
@@ -317,12 +325,9 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         });
 
         // Añadir y gestionar el botón "No"
-        confirmacion.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        confirmacion.setNegativeButton(dNo, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Notificar que se ha rechazado la compra
-                Toast.makeText(getContext(), "Compra rechazada", Toast.LENGTH_LONG).show();
-            }
+            public void onClick(DialogInterface dialog, int id) { }
         });
 
         // Crear y mostrar el diálogo
@@ -422,8 +427,11 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         // Crear la notificación
         NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity().getApplicationContext(), CHANNEL_ID);
         notif.setSmallIcon(R.drawable.icon_notif);      // Asignar icono
-        notif.setContentTitle("Compra finalizada");     // Asignar título
-        notif.setContentText("Gracias por su pedido. ¿Desea la factura?"); // Asignar contenido
+
+        String notifTitulo = getResources().getString(R.string.n_NotifTitulo);
+        String notifContenido = getResources().getString(R.string.n_NotifContenido);
+        notif.setContentTitle(notifContenido);     // Asignar título
+        notif.setContentText(notifTitulo); // Asignar contenido
         notif.setColor(Color.rgb(239, 70, 240));     // Asignar color
         notif.setPriority(NotificationCompat.PRIORITY_DEFAULT);     // Asignar prioridad
         notif.setLights(Color.rgb(239, 70, 240), 1000, 1000);   // Asignar luces
@@ -434,8 +442,10 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         notif.setContentIntent(pendingIntent);
 
         // Asignar botones con acciones: Elegir icono + texto que aparece + pendingIntent
-        notif.addAction(R.drawable.icon_notif, "Si, por favor", siPendingIntent);
-        notif.addAction(R.drawable.icon_notif, "No, gracias", noPendingIntent);
+        String nSi = getResources().getString(R.string.n_si);
+        String nNo = getResources().getString(R.string.n_no);
+        notif.addAction(R.drawable.icon_notif, nSi, siPendingIntent);
+        notif.addAction(R.drawable.icon_notif, nNo, noPendingIntent);
 
         //Solicitar permiso para crear una notificación
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) { // Si no tiene permiso
@@ -537,7 +547,8 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
     private void disenarFactura(){
 
         // Asignar el título de la factura
-        tituloPDF = "Factura de " + datosUser[0] + " " + datosUser[1];
+        String cfFacturaDe = getResources().getString(R.string.cf_facturaDe);
+        tituloPDF = cfFacturaDe + " " + datosUser[0] + " " + datosUser[1];
 
         // Inicializar el contenido de la factura
         descripcionPDF = "";
@@ -557,7 +568,10 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
             double precioTot = Math.round(cantidad * orden.getPrecioProd() * 100.0) / 100.0;
 
             // Añadir información al contenido de la factura
-            descripcionPDF = descripcionPDF + "Producto: " + nombre + "   Cantidad: " + String.valueOf(cantidad) + "  Precio: " + String.valueOf(precioTot) + "€\n";
+            String cfProd = getResources().getString(R.string.cf_producto);
+            String cfAmo = getResources().getString(R.string.cf_cantidad);
+            String cfPrice = getResources().getString(R.string.cf_precio);
+            descripcionPDF = descripcionPDF + cfProd + ": " + nombre + "   " + cfAmo + ": " + String.valueOf(cantidad) + "  " + cfPrice + ": " + String.valueOf(precioTot) + "€\n";
         }
 
         // Calcular resúmen del pedido
@@ -567,9 +581,12 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         double tot = calcularTotal(pTotProd,imp,env);   // Total del pedido
 
         // Añadir información al contenido de la factura
-        descripcionPDF = descripcionPDF + "\n\nTotal en productos: " + String.valueOf(pTotProd) + "€";
-        descripcionPDF = descripcionPDF + "\nCostes de envío: " + String.valueOf(env) + "€";
-        descripcionPDF = descripcionPDF + "\nImpuestos: " + String.valueOf(imp) + "€";
+        String sFacTotProd = getResources().getString(R.string.cf_etiqPrecioProd);
+        String sFacEnvio = getResources().getString(R.string.cf_etiqCosteEnvio);
+        String sFacImp = getResources().getString(R.string.cf_etiqImpuestos);
+        descripcionPDF = descripcionPDF + "\n\n" + sFacTotProd + " " + String.valueOf(pTotProd) + "€";
+        descripcionPDF = descripcionPDF + "\n" + sFacEnvio + " " + String.valueOf(env) + "€";
+        descripcionPDF = descripcionPDF + "\n" + sFacImp + " " + String.valueOf(imp) + "€";
         descripcionPDF = descripcionPDF + "\n--------------------------------------------------------------------------";
         descripcionPDF = descripcionPDF + "\nTotal: " + String.valueOf(tot) + "€";
     }
@@ -675,30 +692,35 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
     public void notificarBorrado(int pos) {
         // Crear Diálogo de confirmación
         AlertDialog.Builder confirmacion = new AlertDialog.Builder(getActivity());
-        confirmacion.setTitle("¡Espera!");      // Asignar el título
-        confirmacion.setMessage("¿Seguro que deseas eliminar el producto de la cesta?");    // Asignar el contenido
+        String dSi = getResources().getString(R.string.d_si);
+        String dNo = getResources().getString(R.string.d_no);
+
+        String dEspera = getResources().getString(R.string.d_espera);
+        String dSeguroElimin = getResources().getString(R.string.d_seguroEliminado);
+        confirmacion.setTitle(dEspera);      // Asignar el título
+        confirmacion.setMessage(dSeguroElimin);    // Asignar el contenido
         confirmacion.setCancelable(false);  // Indicar que no se pueda cancelar
 
         // Añadir y gestionar el botón "Si"
-        confirmacion.setPositiveButton("Seguro", new DialogInterface.OnClickListener() {
+        String dSeguro = getResources().getString(R.string.d_seguro);
+        String dMeArrepiento = getResources().getString(R.string.d_no);
+        confirmacion.setPositiveButton(dSeguro, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
 
                 // Notificar que se ha confirmado la compra
                 adapterOrdenes.eliminar(pos);
-                Toast.makeText(getContext(), "Pedido eliminado", Toast.LENGTH_LONG).show();
+
+                String msg = getResources().getString(R.string.t_pedidoEliminado);
+                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
             }
         });
 
         // Añadir y gestionar el botón "No"
-        confirmacion.setNegativeButton("Me he arrepentido", new DialogInterface.OnClickListener() {
+        confirmacion.setNegativeButton(dMeArrepiento, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Notificar que se ha rechazado la compra
-                Toast.makeText(getContext(), "No se ha eliminado", Toast.LENGTH_LONG).show();
-            }
-        });
+            public void onClick(DialogInterface dialog, int id) {}});
 
         // Crear y mostrar el diálogo
         confirmacion.create().show();

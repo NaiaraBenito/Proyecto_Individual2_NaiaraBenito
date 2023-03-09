@@ -44,54 +44,7 @@ public class ConfiguracionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Obtener la vista
         View view = inflater.inflate(R.layout.fragment_configuracion, container, false);
-
-        // Cargar las preferencias configuradas por el usuario
-        cargar_configuracion(view);
-
-        /*// Crear el intent que redirige la ejecución a la Actividad de Configuración
-        Intent intent = new Intent(getContext(), ConfiguracionActivity.class);
-        startActivity(intent);*/
         return view;
     }
 
-// _________________________________________________________________________________________________
-
-/*  Método cargar_configuracion:
-    ----------------------------
-        *) Parámetros (Input):
-                (View) view: Vista asociada al fragmento.
-        *) Parámetro (Output):
-                void
-        *) Descripción:
-                Este método carga las preferencias configuradas por el usuario (modo oscuro,
-                orientación de la pantalla...).
-*/
-    private void cargar_configuracion(View view){
-
-        // Obtener las preferencias configuradas por el usuario
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        // Comprobar el estado de la preferencia del modo oscuro
-        boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
-
-        if(modoOscuro){        // Si el modo oscuro está activado: Pintar el fondo de negro
-            view.setBackgroundColor(getResources().getColor(R.color.gris_claro));
-        } else{                // Si el modo oscuro está desactivado: Pintar el fondo de blanco
-            view.setBackgroundColor(getResources().getColor(R.color.white));
-        }
-
-        // Comprobar el estado de la preferencia de la orientación
-        String ori = sp.getString("orientacion","false");
-        switch (ori) {
-            case "1":        // Si la orientación es 1: Desbloquear el giro automático de la app
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                break;
-            case "2": // Si la orientación es 2: Bloquear la orientacion vertical
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                break;
-            case "3": // Si la orientación es 3: Bloquear la orientacion horizontal
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                break;
-        }
-    }
 }

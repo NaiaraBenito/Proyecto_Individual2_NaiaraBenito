@@ -1,0 +1,121 @@
+<resources>
+    <string name="app_name">¡Dale un Mordisco!</string>
+    <string name="title_activity_menu_principal">Main_Menu</string>
+    <string name="title_inicio">Home</string>
+    <string name="title_cesta">Cart</string>
+    <string name="title_perfil">Profile</string>
+    <string name="title_configuracion">Configuration</string>
+
+
+    <!-- Detalles Producto -->
+    <string name="dp_etiqPrecio">Price (€):</string>
+    <string name="dp_btnAnadirCarrito">Add to cart</string>
+    <string name="dp_btnRegresar">Back</string>
+
+    <!-- Launch Screen -->
+    <string name="ls_etiqHechoPor">Made by:</string>
+
+    <!-- Login -->
+    <string name="l_etiqBienvenido">Welcome to\n Dale un Mordisco!</string>
+    <string name="l_etiqIniciaSesion">Log in to continue</string>
+    <string name="l_etiqEmail">Email</string>
+    <string name="l_etiqPassword">Password</string>
+    <string name="l_btnIngresar">Continue</string>
+    <string name="l_etiqEresNuevo">Are you new?</string>
+    <string name="l_etiqRegistrate">Sign up!</string>
+    <string name="l_etiqEspanol">Spanish</string>
+    <string name="l_etiqIngles">English</string>
+
+    <!-- Registro -->
+    <string name="r_etiqUneteFamilia">Join the family!</string>
+    <string name="r_etiqRegTusDatos">Register your data</string>
+    <string name="r_etiqNombre">Name</string>
+    <string name="r_etiqApellido">Last name</string>
+    <string name="r_etiqEmail">Email</string>
+    <string name="r_etiqPassword">Password</string>
+    <string name="r_etiqPassword2">Repeat your password</string>
+    <string name="r_btnRegistrar">Register</string>
+    <string name="r_etiqTengoCuenta">I already have an account</string>
+
+    <!-- Cesta -->
+    <string name="cf_etiqMiCarrrito">My Cart</string>
+    <string name="cf_etiqPrecioProd">Cost in products:</string>
+    <string name="cf_etiqCosteEnvio">Delivery costs:</string>
+    <string name="cf_etiqImpuestos">Taxes:</string>
+    <string name="cf_btnPagar">Pay</string>
+
+    <string name="cf_producto">Product</string>
+    <string name="cf_cantidad">Amount</string>
+    <string name="cf_precio">Price</string>
+    <string name="cf_facturaDe">Bill of</string>
+    <string name="cf_factura">Bill</string>
+
+    <!-- Perfil -->
+    <string name="pf_btnCerrarSesion">Sign off</string>
+    <string name="pf_btnEnglish">English</string>
+    <string name="pf_btnEspanol">Spanish</string>
+
+    <!-- Inicio -->
+    <string name="if_etiqHola">Hello</string>
+    <string name="if_etiqPideLoQueQuieras">Ask what you want</string>
+
+    <!-- Preferences -->
+    <string name="p_etiqModoOscuro">Dark mode</string>
+    <string name="p_etiqModoOscuroOn">Dark mode on</string>
+    <string name="p_etiqModoOscuroOff">Dark mode off</string>
+    <string name="p_etiqOrientacion">Orientation</string>
+    <string name="p_etiqOrientacionDes">Set app orientation</string>
+    <string name="p_etiqGuardar">Save</string>
+    <string name="p_etiqPantalla">Screen</string>
+    <string name="p_etiqGuardarConfi">Save configuration</string>
+
+    <!-- Toast -->
+    <string name="t_ingresaNombre">You must enter your name</string>
+    <string name="t_ingresaApellido">You must enter your lastname</string>
+    <string name="t_ingresaEmail">You must enter your email</string>
+    <string name="t_ingresaPassword">You must enter your password</string>
+    <string name="t_coincidePassword">Passwords must match</string>
+    <string name="t_loginIncorrecto">Wrong email or password. Try again</string>
+    <string name="t_emailInvalido">The email entered is invalid</string>
+
+    <string name="t_pedidoEliminado">The order has been successfully deleted</string>
+    <string name="t_pedidoAnadido">Your order has been added to the cart</string>
+    <string name="t_cestaVacia">You have no products in the cart</string>
+    <string name="t_confirmarCompra">Confirmed purchase</string>
+
+    <string name="t_errorBBDD">An error has occurred with the database</string>
+    <string name="t_errorRegistro">ERROR: This user is already registered</string>
+    <string name="t_registroCompletado">Your registration has been successful</string>
+
+    <!-- Diálogo -->
+    <string name="d_confirmarPedido">To confirm order</string>
+    <string name="d_confirmarPedidoMsg">Are you sure you have finished your order?</string>
+    <string name="d_si">Yes</string>
+    <string name="d_no">No</string>
+
+    <string name="d_espera">Wait!</string>
+    <string name="d_seguroEliminado">Are you sure you want to remove the product from the cart?</string>
+    <string name="d_seguro">Surer</string>
+    <string name="d_meArrepiento">No, I have regretted</string>
+
+    <!-- Notificación -->
+    <string name="n_NotifTitulo">Purchase completed</string>
+    <string name="n_NotifContenido">Thanks for your order. Do you want the bill?</string>
+    <string name="n_si">Yes please</string>
+    <string name="n_no">No thanks</string>
+
+    <!-- Productos -->
+    <string name="desc_4Quesos">The 4 cheese pizza is one of the most consumed in the world, of course, by cheese lovers. But be careful, because if we follow the traditional recipe, not just any cheese will do; in fact, the four cheeses used have the Protected Designation of Origin (PDO) certification: Fontina cheese, originally from Valle dAosta; gorgonzola cheese, natural from Milan; Parmesan cheese, originally from the city of Parma; and mozzarella cheese, born in Campania. With these four protagonists you will have in your hands an authentic cheese-making perdition in the form of a pizza. It has no more, no tomato sauce or spices, maybe a touch of ground black pepper.</string>
+    <string name="desc_Barbacoa">As its name indicates, the star ingredient of this pizza is barbecue sauce or BBQ sauce. It is a pizza born in the United States, but it has become the favorite of many people for being juicy and one of the most intense and powerful. Along with the barbecue sauce, the barbecue pizza is made with minced meat and, at the diners choice, with onion, which provides a unique flavor contrast with the rest of the ingredients. Although Italy will always be the queen of pizza, the United States is not far behind in terms of consumption; so much so that the North Americans even have their Pizza National Day, a holiday instituted by Congress that is celebrated on February 9th.</string>
+    <string name="desc_Calzone">The calzone is a special pizza because it hides all its ingredients inside (cheese, meat, tuna, vegetables, etc.), since it is covered by another dough the same size as the base, and in the shape of a dumpling. This wrapped pizza, originally from the city of Puglia (Naples), always maintains its juiciness and, after pasta and classic pizza, it has become one of the best-known and most versioned dishes in Italy.</string>
+    <string name="desc_Diabola">Not suitable for the most delicate palates, the Diavola pizza is distinguished by the spicy flavor of its sauce, which should be noticed in each bite. But also the rest of the ingredients, which further enhance that fiery touch: chorizo, salami, even chili and a generous amount of cheese with character. The American version of this pizza replaces the salami with pepperoni, a variety of Italian sausage that is also spicy but with a more smoky flavor and seasoned with paprika or chili.</string>
+    <string name="desc_Margarita">The margherita pizza is the most classic of Italian pizzas and the one that paved the way for the rest of the pizzas that were later made. The ingredients of this pioneer do not fail, and are the favorites of true lovers of traditional pizza: tomato sauce, mozzarella, basil, oregano and olive oil. What do the colors of these ingredients remind you of? Yes, to the Italian flag; a taste of flag.</string>
+
+    <string name="desc_Vacuno">The integration of pineapple with meat is more common in America than in Europe. The final result of such a combination is well worth trying, as it brings a juiciness to the whole that is difficult to achieve with other recipes. Some of its ingredients are: Beef, Sliced Serrano Ham, Natural Pineapple, Gouda Cheese, Virgin Olive Oil, Salt and Ground Black Pepper.</string>
+    <string name="desc_Shack">One of the most famous burgers in New York. Shake Shacks classic burger, single or double. All hamburgers of this type are made of beef and to accompany it, the famous curly fries.</string>
+    <string name="desc_Clasica">Minced beef, bread soaked in milk, egg, pork bacon and other seasonings form the basis of excellent flavor. This is a super juicy burger that will always be a hit with those who try it. Among the ingredients of this delight we find: sliced bread, veal, Provencal herbs, Dijon mustard, ground black pepper and virgin olive oil.</string>
+    <string name="desc_Ranchera">If you prefer white meats instead of red, then you can choose a chicken burger. Some think that these, compared to beef, are too "sweet" or in some cases even somewhat tasteless. For this reason, you have to try the chicken ranch hamburger, since it is anything but sweet or tasteless. It is accompanied by a good tomato sauce and fried onion, as well as some beans and several strips of bacon.</string>
+
+    <string name="desc_Calamares">The calamari sandwich is one of the most representative dishes of Madrid cuisine. Together with Madrid-style tripe and Madrid stew, it is the best dish we can find in Madrid.</string>
+    <string name="desc_Mixto">The grilled ham and cheese sandwich, mixed sandwich, also known as bikini in Catalonia, is one of the most popular and easy to prepare. However, as silly as it may seem, there are many tricks behind this basic recipe. For example, making cheese perfectly melted without burning the bread or making bread crisp without dripping with grease or being squashed like rolling papers.</string>
+</resources>

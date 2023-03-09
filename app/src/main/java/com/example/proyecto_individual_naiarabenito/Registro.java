@@ -108,15 +108,20 @@ public class Registro extends AppCompatActivity {
 
         // Comprobar que los campos no se encuentren vacíos
         if(nombre.equals("")){
-            Toast.makeText(this,"Debes ingresar tu nombre", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_ingresaNombre);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else if (apellido.equals("")) {
-            Toast.makeText(this,"Debes ingresar tu apellido", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_ingresaApellido);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else if (email.equals("")) {
-            Toast.makeText(this,"Debes ingresar tu email", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_ingresaEmail);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else if (password1.equals("") || password2.equals("")) {
-            Toast.makeText(this,"Debes ingresar tu contraseña", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_ingresaPassword);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else if (!password1.equals(password2)) {    // Comprobar que las contraseñas coincidan
-            Toast.makeText(this,"Las contraseñas deben coincidir", Toast.LENGTH_LONG).show();
+            String msg = getResources().getString(R.string.t_coincidePassword);
+            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
         } else{     // Si se han completado todos los campos: Comprobar email + Registrar
 
             // Crear patrón para validar el email
@@ -127,18 +132,23 @@ public class Registro extends AppCompatActivity {
             if (mather.find()) {    // El email ingresado es válido
                 // Registrar el usuario en la BBDD
                 DBHelper dbHelper = new DBHelper(this);
-                String msg = dbHelper.registrarUsuario(nombre, apellido, email, password1);
+                int registro = dbHelper.registrarUsuario(nombre, apellido, email, password1);
 
-                // Imprimir estado del registro
-                Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
-
-                // Comprobar que el usuario se haya registrado con éxito
-                if(msg.equals("El usuario " + nombre + " ha sido registrado con exito")) {
+                if (registro == 1){
+                    // Imprimir estado del registro
+                    String msg = getResources().getString(R.string.t_errorRegistro);
+                    Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
+                }
+                else if (registro == 2){
+                    String msg = getResources().getString(R.string.t_registroCompletado);
+                    Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
                     // Volver al Login
                     volverLogin(v);
                 }
+
             } else {     // El email ingresado es inválido: Imprimir mensaje de error
-                Toast.makeText(this, "El email ingresado es inválido", Toast.LENGTH_LONG).show();
+                String msg = getResources().getString(R.string.t_emailInvalido);
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
             }
         }
     }

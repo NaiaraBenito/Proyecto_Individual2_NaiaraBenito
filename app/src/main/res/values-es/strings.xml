@@ -83,7 +83,6 @@
     <string name="t_cestaVacia">No tienes productos en la cesta</string>
     <string name="t_confirmarCompra">Compra confirmada</string>
 
-
     <string name="t_errorBBDD">Ha ocurrido un error con la base de datos</string>
     <string name="t_errorRegistro">ERROR: Este usuario ya se encuentra registrado</string>
     <string name="t_registroCompletado">Tu registro se ha realizado con éxito</string>
