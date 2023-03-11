@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/l_etiqEresNuevo"
-                    android:textColor="@color/rosa_claro"
+                    android:textColor="@color/black"
                     android:textSize="15sp" />
 
                 <TextView
@@ -105,7 +105,7 @@
                     android:layout_marginLeft="6dp"
                     android:onClick="crearCuenta"
                     android:text="@string/l_etiqRegistrate"
-                    android:textColor="@color/black"
+                    android:textColor="@color/rosa"
                     android:textSize="15sp" />
             </LinearLayout>
 
