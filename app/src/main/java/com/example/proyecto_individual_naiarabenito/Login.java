@@ -4,7 +4,6 @@ package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +33,6 @@ import java.util.regex.Pattern;
 public class Login extends AppCompatActivity {
 
 // ___________________________________________ Variables ___________________________________________
-
     private EditText et_email;      // EditText que contiene el email del usuario que intenta loguearse
     private EditText et_password;   // EditText que contiene la contraseña del usuario que intenta loguearse
 
@@ -190,13 +187,24 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    //-------------------------
+// _________________________________________________________________________________________________
+
+/*  Método cambiarIdiomaEsp:
+    ------------------------
+        *) Parámetros (Input):
+                1) (View) view: Vista asociada al Activity actual.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se utiliza cuando el usuario pulsa la etiqueta "Español" del Login.
+                Traduce la aplicación completa al idioma español.
+*/
     public void cambiarIdiomaEsp(View v){
-        // Forzar la localización de la aplicación al inglés
+        // Forzar la localización de la aplicación al español
         Locale nuevaloc = new Locale("es");
         Locale.setDefault(nuevaloc);
 
-        // Crear una configuración para la localización inglesa
+        // Crear una configuración para la localización española
         Configuration configuration = getBaseContext().getResources().getConfiguration();
         configuration.setLocale(nuevaloc);
         configuration.setLayoutDirection(nuevaloc);
@@ -211,7 +219,19 @@ public class Login extends AppCompatActivity {
         finish();
         startActivity(getIntent());
     }
-    //-----------------------------
+
+// _________________________________________________________________________________________________
+
+/*  Método cambiarIdiomaIng:
+    ------------------------
+        *) Parámetros (Input):
+                1) (View) view: Vista asociada al Activity actual.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se utiliza cuando el usuario pulsa la etiqueta "Inglés" del Login.
+                Traduce la aplicación completa al idioma inglés.
+*/
     public void cambiarIdiomaIng(View v){
         // Forzar la localización de la aplicación al inglés
         Locale nuevaloc = new Locale("en");

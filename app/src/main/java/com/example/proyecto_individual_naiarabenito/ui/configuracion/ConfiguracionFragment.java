@@ -3,14 +3,10 @@
 package com.example.proyecto_individual_naiarabenito.ui.configuracion;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +34,7 @@ public class ConfiguracionFragment extends Fragment {
                 (View) view: Vista asociada al Fragment actual.
         *) Descripción:
                 Este método se ejecuta cuando el usuario se ha logueado correctamente y accede al
-                apartado Cesta del menú.
+                apartado Configuración del menú.
 */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

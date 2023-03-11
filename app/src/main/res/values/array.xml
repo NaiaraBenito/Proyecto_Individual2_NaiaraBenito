@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Lista de opciones para elegir la orientación de la pantalla en las preferencias -->
     <string-array name="list_ori">
         <item>Auto</item>
         <item>Vertical</item>

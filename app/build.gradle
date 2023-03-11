@@ -53,6 +53,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
+    // Librería para las Preferencias
     implementation 'androidx.preference:preference:1.2.0'
 
 }

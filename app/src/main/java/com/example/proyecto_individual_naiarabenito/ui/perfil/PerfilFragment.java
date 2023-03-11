@@ -15,12 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.proyecto_individual_naiarabenito.Login;
 import com.example.proyecto_individual_naiarabenito.R;
-
 import java.util.Locale;
 
 
@@ -87,7 +85,7 @@ public class PerfilFragment extends Fragment {
             }
         });
 
-        //----------------------
+        // Obtener el botón para cambiar el idioma de la aplicación al inglés
         Button bot_eng = view.findViewById(R.id.btn_en);
         // Cambiar idioma al Inglés --> Funcionamiento del botón English
         bot_eng.setOnClickListener(new View.OnClickListener() {
@@ -114,16 +112,16 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        // Obtener el botón para cambiar el idioma de la aplicación al castellano
         Button bot_esp = view.findViewById(R.id.btn_es);
-        // Cambiar idioma al Inglés --> Funcionamiento del botón English
         bot_esp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Forzar la localización de la aplicación al inglés
+                // Forzar la localización de la aplicación al español
                 Locale nuevaloc = new Locale("es");
                 Locale.setDefault(nuevaloc);
 
-                // Crear una configuración para la localización inglesa
+                // Crear una configuración para la localización española
                 Configuration configuration = getActivity().getBaseContext().getResources().getConfiguration();
                 configuration.setLocale(nuevaloc);
                 configuration.setLayoutDirection(nuevaloc);
@@ -139,7 +137,7 @@ public class PerfilFragment extends Fragment {
                 startActivity(getActivity().getIntent());
             }
         });
-        //----------------------
+
         return view;
     }
 

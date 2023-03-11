@@ -3,7 +3,6 @@
 package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -25,7 +24,6 @@ import java.util.List;
 
     *) Tipo: RecyclerView Adapter
 */
-//public class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder> implements ConfirmarBorradoOrdenDialog.ListenerDialogo, CestaFragment.ListenerCesta{
 class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewHolder>{
 
 // ___________________________________________ Variables ___________________________________________
@@ -34,9 +32,9 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     private final Context context;            // Contexto de CestaFragment
     private final String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
 
-    private InterfazBorradoAlert listenerBorrado;
+    private InterfazBorradoAlert listenerBorrado;   // Listener para utilizar el método notificarBorrado()
 
-    private InterfazActualizarCesta listenerActualizado;
+    private InterfazActualizarCesta listenerActualizado; // Listener para utilizar el método notificarCambios()
 
 
 // __________________________________________ Constructor __________________________________________
@@ -119,21 +117,10 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                     int nuevaCantidad = cantidad - 1;
 
                     // Comprobar si se ha agotado la cantidad del producto
-                    if (nuevaCantidad <= 0){ // Si se ha agotado: Eliminar producto de la cesta
+                    if (nuevaCantidad <= 0) { // Si se ha agotado: Eliminar producto de la cesta
 
+                        // Enseñar un diálogo para confirmar la decisión
                         listenerBorrado.notificarBorrado(position);
-
-                        /*// Eliminar producto de la lista
-                        lista_orden.remove(position);
-
-                        // Eliminar producto de la BBDD
-                        DBHelper dbHelper = new DBHelper(context);
-                        dbHelper.borrarOrden(producto, datosUser[2]);*/
-
-                        //listener = (ListenerCesta) view.findViewById(R.id.total).getContext();
-                        //listener.actualizarDatos();
-
-
                     }
                     else{   // Si no se ha agotado: Actualizar cantidad del producto de la cesta
 
@@ -143,14 +130,12 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                         // Actualizar la BBDD
                         DBHelper dbHelper = new DBHelper(context);
                         dbHelper.actualizarOrden(producto, -1, datosUser[2]);
-
-                        //listener = (ListenerCesta) view.getContext();
-                        //listener.actualizarDatos();
-
                     }
 
                     // Notificar al RecyclerView que la lista ha sido modificada
                     notifyDataSetChanged();
+
+                    // Notificar a CestaFragment que la lista ha sido modificada
                     listenerActualizado.notificarCambios();
                 }
             }
@@ -170,6 +155,8 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
                 // Notificar al RecyclerView que la lista ha sido modificada
                 notifyDataSetChanged();
+
+                // Notificar a CestaFragment que la lista ha sido modificada
                 listenerActualizado.notificarCambios();
 
                 // Actualizar la BBDD
@@ -225,7 +212,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método bindData:
-    --------------------
+    ----------------
         *) Parámetros (Input):
                 (Orden) item: Contiene la Orden de un elemento de la cesta.
         *) Parámetro (Output):
@@ -272,6 +259,18 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         }
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método eliminar:
+    ----------------
+        *) Parámetros (Input):
+                (int) position: Índice del producto que se desea eliminar.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método carga las preferencias configuradas por el usuario (modo oscuro,
+                orientación de la pantalla...).
+*/
     public void eliminar(int position){
         String producto = lista_orden.get(position).getNombreProd();
         // Eliminar producto de la lista
@@ -283,6 +282,8 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
         // Notificar al RecyclerView que la lista ha sido modificada
         notifyDataSetChanged();
+
+        // Notificar a CestaFragment que la lista ha sido modificada
         listenerActualizado.notificarCambios();
 
     }

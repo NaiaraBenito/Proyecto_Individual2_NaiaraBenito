@@ -18,7 +18,7 @@ import java.util.ArrayList;
     *) Descripción:
         La función de esta clase es comunicar la aplicación con una BBDD local de SQLite.
         Los métodos que implementa se comportan como un puente realizando distintas peticiones
-        como crear la BBDD ademáss de añadir, eliminar y actualizar los datos de las tablas.
+        como crear la BBDD además de añadir, eliminar y actualizar los datos de las tablas.
 
     *) Tipo: Helper
 */
@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
 */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        // Crear la tabla de usuarios
+        // Crear la tabla de usuarios resgistrados
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_USUARIOS + "(" +
                 "nombre TEXT NOT NULL," +
                 "apellido TEXT NOT NULL," +
@@ -165,13 +165,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 3) (String) pEmail: Email del usuario que intenta registrarse.
                 4) (String) pPassword: Contraseña del usuario que intenta registrarse.
         *) Parámetro (Output):
-                (String) msg: Texto informativo sobre el estado del proceso de registro.
+                (int) msg: Identificador que informa sobre el resultado del registro.
         *) Descripción:
                 Este método se ejecuta cuando el usuario intenta registrarse en la aplicación.
                 Se comprueba que el usuario no se encuentre registrado en la BBDD.
-                    - Si está registrado: Devuelve "ERROR: Este usuario ya se encuentra registrado".
-                    - Si no está registrado: Añade el nuevo usuario a la BBDD y devuelve "El usuario
-                      [nombre] ha sido registrado con exito".
+                    - Si está registrado: Devuelve 1 --> "ERROR: Este usuario ya se encuentra registrado".
+                    - Si no está registrado:Añade el nuevo usuario a la BBDD y devuelve 2 -->  "El
+                      usuario ha sido registrado con exito".
 */
     public int registrarUsuario(String pNombre, String pApellido, String pEmail, String pPassword){
         try{
@@ -226,7 +226,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 4) (int) pCantidad: Número de unidades  que se desea añadir del producto.
                 5) (String) pEmail: Email del usuario logueado.
         *) Parámetro (Output):
-                (Boolean) anadido: Booleano que informa del estado del registro de la orden.
+                (Boolean) anadido: Booleano que informa del resultado del registro de la orden.
         *) Descripción:
                 Este método se ejecuta cuando el usuario intenta añadir algún producto al carrito.
                 Se comprueba si el producto ya se encontraba en la cesta.
@@ -362,10 +362,11 @@ public class DBHelper extends SQLiteOpenHelper {
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Este método se ejecuta cuando el usuario cambia el pedido desde a la vista del
+                Este método se ejecuta cuando el usuario cambia el pedido desde el fragmento del
                 carrito.
                 Se comprueba que el producto se encuentre registrado:
                     - Si está registrado: Actualiza la cantidad del producto
+                    - Si está no está registrado: No hace nada
 */
     public void actualizarOrden(String pProducto, int pCantidad, String pEmail){
         try{
@@ -407,6 +408,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 Este método se ejecuta cuando el usuario elimina un producto del carrito.
                 Se comprueba que el producto se encuentre registrado:
                     - Si está registrado: Borra el producto
+                    - Si no está registrado: No hace nada
 */
     public void borrarOrden(String pProducto, String pEmail){
         try{

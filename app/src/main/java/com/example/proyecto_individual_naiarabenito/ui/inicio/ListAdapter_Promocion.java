@@ -104,7 +104,6 @@ public class ListAdapter_Promocion extends RecyclerView.Adapter<ListAdapter_Prom
             img_icon = itemView.findViewById(R.id.prom_img);
         }
 
-
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método bindData:

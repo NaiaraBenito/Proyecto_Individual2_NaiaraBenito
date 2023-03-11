@@ -1,3 +1,5 @@
+
+// _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/* ################################ CLASE CONFIGURACION_ACTIVITY ###################################
+/* ################################ CLASE INICIO_FRAGMENT ###################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar las lista del productos de la aplicación.
 

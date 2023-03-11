@@ -2,6 +2,7 @@
 // _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
+
 /* ######################################## CLASE PRODUCTO #########################################
     *) Descripción:
         La función de esta clase es guardar la información de los productos ofrece la aplicación.
@@ -24,6 +25,7 @@ public class Producto {
         this.img_id = img_id;
         this.precio = precio;
     }
+
 // _________________________________________________________________________________________________
     public Producto(String nombre, String descripcion, int img_id, int cantidad, double precio) {
         this.nombre = nombre;

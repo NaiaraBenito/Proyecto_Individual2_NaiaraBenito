@@ -1,8 +1,9 @@
+
+// _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
 package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
-
+// ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import static com.example.proyecto_individual_naiarabenito.ui.cesta.CestaFragment.NOTIFICACION_ID;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,27 +16,46 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextPaint;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
-
 import java.io.File;
 import java.io.FileOutputStream;
 
+
+/* ################################### CLASE SI_ACT_NOTIFICACION ##################################
+    *) Descripción:
+        La función de esta clase es gestionar el proceso de haber pulsado Si en la notificación
+        que aparece al terminar un pedido y pregunta por la factura.
+
+    *) Tipo: Activity
+*/
 public class SiActNotificacion extends AppCompatActivity {
 
-    String[] datosUser;
-    String tituloPDF;
-    String descripcionPDF;
+    // ___________________________________________ Variables ___________________________________________
+    private String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
+    private String tituloPDF;    // Variable que contiene el título de la factura que se genera al finalizar el pedido
+    private String descripcionPDF;  // Variable que contiene el cuerpo de la factura
 
+// ____________________________________________ Métodos ____________________________________________
+
+/*  Método onCreate:
+    ----------------
+        *) Parámetros (Input):
+                1) (Bundle) savedInstanceState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta la primera vez que se crea el Activity.
+                Elimina la notificación, crea la factura y devuelve la ejecución al Menú Principal.
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_si_act_notificacion);
+
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             // Obtener los datos del usuario para mantener la sesión
@@ -46,6 +66,7 @@ public class SiActNotificacion extends AppCompatActivity {
             tituloPDF = extras.getString("tituloFactura");
             descripcionPDF = extras.getString("descripcionFactura");
 
+            // Crear la factura de la compra
             crearPDF();
 
             // Crear el intent que redirige la ejecución al Menú Principal
@@ -55,10 +76,11 @@ public class SiActNotificacion extends AppCompatActivity {
             intent.putExtra("nombreUsuario", datosUser[0]);
             intent.putExtra("apellidoUsuario", datosUser[1]);
             intent.putExtra("emailUsuario", datosUser[2]);
-            // Para hacer que la notificación desaparezca al ejecutar la actividad
+
             // Crear un manager de notificaciones
             NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
-            // Cancelar la notificación, pasándole el NOTIFICATION_ID
+
+            // Eliminar la notificación, pasándole el NOTIFICATION_ID
             nmc.cancel(NOTIFICACION_ID);
 
             // Evitar que se llene la pila de Actividades (Menú Principal solo tiene una instancia)

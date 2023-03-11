@@ -8,7 +8,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -218,7 +217,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         *) Parámetros (Input):
                 1) (double) pPrecio: Contiene el coste total de los productos de la cesta.
         *) Parámetro (Output):
-                (double) auxImp: Contiene el coste de los impuestos del pedido .
+                (double) auxImp: Contiene el coste de los impuestos del pedido.
         *) Descripción:
                 Este método calcula el coste de los impuestos del pedido realizando %10 del total de
                 los productos.
@@ -310,7 +309,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
 
         // Añadir y gestionar el botón "Si"
         String dSi = getResources().getString(R.string.d_si);
-        String dNo = getResources().getString(R.string.d_no);
+
         confirmacion.setPositiveButton(dSi, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
@@ -325,9 +324,10 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         });
 
         // Añadir y gestionar el botón "No"
+        String dNo = getResources().getString(R.string.d_no);
         confirmacion.setNegativeButton(dNo, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) { }
+            public void onClick(DialogInterface dialog, int id) { } // Si pulsa "No": No hacer nada
         });
 
         // Crear y mostrar el diálogo
@@ -343,7 +343,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
                 void
         *) Descripción:
                 Este método crea la el canal y la notificación de agradecimiento tras el pedido,
-                además de gestionar su funcionamiento.
+                además de gestionar su funcionamiento, como actualizar la vista y la BBDD.
 */
     private void gestionarNotificacion(){
 
@@ -414,8 +414,8 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         *) Descripción:
                 Este método crea una notificación para agradecerle al usuario el pedido y
                 preguntarle si desea obtener la factura del pedido.
-                    - Si el usuario pulsa "Si, por favor": Se le descargará la factura en la SD.
-                    - Si el usuario pulsa "No, gracias": La notificación desaparecerá sin hacer nada.
+                    - Si el usuario pulsa "Si por favor": Se le descargará la factura en la SD.
+                    - Si el usuario pulsa "No gracias": La notificación desaparecerá sin hacer nada.
 */
     private void crearNotificacion() {
 
@@ -430,8 +430,8 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
 
         String notifTitulo = getResources().getString(R.string.n_NotifTitulo);
         String notifContenido = getResources().getString(R.string.n_NotifContenido);
-        notif.setContentTitle(notifContenido);     // Asignar título
-        notif.setContentText(notifTitulo); // Asignar contenido
+        notif.setContentTitle(notifContenido);                      // Asignar título
+        notif.setContentText(notifTitulo);                          // Asignar contenido
         notif.setColor(Color.rgb(239, 70, 240));     // Asignar color
         notif.setPriority(NotificationCompat.PRIORITY_DEFAULT);     // Asignar prioridad
         notif.setLights(Color.rgb(239, 70, 240), 1000, 1000);   // Asignar luces
@@ -466,8 +466,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Este método gestiona el estado de espera de la notificación. Mientras espera a que
-                el usuario responda, lo redirige al Menú Principal.
+                Este método gestiona el estado de espera de la notificación.
 */
     private void setPendingIntent(){
 
@@ -506,6 +505,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         i.putExtra("tituloFactura", tituloPDF);
         i.putExtra("descripcionFactura", descripcionPDF);
 
+        // Redirigir ejecución al Activity SiActNotificacion
         siPendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -530,6 +530,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
 
+        // Redirigir ejecución al Activity NoActNotificacion
         noPendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -541,7 +542,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Este método guarda la informaición necesaria para realizar la factura del peddido
+                Este método guarda la información necesaria para realizar la factura del peddido
                 realizado por el usuario.
 */
     private void disenarFactura(){
@@ -686,15 +687,24 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         super.onDestroyView();
     }
 
-//---------------------------------------
+// _________________________________________________________________________________________________
 
+    /*  Método notificarBorrado:
+        ------------------------
+            *) Parámetos (Input):
+                    (int) pPos: Índice ddel elemento que se desea eliminar.
+            *) Parámetro (Output):
+                    void
+            *) Descripción:
+                    Este método se ejecuta cuando el usuario desea eliminar un producto de la cesta.
+                    Crea un diálogo para confirmar la decisión.
+                        - Si pulsa el botón "Seguro": Elimina el producto de la cesta
+                        - Si pulsa el botón "Me arreptiento": No hace nada
+*/
     @Override
-    public void notificarBorrado(int pos) {
+    public void notificarBorrado(int PPos) {
         // Crear Diálogo de confirmación
         AlertDialog.Builder confirmacion = new AlertDialog.Builder(getActivity());
-        String dSi = getResources().getString(R.string.d_si);
-        String dNo = getResources().getString(R.string.d_no);
-
         String dEspera = getResources().getString(R.string.d_espera);
         String dSeguroElimin = getResources().getString(R.string.d_seguroEliminado);
         confirmacion.setTitle(dEspera);      // Asignar el título
@@ -703,31 +713,44 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
 
         // Añadir y gestionar el botón "Si"
         String dSeguro = getResources().getString(R.string.d_seguro);
-        String dMeArrepiento = getResources().getString(R.string.d_no);
         confirmacion.setPositiveButton(dSeguro, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
 
-                // Notificar que se ha confirmado la compra
-                adapterOrdenes.eliminar(pos);
+                // Eliminar el producto de la cesta y de la BBDD
+                adapterOrdenes.eliminar(PPos);
 
+                // Notificar que se ha confirmado la compra
                 String msg = getResources().getString(R.string.t_pedidoEliminado);
                 Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
             }
         });
 
-        // Añadir y gestionar el botón "No"
+        // Añadir y gestionar el botón "Me arrepiento"
+        String dMeArrepiento = getResources().getString(R.string.d_meArrepiento);
         confirmacion.setNegativeButton(dMeArrepiento, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {}});
+            public void onClick(DialogInterface dialog, int id) {}});       // No hace nada
 
         // Crear y mostrar el diálogo
         confirmacion.create().show();
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método notificarCambios:
+    ------------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este es un método abstracto de la interfaz InterfazActualizarCesta. Es llamado desde
+                ListAdapter_Ordenes y se utiliza para actualizar el apartado de costes.
+*/
     @Override
     public void notificarCambios() {
+        // Actualizar los costes (Total producto, envio, impuestos y total)
         cargarResumen(getView());
     }
 }
