@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.proyecto_individual_naiarabenito.Login;
@@ -33,6 +35,9 @@ public class PerfilFragment extends Fragment {
 // ___________________________________________ Variables ___________________________________________
     private String[] datosUser; // Lista que contiene los datos del usuario para mantener la sesión
     private Button btn_cerrarSesion;    // Botón para cerrar la sesión
+    private TextView tv_nombre;         // TextView que contiene el nombre del usuario
+    private TextView tv_apellido;         // TextView que contiene el apellido del usuario
+    private TextView tv_email;         // TextView que contiene el email del usuario
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -63,7 +68,15 @@ public class PerfilFragment extends Fragment {
         datosUser[2] = getActivity().getIntent().getExtras().getString("emailUsuario");
 
         // Obtener los Objetos de la vista
+        tv_nombre = view.findViewById(R.id.pf_nombre);
+        tv_apellido = view.findViewById(R.id.pf_apellido);
+        tv_email = view.findViewById(R.id.pf_email);
         btn_cerrarSesion = view.findViewById(R.id.btn_logout);
+
+        // Asignar valor a los elementos
+        tv_nombre.setText(datosUser[0]);
+        tv_apellido.setText(datosUser[1]);
+        tv_email.setText(datosUser[2]);
 
         // Asignar acción al pulsar el botón "CERRAR SESIÓN"
         btn_cerrarSesion.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +198,7 @@ public class PerfilFragment extends Fragment {
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
         if(modoOscuro){         // Si el modo oscuro está activado: Pintar el fondo de negro
-            view.setBackgroundColor(getResources().getColor(R.color.gris_claro));
+            view.setBackgroundColor(getResources().getColor(R.color.black));
         } else{                 // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             view.setBackgroundColor(getResources().getColor(R.color.white));
         }

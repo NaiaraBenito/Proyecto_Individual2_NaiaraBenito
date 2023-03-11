@@ -54,6 +54,12 @@
     <string name="pf_btnCerrarSesion">Cerrar Sesión</string>
     <string name="pf_btnEnglish">Inglés</string>
     <string name="pf_btnEspanol">Español</string>
+    <string name="pf_nombre">Nombre:</string>
+    <string name="pf_apellido">Apellido:</string>
+    <string name="pf_email">Email:</string>
+    <string name="pf_idioma">Escoge el idioma de la aplicación</string>
+    <string name="pf_salir">Salir de la aplicación</string>
+    <string name="pf_datosPers">Mis datos personales</string>
 
     <!-- Inicio -->
     <string name="if_etiqHola">Hola</string>
@@ -118,5 +124,4 @@
 
     <string name="desc_Calamares">El bocata de calamares es uno de los platos más representativos de la cocina madrileña. Junto con los callos a la madrileña y el cocido madrileño, es el mejor plato que podemos encontrar en Madrid.</string>
     <string name="desc_Mixto">El sándwich de jamón y queso a la plancha, sándwich mixto, también conocido como bikini en Catalunya, es uno de los  más populares y fáciles de preparar. Sin embargo, por más que parezca una tontería, hay muchos trucos que se esconden tras esta básica receta. Por ejemplo, lograr que el queso quede perfectamente fundido sin quemar el pan o hacer que el pan quede crujiente sin que chorree grasa ni esté aplastado como un papel de fumar.</string>
-
 </resources>

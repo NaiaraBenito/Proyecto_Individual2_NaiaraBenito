@@ -8,10 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Colores del Login -->
+
     <color name="rosa">#EF46F0</color>
     <color name="rosa_claro">#FFC8FF</color>
+    <color name="rosa_palo">#F291B5</color>
     <color name="negro">#333133</color>
     <color name="gris_claro">#C4B5C4</color>
+    <color name="morado_oscuro">#40091D</color>
+    <color name="morado_claro">#A6445E</color>
 
 </resources>

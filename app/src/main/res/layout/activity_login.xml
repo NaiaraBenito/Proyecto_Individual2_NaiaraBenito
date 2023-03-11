@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/l_etiqEresNuevo"
-                    android:textColor="@color/black"
+                    android:textColor="@color/rosa_claro"
                     android:textSize="15sp" />
 
                 <TextView
@@ -105,7 +105,7 @@
                     android:layout_marginLeft="6dp"
                     android:onClick="crearCuenta"
                     android:text="@string/l_etiqRegistrate"
-                    android:textColor="@color/rosa"
+                    android:textColor="@color/black"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -113,8 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text=""
                 android:background="@color/rosa"
+                android:text=""
                 android:textSize="5sp" />
 
             <LinearLayout
@@ -128,8 +128,8 @@
                     android:id="@+id/btn_EspanolLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/l_etiqEspanol"
                     android:onClick="cambiarIdiomaEsp"
+                    android:text="@string/l_etiqEspanol"
                     android:textColor="@color/rosa"
                     android:textSize="15sp" />
 

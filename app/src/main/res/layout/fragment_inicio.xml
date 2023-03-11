@@ -49,18 +49,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/if_etiqPideLoQueQuieras"
-                android:textColor="@color/black"
+                android:textColor="@color/gris_claro"
                 android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/rosa"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="#FFFFFF"
                     android:onClick="llamada"
                     android:src="@drawable/tel_icon" />
 
@@ -70,7 +71,8 @@
                     android:onClick="llamada"
                     android:layout_marginLeft="5dp"
                     android:text="943 466 484"
-                    android:textColor="@color/rosa"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:textSize="12sp"/>
             </LinearLayout>
         </LinearLayout>
@@ -80,7 +82,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginRight="5sp"
-            android:src="@drawable/login_icon"/>
+            android:src="@drawable/logo"/>
     </LinearLayout>
 
     <TextView
@@ -93,6 +95,7 @@
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:hint="Buscar"
+        android:background="@color/white"
         android:layout_height="wrap_content" />
 
     <TextView

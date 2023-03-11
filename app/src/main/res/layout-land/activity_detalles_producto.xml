@@ -31,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:text="4 Quesos"
                 android:textAlignment="center"
-                android:textColor="@color/rosa"
+                android:background="@color/rosa"
+                android:textColor="@color/white"
                 android:textSize="50sp"
                 android:textStyle="bold" />
 
@@ -39,9 +40,11 @@
                 android:id="@+id/det_prod_descrip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="26sp"
                 android:layout_marginLeft="16sp"
                 android:layout_marginRight="16sp"
                 android:text="4 Quesos"
+                android:background="@color/rosa_claro"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
@@ -128,8 +131,9 @@
                 android:id="@+id/btn_anadirCarrito_det_prod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginTop="16sp"
+                android:layout_marginLeft="200dp"
+                android:layout_marginRight="200dp"
                 android:onClick="anadirCarrito"
                 android:text="@string/dp_btnAnadirCarrito"
                 app:iconSize="40sp"
@@ -139,8 +143,8 @@
                 android:id="@+id/btn_regresarInicio_det_prod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="200dp"
+                android:layout_marginRight="200dp"
                 android:onClick="regresar"
                 android:text="@string/dp_btnRegresar" />
         </LinearLayout>

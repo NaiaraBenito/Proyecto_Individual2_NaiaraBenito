@@ -54,6 +54,12 @@
     <string name="pf_btnCerrarSesion">Sign off</string>
     <string name="pf_btnEnglish">English</string>
     <string name="pf_btnEspanol">Spanish</string>
+    <string name="pf_nombre">Name:</string>
+    <string name="pf_apellido">Lastname:</string>
+    <string name="pf_email">Email:</string>
+    <string name="pf_idioma">Choose the language of the application</string>
+    <string name="pf_salir">Exit application</string>
+    <string name="pf_datosPers">My personal information</string>
 
     <!-- Inicio -->
     <string name="if_etiqHola">Hello</string>
@@ -95,7 +101,7 @@
 
     <string name="d_espera">Wait!</string>
     <string name="d_seguroEliminado">Are you sure you want to remove the product from the cart?</string>
-    <string name="d_seguro">Surer</string>
+    <string name="d_seguro">Sure</string>
     <string name="d_meArrepiento">No, I have regretted</string>
 
     <!-- Notificación -->

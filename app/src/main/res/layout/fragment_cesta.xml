@@ -39,6 +39,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
+                android:background="@color/rosa_claro"
                 android:orientation="horizontal">
 
                 <TextView
@@ -56,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:text="100€"
                     android:textStyle="bold"
-                    android:textColor="@color/rosa_claro"
+                    android:textColor="@color/rosa"
                     android:textSize="18sp"/>
             </LinearLayout>
 
@@ -67,6 +68,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
+                android:background="@color/rosa_claro"
                 android:orientation="horizontal">
 
                 <TextView
@@ -84,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:text="3€"
                     android:textStyle="bold"
-                    android:textColor="@color/rosa_claro"
+                    android:textColor="@color/rosa"
                     android:textSize="18sp"/>
             </LinearLayout>
 
@@ -95,6 +97,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
+                android:background="@color/rosa_claro"
                 android:orientation="horizontal">
 
                 <TextView
@@ -109,11 +112,11 @@
                 <TextView
                     android:id="@+id/total_impuesto_carrito"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="10€"
-                    android:textStyle="bold"
-                    android:textColor="@color/rosa_claro"
-                    android:textSize="18sp"/>
+                    android:textColor="@color/rosa"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
@@ -132,6 +135,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
+                android:background="@color/morado_oscuro"
                 android:orientation="horizontal">
 
                 <TextView
@@ -140,7 +144,7 @@
                     android:layout_weight="1"
                     android:text="Total:"
                     android:textStyle="bold"
-                    android:textColor="@color/rosa"
+                    android:textColor="@color/white"
                     android:textSize="30sp"/>
 
                 <TextView
@@ -149,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:text="113€"
                     android:textStyle="bold"
-                    android:textColor="@color/rosa_claro"
+                    android:textColor="@color/white"
                     android:textSize="30sp"/>
             </LinearLayout>
 
@@ -157,11 +161,13 @@
                 android:id="@+id/btn_pagar_carrito"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="25dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="50dp"
                 android:layout_marginBottom="25dp"
                 android:onClick="terminarCompras"
+                app:icon="@drawable/carrito"
+                app:iconSize="40sp"
                 android:text="@string/cf_btnPagar" />
         </LinearLayout>
     </ScrollView>

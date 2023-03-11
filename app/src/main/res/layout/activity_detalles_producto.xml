@@ -30,8 +30,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="4 Quesos"
+                android:background="@color/rosa"
                 android:textAlignment="center"
-                android:textColor="@color/rosa"
+                android:textColor="@color/white"
                 android:textSize="50sp"
                 android:textStyle="bold" />
 
@@ -40,8 +41,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16sp"
+                android:layout_marginTop="26sp"
                 android:layout_marginRight="16sp"
                 android:text="4 Quesos"
+                android:background="@color/rosa_claro"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
@@ -78,6 +81,7 @@
                     android:textAlignment="center"
                     android:layout_marginLeft="16sp"
                     android:text="16.90"
+                    android:textStyle="bold"
                     android:textColor="@color/rosa_claro"
                     android:textSize="25sp" />
             </LinearLayout>

@@ -48,6 +48,7 @@
                 android:layout_marginTop="5dp"
                 android:onClick="volverLogin"
                 android:text="@string/r_etiqTengoCuenta"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
 
