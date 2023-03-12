@@ -45,7 +45,7 @@ import java.util.List;
 
     *) Tipo: Fragment
 */
-public class CestaFragment extends Fragment implements InterfazBorradoAlert, InterfazActualizarCesta {
+public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
 // ___________________________________________ Variables ___________________________________________
     private String[] datosUser; // Lista que contiene los datos del usuario para mantener la sesión
@@ -144,7 +144,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
         // Cargar las lista en el RecyclerView
         recyclerViewOrdenes = view.findViewById(R.id.lista_carrito);
         recyclerViewOrdenes.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser,this, this);
+        adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser,this);
         recyclerViewOrdenes.setAdapter(adapterOrdenes);
     }
 
@@ -702,7 +702,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
                         - Si pulsa el botón "Me arreptiento": No hace nada
 */
     @Override
-    public void notificarBorrado(int PPos) {
+    public void notificarBorrado(int pPos) {
         // Crear Diálogo de confirmación
         AlertDialog.Builder confirmacion = new AlertDialog.Builder(getActivity());
         String dEspera = getResources().getString(R.string.d_espera);
@@ -718,7 +718,7 @@ public class CestaFragment extends Fragment implements InterfazBorradoAlert, Int
             public void onClick(DialogInterface dialog, int id) {
 
                 // Eliminar el producto de la cesta y de la BBDD
-                adapterOrdenes.eliminar(PPos);
+                adapterOrdenes.eliminar(pPos);
 
                 // Notificar que se ha confirmado la compra
                 String msg = getResources().getString(R.string.t_pedidoEliminado);

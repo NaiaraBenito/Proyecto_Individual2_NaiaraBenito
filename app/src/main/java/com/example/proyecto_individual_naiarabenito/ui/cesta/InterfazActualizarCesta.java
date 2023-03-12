@@ -14,4 +14,5 @@ public interface InterfazActualizarCesta {
 
 // ____________________________________________ Métodos ____________________________________________
     void notificarCambios();
+    void notificarBorrado(int pos);
 }

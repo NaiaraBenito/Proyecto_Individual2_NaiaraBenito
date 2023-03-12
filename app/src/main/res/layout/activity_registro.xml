@@ -140,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="volverLogin"
                 android:text="@string/r_etiqTengoCuenta"
-                android:textColor="@color/black"
+                android:textColor="@color/rosa"
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>

@@ -32,18 +32,15 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     private final Context context;            // Contexto de CestaFragment
     private final String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
 
-    private InterfazBorradoAlert listenerBorrado;   // Listener para utilizar el método notificarBorrado()
-
     private InterfazActualizarCesta listenerActualizado; // Listener para utilizar el método notificarCambios()
 
 
 // __________________________________________ Constructor __________________________________________
-    public ListAdapter_Ordenes(List<Orden> pList_ele, Context pContext, String[] pDatosUser,InterfazBorradoAlert listenerBorrado, InterfazActualizarCesta listenerActualizado){
+    public ListAdapter_Ordenes(List<Orden> pList_ele, Context pContext, String[] pDatosUser, InterfazActualizarCesta listenerActualizado){
         this.inflater = LayoutInflater.from(pContext);
         this.context = pContext;
         this.lista_orden = pList_ele;
         this.datosUser = pDatosUser;
-        this.listenerBorrado = listenerBorrado;
         this.listenerActualizado = listenerActualizado;
     }
 
@@ -120,7 +117,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                     if (nuevaCantidad <= 0) { // Si se ha agotado: Eliminar producto de la cesta
 
                         // Enseñar un diálogo para confirmar la decisión
-                        listenerBorrado.notificarBorrado(position);
+                        listenerActualizado.notificarBorrado(position);
                     }
                     else{   // Si no se ha agotado: Actualizar cantidad del producto de la cesta
 

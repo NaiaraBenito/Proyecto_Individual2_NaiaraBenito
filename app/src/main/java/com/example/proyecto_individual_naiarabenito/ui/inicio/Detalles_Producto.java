@@ -21,7 +21,7 @@ import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 /* ################################### CLASE DETALLES_PRODUCTO #####################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar la vista que muestra los detalles del
-        procuto seleccionado.
+        producto seleccionado.
 
     *) Tipo: Activity
 */
