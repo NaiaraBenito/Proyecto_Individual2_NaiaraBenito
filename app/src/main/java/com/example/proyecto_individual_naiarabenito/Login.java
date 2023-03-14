@@ -3,12 +3,11 @@
 package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +31,7 @@ public class Login extends AppCompatActivity {
 // ___________________________________________ Variables ___________________________________________
     private EditText et_email;      // EditText que contiene el email del usuario que intenta loguearse
     private EditText et_password;   // EditText que contiene la contraseña del usuario que intenta loguearse
+    private String idioma;          // String que contiene el idioma actual de la aplicación
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -48,6 +47,27 @@ public class Login extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getBaseContext(), idioma);
+        }
+
         // Crear la vista
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -76,6 +96,9 @@ public class Login extends AppCompatActivity {
 
         // Crear el intent que redirige la ejecución al Registro
         Intent intent = new Intent(this, Registro.class);
+
+        // Guardar el idioma actual de la aplicación
+        intent.putExtra("idioma",idioma);
         startActivity(intent);
         finish();
     }
@@ -127,6 +150,9 @@ public class Login extends AppCompatActivity {
                     intent.putExtra("nombreUsuario", datos[0]);
                     intent.putExtra("apellidoUsuario", datos[1]);
                     intent.putExtra("emailUsuario", datos[2]);
+
+                    // Guardar el idioma actual de la aplicación
+                    intent.putExtra("idioma",idioma);
 
                     // Cargar el Menú Principal
                     startActivity(intent);
@@ -198,24 +224,22 @@ public class Login extends AppCompatActivity {
                 Traduce la aplicación completa al idioma español.
 */
     public void cambiarIdiomaEsp(View v){
-        // Forzar la localización de la aplicación al español
-        Locale nuevaloc = new Locale("es");
-        Locale.setDefault(nuevaloc);
 
-        // Crear una configuración para la localización española
-        Configuration configuration = getBaseContext().getResources().getConfiguration();
-        configuration.setLocale(nuevaloc);
-        configuration.setLayoutDirection(nuevaloc);
-        Context context = getBaseContext().createConfigurationContext(configuration);
+        // Cambiar variable auxiliar que indica el idioma de la aplicación
+        idioma = "es";
 
-        // Actualizar todos los recursos de la aplicación
-        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+        // Instanciar el Gestor de idiomas
+        GestorIdioma gI = new GestorIdioma();
 
-        // Regargar de nuevo la actividad:
-        //   - finish() -> Finalizar la instancia en curso
-        //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+        // Asignar el idioma a la pantalla actual
+        gI.cambiarIdioma(getBaseContext(), idioma);
+
+        // Recargar de nuevo la actividad
+        Intent intent = new Intent(this, Login.class);
+        // Enviar el idioma actual
+        intent.putExtra("idioma",idioma);
+        startActivity(intent);
         finish();
-        startActivity(getIntent());
     }
 
 // _________________________________________________________________________________________________
@@ -231,23 +255,40 @@ public class Login extends AppCompatActivity {
                 Traduce la aplicación completa al idioma inglés.
 */
     public void cambiarIdiomaIng(View v){
-        // Forzar la localización de la aplicación al inglés
-        Locale nuevaloc = new Locale("en");
-        Locale.setDefault(nuevaloc);
+        // Cambiar variable auxiliar que indica el idioma de la aplicación
+        idioma = "en";
 
-        // Crear una configuración para la localización inglesa
-        Configuration configuration = getBaseContext().getResources().getConfiguration();
-        configuration.setLocale(nuevaloc);
-        configuration.setLayoutDirection(nuevaloc);
-        Context context = getBaseContext().createConfigurationContext(configuration);
+        // Instanciar el Gestor de idiomas
+        GestorIdioma gI = new GestorIdioma();
 
-        // Actualizar todos los recursos de la aplicación
-        getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+        // Asignar el idioma a la pantalla actual
+        gI.cambiarIdioma(getBaseContext(), idioma);
 
-        // Regargar de nuevo la actividad:
-        //   - finish() -> Finalizar la instancia en curso
-        //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+        // Recargar de nuevo la actividad
+        Intent intent = new Intent(this, Login.class);
+        // Enviar el idioma actual
+        intent.putExtra("idioma",idioma);
         finish();
-        startActivity(getIntent());
+        startActivity(intent);
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

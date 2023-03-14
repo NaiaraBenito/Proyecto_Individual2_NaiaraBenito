@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,8 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private String[] datosUser; // Lista que contiene los datos del usuario para mantener la sesión
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreateView:
@@ -60,6 +63,27 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
                 apartado inicio del menú.
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getActivity().getBaseContext(), idioma);
+        }
+
         // Obtener la vista
         View view = inflater.inflate(R.layout.fragment_inicio,container,false);
 
@@ -149,7 +173,7 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
         // Cargar las lista en el RecyclerView
         recyclerViewProductos = view.findViewById(R.id.lista_productos);
         recyclerViewProductos.setLayoutManager(new GridLayoutManager(getContext(),3));
-        adapterProductos = new ListAdapter_Productos(lista_prod,getContext(),datosUser);
+        adapterProductos = new ListAdapter_Productos(lista_prod,getContext(),datosUser, idioma);
         recyclerViewProductos.setAdapter(adapterProductos);
     }
 
@@ -248,5 +272,25 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Fragment.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

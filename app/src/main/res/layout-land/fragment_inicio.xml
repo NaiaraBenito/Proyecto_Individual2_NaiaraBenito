@@ -73,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:layout_marginLeft="10sp"
-                            android:text="Pide lo que quieras"
+                            android:text="@string/if_etiqPideLoQueQuieras"
                             android:textColor="@color/gris_claro"
                             android:textSize="15sp" />
 

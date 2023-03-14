@@ -33,6 +33,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
@@ -69,6 +71,9 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     final static String CHANNEL_ID = "NOTIFICACION";    // Variable que contiene el id del canal para la notificación
     final static int NOTIFICACION_ID = 0;       // Variable que contiene el id de la notificación
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreateView:
@@ -85,6 +90,27 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 apartado Cesta del menú.
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getActivity().getBaseContext(), idioma);
+        }
+
         // Obtener la vista
         View view = inflater.inflate(R.layout.fragment_cesta, container, false);
 
@@ -477,6 +503,10 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
 
+        // Enviar el idioma actual
+        i.putExtra("idioma",idioma);
+
+
         pendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -500,6 +530,9 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         i.putExtra("nombreUsuario", datosUser[0]);
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
+
+        // Enviar el idioma actual
+        i.putExtra("idioma",idioma);
 
         // Pasarle los datos necesarios para crear la fatura
         i.putExtra("tituloFactura", tituloPDF);
@@ -529,6 +562,9 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         i.putExtra("nombreUsuario", datosUser[0]);
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
+
+        // Enviar el idioma actual
+        i.putExtra("idioma",idioma);
 
         // Redirigir ejecución al Activity NoActNotificacion
         noPendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
@@ -752,5 +788,25 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     public void notificarCambios() {
         // Actualizar los costes (Total producto, envio, impuestos y total)
         cargarResumen(getView());
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Fragment.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,6 +36,8 @@ public class Menu_Principal extends AppCompatActivity {
     private static final int REQUEST_CALL = 1;      // ID para realizar llamadas telefónicas
     private ActivityMenuPrincipalBinding binding;   // Variable para gestionar los fragmentos del menú
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -48,6 +52,26 @@ public class Menu_Principal extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getBaseContext(), idioma);
+        }
+
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
 
@@ -130,5 +154,25 @@ public class Menu_Principal extends AppCompatActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

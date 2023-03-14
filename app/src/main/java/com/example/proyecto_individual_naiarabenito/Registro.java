@@ -3,6 +3,7 @@
 package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
+import androidx.annotation.NonNull;
 import  androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +35,8 @@ public class Registro extends AppCompatActivity {
     private EditText et_password1;  // EditText que contiene la contraseña del usuario que intenta registrarse
     private EditText et_password2;  // EditText que contiene la contraseña del usuario que intenta registrarse
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -48,6 +51,26 @@ public class Registro extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getBaseContext(), idioma);
+        }
+
         // Crear la vista
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
@@ -79,6 +102,9 @@ public class Registro extends AppCompatActivity {
 
         // Crear el intent que redirige la ejecución al Login
         Intent intent = new Intent(this, Login.class);
+
+        // Guardar idioma actual de la aplicación
+        intent.putExtra("idioma",idioma);
         startActivity(intent);
         finish();
     }
@@ -192,5 +218,25 @@ public class Registro extends AppCompatActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

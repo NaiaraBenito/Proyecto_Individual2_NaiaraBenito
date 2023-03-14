@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import java.io.File;
@@ -39,6 +41,8 @@ public class SiActNotificacion extends AppCompatActivity {
     private String tituloPDF;    // Variable que contiene el título de la factura que se genera al finalizar el pedido
     private String descripcionPDF;  // Variable que contiene el cuerpo de la factura
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -53,10 +57,30 @@ public class SiActNotificacion extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getBaseContext(), idioma);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_si_act_notificacion);
 
-        Bundle extras = getIntent().getExtras();
         if(extras != null){
             // Obtener los datos del usuario para mantener la sesión
             datosUser = new String[3];
@@ -76,6 +100,9 @@ public class SiActNotificacion extends AppCompatActivity {
             intent.putExtra("nombreUsuario", datosUser[0]);
             intent.putExtra("apellidoUsuario", datosUser[1]);
             intent.putExtra("emailUsuario", datosUser[2]);
+
+            // Enviar el idioma actual
+            intent.putExtra("idioma",idioma);
 
             // Crear un manager de notificaciones
             NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
@@ -193,5 +220,25 @@ public class SiActNotificacion extends AppCompatActivity {
                 }
             }
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

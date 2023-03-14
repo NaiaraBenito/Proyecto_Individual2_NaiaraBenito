@@ -3,6 +3,7 @@
 package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -39,6 +40,8 @@ public class Launch_Screen extends AppCompatActivity {
     private Animation animacion1;   // Animación que realiza un desplazamiento ascendente
     private Animation animacion2;   // Animación que realiza un desplazamiento descendente
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -54,6 +57,25 @@ public class Launch_Screen extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getBaseContext(), idioma);
+        }
 
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
@@ -114,6 +136,9 @@ public class Launch_Screen extends AppCompatActivity {
             // Crear el intent para pasar al Activity del Login
             Intent intent = new Intent(Launch_Screen.this, Login.class);
 
+            // Guardar el idioma actual de la aplicación
+            intent.putExtra("idioma", idioma);
+
             // Conectar el este Activity (Launch Screen) con el Login mediante una animación
             Pair[] pairs = new Pair[2];
             pairs[0] = new Pair<View, String>(logo, "logoImageTrans");
@@ -172,5 +197,25 @@ public class Launch_Screen extends AppCompatActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ---------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

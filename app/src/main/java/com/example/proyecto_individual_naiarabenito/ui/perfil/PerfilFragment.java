@@ -17,7 +17,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Login;
+import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import java.util.Locale;
 
@@ -37,6 +40,8 @@ public class PerfilFragment extends Fragment {
     private TextView tv_apellido;         // TextView que contiene el apellido del usuario
     private TextView tv_email;         // TextView que contiene el email del usuario
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreateView:
@@ -53,6 +58,27 @@ public class PerfilFragment extends Fragment {
                 apartado Perfil del menú.
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getActivity().getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getActivity().getBaseContext(), idioma);
+        }
+
         // Obtener la vista
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
@@ -91,24 +117,28 @@ public class PerfilFragment extends Fragment {
         bot_eng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Forzar la localización de la aplicación al inglés
-                Locale nuevaloc = new Locale("en");
-                Locale.setDefault(nuevaloc);
+                // Cambiar variable auxiliar que indica el idioma de la aplicación
+                idioma = "en";
 
-                // Crear una configuración para la localización inglesa
-                Configuration configuration = getActivity().getBaseContext().getResources().getConfiguration();
-                configuration.setLocale(nuevaloc);
-                configuration.setLayoutDirection(nuevaloc);
-                Context context = getActivity().getBaseContext().createConfigurationContext(configuration);
+                // Instanciar el Gestor de idiomas
+                GestorIdioma gI = new GestorIdioma();
 
-                // Actualizar todos los recursos de la aplicación
-                getActivity().getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+                // Asignar el idioma a la pantalla actual
+                gI.cambiarIdioma(getActivity().getBaseContext(), idioma);
 
-                // Regargar de nuevo la actividad:
-                //   - finish() -> Finalizar la instancia en curso
-                //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+                // Recargar de nuevo la actividad
+                Intent intent = new Intent(getContext(), Menu_Principal.class);
+
+                // Guardar los datos del usuario (mantener la sesión)
+                intent.putExtra("nombreUsuario", datosUser[0]);
+                intent.putExtra("apellidoUsuario", datosUser[1]);
+                intent.putExtra("emailUsuario", datosUser[2]);
+
+                // Enviar el idioma actual
+                intent.putExtra("idioma",idioma);
+
                 getActivity().finish();
-                startActivity(getActivity().getIntent());
+                startActivity(intent);
             }
         });
 
@@ -117,24 +147,28 @@ public class PerfilFragment extends Fragment {
         bot_esp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Forzar la localización de la aplicación al español
-                Locale nuevaloc = new Locale("es");
-                Locale.setDefault(nuevaloc);
+                // Cambiar variable auxiliar que indica el idioma de la aplicación
+                idioma = "es";
 
-                // Crear una configuración para la localización española
-                Configuration configuration = getActivity().getBaseContext().getResources().getConfiguration();
-                configuration.setLocale(nuevaloc);
-                configuration.setLayoutDirection(nuevaloc);
-                Context context = getActivity().getBaseContext().createConfigurationContext(configuration);
+                // Instanciar el Gestor de idiomas
+                GestorIdioma gI = new GestorIdioma();
 
-                // Actualizar todos los recursos de la aplicación
-                getActivity().getBaseContext().getResources().updateConfiguration(configuration, context.getResources().getDisplayMetrics());
+                // Asignar el idioma a la pantalla actual
+                gI.cambiarIdioma(getActivity().getBaseContext(), idioma);
 
-                // Regargar de nuevo la actividad:
-                //   - finish() -> Finalizar la instancia en curso
-                //   - startActivity(getIntent()) -> Lanzar una nueva instancia
+                // Recargar de nuevo la actividad
+                Intent intent = new Intent(getContext(), Menu_Principal.class);
+
+                // Guardar los datos del usuario (mantener la sesión)
+                intent.putExtra("nombreUsuario", datosUser[0]);
+                intent.putExtra("apellidoUsuario", datosUser[1]);
+                intent.putExtra("emailUsuario", datosUser[2]);
+
+                // Enviar el idioma actual
+                intent.putExtra("idioma",idioma);
+
                 getActivity().finish();
-                startActivity(getActivity().getIntent());
+                startActivity(intent);
             }
         });
 
@@ -155,6 +189,10 @@ public class PerfilFragment extends Fragment {
     private void cerrarSesion(){
         // Crear el intent que redirige la ejecución al Login
         Intent intent = new Intent(getContext(), Login.class);
+
+        // Guardar el idioma actual de la aplicación
+        intent.putExtra("idioma", idioma);
+
         startActivity(intent);
         getActivity().finish();
     }
@@ -214,5 +252,25 @@ public class PerfilFragment extends Fragment {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Fragment.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }

@@ -37,14 +37,17 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
 
     private final String[] datosUser; // Lista que contiene los datos del usuario para mantener la sesión
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // __________________________________________ Constructor __________________________________________
-    public ListAdapter_Productos(List<Producto> pLista_prod, Context pContext, String[] pDatosUser) {
+    public ListAdapter_Productos(List<Producto> pLista_prod, Context pContext, String[] pDatosUser, String pIdioma) {
         this.inflater = LayoutInflater.from(pContext);
         this.context = pContext;
         this.lista_prod = pLista_prod;
         this.lista_prod_original = new ArrayList<>();
         this.lista_prod_original.addAll(pLista_prod);
         this.datosUser = pDatosUser;
+        this.idioma = pIdioma;
     }
 
 // ____________________________________________ Métodos ____________________________________________
@@ -106,6 +109,9 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
                 intent.putExtra("nombreUsuario", datosUser[0]);
                 intent.putExtra("apellidoUsuario", datosUser[1]);
                 intent.putExtra("emailUsuario", datosUser[2]);
+
+                // Guardar el idioma actual de la aplicación
+                intent.putExtra("idioma", idioma);
 
                 context.startActivity(intent);
             }

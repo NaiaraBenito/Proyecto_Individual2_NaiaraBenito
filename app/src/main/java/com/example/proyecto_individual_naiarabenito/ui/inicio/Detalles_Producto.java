@@ -3,6 +3,7 @@
 package com.example.proyecto_individual_naiarabenito.ui.inicio;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
@@ -40,6 +43,8 @@ public class Detalles_Producto extends AppCompatActivity {
     private int cantidad = 1;       // Cantidad seleccionada 
     private int imagen;             // Id de la imagen del producto seleccionado
 
+    private String idioma;          // String que contiene el idioma actual de la aplicación
+
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -54,6 +59,26 @@ public class Detalles_Producto extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
+        if (savedInstanceState != null) {
+            idioma = savedInstanceState.getString("idioma");
+        }
+
+        // Obtener el idioma de la aplicación del intent (mantener idioma al moverse por la aplicación)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            idioma = (String) extras.get("idioma");
+        }
+
+        // Si en la anterior ejecución se ha guardado el idioma
+        if (idioma != null){
+            // Instanciar el Gestor de idiomas
+            GestorIdioma gI = new GestorIdioma();
+
+            // Asignar el idioma a la pantalla actual
+            gI.cambiarIdioma(getBaseContext(), idioma);
+        }
+
         // Crear la vista
         super.onCreate(savedInstanceState);
 
@@ -129,6 +154,9 @@ public class Detalles_Producto extends AppCompatActivity {
         intent.putExtra("apellidoUsuario", aUser);
         intent.putExtra("emailUsuario", eUser);
 
+        // Guardar el idioma actual de la aplicación
+        intent.putExtra("idioma", idioma);
+
         // Evitar que se llene la pila de Actividades (Menú Principal solo tiene una instancia)
         onNewIntent(intent);
         finish();
@@ -173,6 +201,10 @@ public class Detalles_Producto extends AppCompatActivity {
         intent.putExtra("nombreUsuario", nUser);
         intent.putExtra("apellidoUsuario", aUser);
         intent.putExtra("emailUsuario", eUser);
+
+        // Guardar el idioma actual de la aplicación
+        intent.putExtra("idioma", idioma);
+
         startActivity(intent);
         finish();
     }
@@ -255,5 +287,25 @@ public class Detalles_Producto extends AppCompatActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
         }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onSaveInstanceState:
+    ------------------------
+        *) Parámetros (Input):
+                1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
+                Bundle, para que al refrescar la actividad se mantenga.
+*/
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Guardar en el Bundle el idioma actual de la aplicación
+        outState.putString("idioma",idioma);
     }
 }
