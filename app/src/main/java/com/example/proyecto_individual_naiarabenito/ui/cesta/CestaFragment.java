@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_individual_naiarabenito.GestorIdioma;
+import com.example.proyecto_individual_naiarabenito.Mapa;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
@@ -61,6 +62,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     private TextView impuestos;     // TextView que contiene los impuestos
     private TextView total;         // TextView que contiene el coste total del pedido
     private Button pagar;           // Botón para finalizar el pedido
+    private Button mapa;
 
     private String tituloPDF;       // Variable que contiene el título de la factura que se genera al finalizar el pedido
     private String descripcionPDF;  // Variable que contiene el cuerpo de la factura
@@ -145,6 +147,29 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                     // Gestionar el diálogo de confirmación del pedido
                     gestionarDialogo(view);
                 }
+            }
+        });
+
+        // Obtener los Objetos de la vista
+        mapa = view.findViewById(R.id.btn_mapa);
+
+        // Gestionar el proceso de compra del usuario y asignar acción al pulsar el botón "PAGAR"
+        mapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Crear el intent que redirige la ejecución al Menú Principal
+                Intent intent = new Intent(getContext(), Mapa.class);
+
+                // Guardar los datos del usuario (mantener la sesión)
+                intent.putExtra("nombreUsuario", datosUser[0]);
+                intent.putExtra("apellidoUsuario", datosUser[1]);
+                intent.putExtra("emailUsuario", datosUser[2]);
+
+                // Guardar el idioma actual de la aplicación
+                intent.putExtra("idioma", idioma);
+
+                startActivity(intent);
             }
         });
         return view;
