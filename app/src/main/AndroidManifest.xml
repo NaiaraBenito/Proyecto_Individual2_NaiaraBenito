@@ -8,10 +8,12 @@
     <!-- READ_EXTERNAL_STORAGE: Para crear las facturas de las compras en formato PDF -->
     <!-- CALL_PHONE: Para llamar al teléfono de atención al cliente de las empresa -->
     <!-- POST_NOTIFICATIONS: Para las notificaciones que agradecen la compra -->
+    <!-- INTERNET: Para poder conectarse a la BBDD remota -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- ____________________________ COMPONENTES DE LA APLICACIÓN _____________________________ -->
     <application

@@ -11,8 +11,7 @@
     <LinearLayout
         android:id="@+id/login"
         android:layout_width="match_parent"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
+
         android:layout_height="348dp"
         android:background="@color/white"
         android:orientation="horizontal">
