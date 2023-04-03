@@ -62,4 +62,7 @@ dependencies {
     // Mapa
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
+    // Servicio en segundo plano
+    implementation 'androidx.work:work-runtime:2.8.1'
+
 }

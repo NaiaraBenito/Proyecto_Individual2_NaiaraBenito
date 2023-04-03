@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +34,20 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.WorkManager;
 
 import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Mapa;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
+import com.example.proyecto_individual_naiarabenito.PedidoWorkManager;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
+
+import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 
 /* ####################################### CLASE CESTA_FRAGMENT ####################################
@@ -371,6 +379,31 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
                 // Crear y gestionar la notificación de agradecimiento
                 gestionarNotificacion();
+
+                // Añadir una tarea para notificar cuando el pedido está listo
+
+                // Crear un objeto Calendar para obtener la fecha actual
+                Calendar alertaCal = Calendar.getInstance();
+
+                // Sumar 5 minutos a la fecha actual
+                alertaCal.add(Calendar.MINUTE,5);
+
+                // Crear un tag random
+                String tag = UUID.randomUUID().toString();
+
+                // Calcular la duración para que se lance la notificación
+                Long duracion  = alertaCal.getTimeInMillis() - System.currentTimeMillis();
+
+                // Generar un id random
+                int random = (int)(Math.random()*50+1);
+
+                // Obtener el titulo y el contenido de la notificación
+                String pedTitulo = getResources().getString(R.string.n_PNotifTitulo);
+                String pedContenido = getResources().getString(R.string.n_PNotifContenido);
+                Data data = guardarData(pedTitulo,pedContenido, random);
+
+                // Ejecutar el servicio en segundo plano
+                PedidoWorkManager.NotificarPedido(duracion,data,tag);
             }
         });
 
@@ -481,8 +514,8 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
         String notifTitulo = getResources().getString(R.string.n_NotifTitulo);
         String notifContenido = getResources().getString(R.string.n_NotifContenido);
-        notif.setContentTitle(notifContenido);                      // Asignar título
-        notif.setContentText(notifTitulo);                          // Asignar contenido
+        notif.setContentTitle(notifTitulo);                      // Asignar título
+        notif.setContentText(notifContenido);                          // Asignar contenido
         notif.setColor(Color.rgb(239, 70, 240));     // Asignar color
         notif.setPriority(NotificationCompat.PRIORITY_DEFAULT);     // Asignar prioridad
         notif.setLights(Color.rgb(239, 70, 240), 1000, 1000);   // Asignar luces
@@ -833,5 +866,15 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
         // Guardar en el Bundle el idioma actual de la aplicación
         outState.putString("idioma",idioma);
+    }
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------
+    private Data guardarData(String titulo, String contenido, int id){
+        return new Data.Builder()
+                .putString("titulo", titulo)
+                .putString("contenido",contenido)
+                .putInt("idnoti",id).build();
+
     }
 }

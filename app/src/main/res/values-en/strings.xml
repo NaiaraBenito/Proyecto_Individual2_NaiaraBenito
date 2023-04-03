@@ -5,6 +5,7 @@
     <string name="title_cesta">Cart</string>
     <string name="title_perfil">Profile</string>
     <string name="title_configuracion">Configuration</string>
+    <string name="title_mapa">Map</string>
 
 
     <!-- Detalles Producto -->
@@ -109,6 +110,9 @@
     <string name="n_NotifContenido">Thanks for your order. Do you want the bill?</string>
     <string name="n_si">Yes please</string>
     <string name="n_no">No thanks</string>
+
+    <string name="n_PNotifTitulo">Order Ready</string>
+    <string name="n_PNotifContenido">Your order is ready and on the way. </string>
 
     <!-- Productos -->
     <string name="desc_4Quesos">The 4 cheese pizza is one of the most consumed in the world, of course, by cheese lovers. But be careful, because if we follow the traditional recipe, not just any cheese will do; in fact, the four cheeses used have the Protected Designation of Origin (PDO) certification: Fontina cheese, originally from Valle dAosta; gorgonzola cheese, natural from Milan; Parmesan cheese, originally from the city of Parma; and mozzarella cheese, born in Campania. With these four protagonists you will have in your hands an authentic cheese-making perdition in the form of a pizza. It has no more, no tomato sauce or spices, maybe a touch of ground black pepper.</string>
