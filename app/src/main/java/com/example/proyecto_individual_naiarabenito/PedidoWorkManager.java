@@ -48,7 +48,6 @@ public class PedidoWorkManager extends Worker {
 
     @SuppressLint("MissingPermission")
     private void notificarPedido(String titulo, String contenido, int id){
-        Log.d("PEDIDO", "Titulo: " + titulo + " y Detalle: " + contenido);
 
         // Crear la notificación
         NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);

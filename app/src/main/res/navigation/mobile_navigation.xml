@@ -28,4 +28,5 @@
         android:name="com.example.proyecto_individual_naiarabenito.ui.configuracion.ConfiguracionFragment"
         android:label="@string/title_configuracion"
         tools:layout="@layout/fragment_configuracion" />
+
 </navigation>

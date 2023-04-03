@@ -20,5 +20,5 @@
         android:id="@+id/navigation_configuracion"
         android:icon="@drawable/confi_menu"
         android:title="@string/title_configuracion" />
-
+    
 </menu>

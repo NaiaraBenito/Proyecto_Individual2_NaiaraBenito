@@ -4,17 +4,30 @@ package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import  androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,6 +170,7 @@ public class Registro extends AppCompatActivity {
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
                 // Registrar el usuario en la BBDD
+                //registrarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_usuario.php");
                 DBHelper dbHelper = new DBHelper(this);
                 int registro = dbHelper.registrarUsuario(nombre, apellido, email, password1);
 
@@ -239,4 +253,42 @@ public class Registro extends AppCompatActivity {
         // Guardar en el Bundle el idioma actual de la aplicación
         outState.putString("idioma",idioma);
     }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    /*private void registrarUsuario(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String msg = getResources().getString(R.string.t_registroCompletado);
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                // Volver al Login
+                //volverLogin(v);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = getResources().getString(R.string.t_errorRegistro);
+                Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.d("BBDD","Entra por aqui");
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("nombre", et_nombre.getText().toString());
+                parametros.put("apellido", et_apellido.getText().toString());
+                parametros.put("email", et_email.getText().toString());
+                parametros.put("password", et_password1.getText().toString());
+                Log.d("BBDD",parametros.get("nombre"));
+                return parametros;
+                //return super.getParams();
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }*/
+
+
 }

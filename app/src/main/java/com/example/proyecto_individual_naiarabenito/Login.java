@@ -10,11 +10,23 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -138,6 +150,7 @@ public class Login extends AppCompatActivity {
 
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
+                //validarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/validar_usuario.php");
                 // Comprobar que el usuario que intenta loguearse esté registrado en la BBDD
                 DBHelper dbHelper = new DBHelper(this);
                 String[] datos = dbHelper.verificarUsuarioLogin(email, password);
@@ -291,4 +304,56 @@ public class Login extends AppCompatActivity {
         // Guardar en el Bundle el idioma actual de la aplicación
         outState.putString("idioma",idioma);
     }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+/*private void validarUsuario(String pUrl){
+    StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            if(!response.isEmpty()){
+
+                // Crear un intent para pasar a la Actividad Menu_Principal
+                Intent intent = new Intent(getApplicationContext(), Menu_Principal.class);
+
+                // Guardar los datos del usuario (para mantener la sesión)
+                intent.putExtra("nombreUsuario", "Naiara");                        //CAMBIAR!!!!
+                intent.putExtra("apellidoUsuario", "Benito");                     //CAMBIAR!!!!
+                intent.putExtra("emailUsuario", "n@n.com");                                  //CAMBIAR!!!!
+
+                // Guardar el idioma actual de la aplicación
+                intent.putExtra("idioma",idioma);
+
+                // Cargar el Menú Principal
+                startActivity(intent);
+                finish();
+            } else{      // Si no está registrado: Imprimir mensaje de error
+                String msg = getResources().getString(R.string.t_loginIncorrecto);
+                Toast.makeText(Login.this,msg, Toast.LENGTH_LONG).show();
+            }
+            String msg = getResources().getString(R.string.t_registroCompletado);
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            // Imprimir estado del registro
+            Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
+            Log.d("BBDD",error.toString());
+        }
+    }
+    ){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Log.d("BBDD","Entra por aqui");
+            Map<String, String> parametros = new HashMap<String, String>();
+            parametros.put("email", et_email.getText().toString());
+            parametros.put("password", et_password.getText().toString());
+            Log.d("BBDD",parametros.get("email"));
+            return parametros;
+        }
+    };
+    RequestQueue requestQueue = Volley.newRequestQueue(this);
+    requestQueue.add(stringRequest);
+}*/
 }

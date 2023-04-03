@@ -5,7 +5,6 @@
     <string name="title_cesta">Cart</string>
     <string name="title_perfil">Profile</string>
     <string name="title_configuracion">Configuration</string>
-    <string name="title_mapa">Map</string>
 
 
     <!-- Detalles Producto -->
@@ -50,6 +49,8 @@
     <string name="cf_precio">Price</string>
     <string name="cf_facturaDe">Bill of</string>
     <string name="cf_factura">Bill</string>
+
+    <string name="cf_mapa">See physical stores</string>
 
     <!-- Perfil -->
     <string name="pf_btnCerrarSesion">Sign off</string>
