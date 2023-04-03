@@ -129,4 +129,7 @@
 
     <string name="desc_Calamares">The calamari sandwich is one of the most representative dishes of Madrid cuisine. Together with Madrid-style tripe and Madrid stew, it is the best dish we can find in Madrid.</string>
     <string name="desc_Mixto">The grilled ham and cheese sandwich, mixed sandwich, also known as bikini in Catalonia, is one of the most popular and easy to prepare. However, as silly as it may seem, there are many tricks behind this basic recipe. For example, making cheese perfectly melted without burning the bread or making bread crisp without dripping with grease or being squashed like rolling papers.</string>
+
+    <!-- Mapa -->
+    <string name="m_PosicionActual">Your current position</string>
 </resources>

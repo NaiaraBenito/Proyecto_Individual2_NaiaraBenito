@@ -37,11 +37,12 @@ import com.google.android.gms.tasks.Task;
 
 public class Mapa extends AppCompatActivity {  //implements OnMapReadyCallback
 
-    FusedLocationProviderClient fusedLocationProviderClient;
-    LocationRequest locationRequest;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
     private static int LOCATION_REQUEST_CODE = 10001;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
+    private boolean primeraVez = true;
 
     LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -57,15 +58,41 @@ public class Mapa extends AppCompatActivity {  //implements OnMapReadyCallback
                     public void onMapReady(@NonNull GoogleMap googleMap) {
                         if (location != null) {
                             mMap = googleMap;
+                            mMap.clear();
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            Log.d("MAPA",latLng.toString());
                             mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
-                                    .title("Tu posicion"));
+                                    .title(getResources().getString(R.string.m_PosicionActual)));
 
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                        } else {
-                            Toast.makeText(Mapa.this, "Please on your Location App Permissions", Toast.LENGTH_LONG).show();
+                            LatLng barakaldo = new LatLng(43.297685425160246, -2.9878466053022246);
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(barakaldo)
+                                    .title("Zaballa Kalea, 48901 Barakaldo, Bizkaia"));
+
+                            LatLng bilbao = new LatLng(43.26231215663768, -2.927504349778167);
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(bilbao)
+                                    .title("Colón de Larreátegui K., 9, 48001 Bilbo, Bizkaia"));
+
+                            LatLng sestao = new LatLng(43.30673726943006, -3.008378845997969);
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(sestao)
+                                    .title("Vía Galindo Kalea, 48910 Sestao, Bizkaia"));
+
+                            LatLng kabiezes = new LatLng(43.322818297986224, -3.039722329610171);
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(kabiezes)
+                                    .title("Doctor Ferran Kalea, 10, 48980 Santurtzi, Bizkaia"));
+
+                            LatLng basauri = new LatLng(43.23570983534051, -2.8891110594587763);
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(basauri)
+                                    .title("Kale Nagusia, 1, 48970 Basauri, Bizkaia"));
+                            if(primeraVez){
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                                primeraVez = false;
+                            }
+
                         }
                     }
                 });
@@ -87,36 +114,6 @@ public class Mapa extends AppCompatActivity {  //implements OnMapReadyCallback
         locationRequest.setFastestInterval(2000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull GoogleMap googleMap) {
-                mMap = googleMap;
-                LatLng barakaldo = new LatLng(43.297685425160246, -2.9878466053022246);
-                mMap.addMarker(new MarkerOptions()
-                        .position(barakaldo)
-                        .title("Zaballa Kalea, 48901 Barakaldo, Bizkaia"));
-
-                LatLng bilbao = new LatLng(43.26231215663768, -2.927504349778167);
-                mMap.addMarker(new MarkerOptions()
-                        .position(bilbao)
-                        .title("Colón de Larreátegui K., 9, 48001 Bilbo, Bizkaia"));
-
-                LatLng sestao = new LatLng(43.30673726943006, -3.008378845997969);
-                mMap.addMarker(new MarkerOptions()
-                        .position(sestao)
-                        .title("Vía Galindo Kalea, 48910 Sestao, Bizkaia"));
-
-                LatLng kabiezes = new LatLng(43.322818297986224, -3.039722329610171);
-                mMap.addMarker(new MarkerOptions()
-                        .position(kabiezes)
-                        .title("Doctor Ferran Kalea, 10, 48980 Santurtzi, Bizkaia"));
-
-                LatLng basauri = new LatLng(43.23570983534051, -2.8891110594587763);
-                mMap.addMarker(new MarkerOptions()
-                        .position(basauri)
-                        .title("Kale Nagusia, 1, 48970 Basauri, Bizkaia"));
-            }
-        });
     }
 
     @Override
