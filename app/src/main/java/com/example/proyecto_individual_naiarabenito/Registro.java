@@ -26,6 +26,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -49,6 +52,9 @@ public class Registro extends AppCompatActivity {
     private EditText et_password2;  // EditText que contiene la contraseña del usuario que intenta registrarse
 
     private String idioma;          // String que contiene el idioma actual de la aplicación
+
+    private RequestQueue requestQueue;
+    private View v;
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -97,6 +103,8 @@ public class Registro extends AppCompatActivity {
         et_email = findViewById(R.id.et_emailRegistro);
         et_password1 = findViewById(R.id.et_passwordRegistro1);
         et_password2 = findViewById(R.id.et_passwordRegistro2);
+
+        requestQueue = Volley.newRequestQueue(this);
     }
 
 // _________________________________________________________________________________________________
@@ -169,22 +177,9 @@ public class Registro extends AppCompatActivity {
 
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
+                this.v = v;
                 // Registrar el usuario en la BBDD
-                //registrarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_usuario.php");
-                DBHelper dbHelper = new DBHelper(this);
-                int registro = dbHelper.registrarUsuario(nombre, apellido, email, password1);
-
-                if (registro == 1){
-                    // Imprimir estado del registro
-                    String msg = getResources().getString(R.string.t_errorRegistro);
-                    Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
-                }
-                else if (registro == 2){
-                    String msg = getResources().getString(R.string.t_registroCompletado);
-                    Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
-                    // Volver al Login
-                    volverLogin(v);
-                }
+                validarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/validar_usuario.php");
 
             } else {     // El email ingresado es inválido: Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_emailInvalido);
@@ -255,40 +250,73 @@ public class Registro extends AppCompatActivity {
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    /*private void registrarUsuario(String pUrl){
+    private void añadirUsuario(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String msg = getResources().getString(R.string.t_registroCompletado);
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+
                 // Volver al Login
-                //volverLogin(v);
+                volverLogin(v);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Imprimir estado del registro
-                String msg = getResources().getString(R.string.t_errorRegistro);
+                String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Log.d("BBDD","Entra por aqui");
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("nombre", et_nombre.getText().toString());
                 parametros.put("apellido", et_apellido.getText().toString());
                 parametros.put("email", et_email.getText().toString());
                 parametros.put("password", et_password1.getText().toString());
-                Log.d("BBDD",parametros.get("nombre"));
                 return parametros;
-                //return super.getParams();
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }*/
+    }
 
+    private void validarUsuario(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
 
+                    if(json.get("exist").toString().equals("false")){
+                        añadirUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_usuario.php");
+                    } else{
+                        String msg = getResources().getString(R.string.t_errorRegistro);
+                        Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("id", "registro");
+                parametros.put("email", et_email.getText().toString());
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
 }

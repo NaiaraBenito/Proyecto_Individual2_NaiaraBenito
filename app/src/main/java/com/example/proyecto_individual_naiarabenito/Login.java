@@ -25,6 +25,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,6 +48,7 @@ public class Login extends AppCompatActivity {
     private EditText et_password;   // EditText que contiene la contraseña del usuario que intenta loguearse
     private String idioma;          // String que contiene el idioma actual de la aplicación
 
+    private RequestQueue requestQueue;
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -90,6 +94,8 @@ public class Login extends AppCompatActivity {
         // Obtener los objetos de la vista editados por el usuario
         et_email = findViewById(R.id.et_emailLogin);
         et_password = findViewById(R.id.et_passwordLogin);
+
+        requestQueue = Volley.newRequestQueue(this);
     }
 
 // _________________________________________________________________________________________________
@@ -150,30 +156,7 @@ public class Login extends AppCompatActivity {
 
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
-                //validarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/validar_usuario.php");
-                // Comprobar que el usuario que intenta loguearse esté registrado en la BBDD
-                DBHelper dbHelper = new DBHelper(this);
-                String[] datos = dbHelper.verificarUsuarioLogin(email, password);
-
-                if(datos != null){ // Si está registrado: Ir a Menu_Principal
-                    // Crear un intent para pasar a la Actividad Menu_Principal
-                    Intent intent = new Intent(this, Menu_Principal.class);
-
-                    // Guardar los datos del usuario (para mantener la sesión)
-                    intent.putExtra("nombreUsuario", datos[0]);
-                    intent.putExtra("apellidoUsuario", datos[1]);
-                    intent.putExtra("emailUsuario", datos[2]);
-
-                    // Guardar el idioma actual de la aplicación
-                    intent.putExtra("idioma",idioma);
-
-                    // Cargar el Menú Principal
-                    startActivity(intent);
-                    finish();
-                } else{      // Si no está registrado: Imprimir mensaje de error
-                    String msg = getResources().getString(R.string.t_loginIncorrecto);
-                    Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
-                }
+                validarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/validar_usuario.php");
             } else {        // El email ingresado es inválido: Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_emailInvalido);
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
@@ -306,54 +289,56 @@ public class Login extends AppCompatActivity {
     }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
-/*private void validarUsuario(String pUrl){
-    StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            if(!response.isEmpty()){
+    private void validarUsuario(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
 
-                // Crear un intent para pasar a la Actividad Menu_Principal
-                Intent intent = new Intent(getApplicationContext(), Menu_Principal.class);
+                    if(json.get("exist").toString().equals("true")){
+                        // Crear un intent para pasar a la Actividad Menu_Principal
+                        Intent intent = new Intent(getApplicationContext(), Menu_Principal.class);
 
-                // Guardar los datos del usuario (para mantener la sesión)
-                intent.putExtra("nombreUsuario", "Naiara");                        //CAMBIAR!!!!
-                intent.putExtra("apellidoUsuario", "Benito");                     //CAMBIAR!!!!
-                intent.putExtra("emailUsuario", "n@n.com");                                  //CAMBIAR!!!!
+                        // Guardar los datos del usuario (para mantener la sesión)
+                        intent.putExtra("nombreUsuario", json.get("nombre").toString());
+                        intent.putExtra("apellidoUsuario", json.get("apellido").toString());
+                        intent.putExtra("emailUsuario", json.get("email").toString());
 
-                // Guardar el idioma actual de la aplicación
-                intent.putExtra("idioma",idioma);
+                        // Guardar el idioma actual de la aplicación
+                        intent.putExtra("idioma",idioma);
 
-                // Cargar el Menú Principal
-                startActivity(intent);
-                finish();
-            } else{      // Si no está registrado: Imprimir mensaje de error
-                String msg = getResources().getString(R.string.t_loginIncorrecto);
-                Toast.makeText(Login.this,msg, Toast.LENGTH_LONG).show();
+                        // Cargar el Menú Principal
+                        startActivity(intent);
+                        finish();
+
+                    } else{
+                        String msg = getResources().getString(R.string.t_loginIncorrecto);
+                        Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            String msg = getResources().getString(R.string.t_registroCompletado);
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+            }
         }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            // Imprimir estado del registro
-            Toast.makeText(getApplicationContext(),"ERROR", Toast.LENGTH_LONG).show();
-            Log.d("BBDD",error.toString());
-        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("id", "login");
+                parametros.put("email", et_email.getText().toString());
+                parametros.put("password", et_password.getText().toString());
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
-    ){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Log.d("BBDD","Entra por aqui");
-            Map<String, String> parametros = new HashMap<String, String>();
-            parametros.put("email", et_email.getText().toString());
-            parametros.put("password", et_password.getText().toString());
-            Log.d("BBDD",parametros.get("email"));
-            return parametros;
-        }
-    };
-    RequestQueue requestQueue = Volley.newRequestQueue(this);
-    requestQueue.add(stringRequest);
-}*/
 }

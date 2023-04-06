@@ -32,7 +32,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-public class Mapa extends AppCompatActivity {  //implements OnMapReadyCallback
+public class Mapa extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
