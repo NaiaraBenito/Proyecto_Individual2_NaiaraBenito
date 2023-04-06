@@ -26,10 +26,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.R;
-import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -288,7 +284,6 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         nombreProd = producto;
         // Eliminar producto de la lista
         lista_orden.remove(position);
-        Log.d("ORDENES","eliminar");
 
         // Eliminar producto de la BBDD
         eliminarOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
@@ -305,17 +300,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONObject json = null;
-                try {
-                    Log.d("ORDENES","AQUI");
-                    json = new JSONObject(response);
-                    if(json.get("done").toString().equals("true")){
-                        Log.d("ORDENES","HECHO");
-                    }
 
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -343,16 +328,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONObject json = null;
-                try {
-                    json = new JSONObject(response);
-                    if(json.get("done").toString().equals("true")){
-                        Log.d("ORDENES","HECHO");
-                    }
 
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
             }
         }, new Response.ErrorListener() {
             @Override

@@ -26,7 +26,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
-import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -306,7 +305,6 @@ public class Detalles_Producto extends AppCompatActivity {
                 try {
                     json = new JSONObject(response);
                     if(json.get("done").toString().equals("true")){
-                        Log.d("ORDENES","HECHO");
                         String msg = getResources().getString(R.string.t_pedidoAnadido);
                         Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
 

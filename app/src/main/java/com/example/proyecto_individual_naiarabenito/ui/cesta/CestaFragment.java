@@ -892,7 +892,6 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                     json = new JSONObject(response);
                     ArrayList<Orden> lista_ordenesAux = new ArrayList<>();
                     if(json.get("exist").toString().equals("true")){
-                        //Log.d("ORDENES",json.get("orders").toString());
                         JSONArray listaJSON = (JSONArray) json.get("orders");
 
                         for (int i = 0; i < listaJSON.length(); i++){
@@ -951,7 +950,6 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 try {
                     json = new JSONObject(response);
                     if(json.get("done").toString().equals("true")){
-                        Log.d("ORDENES","HECHO");
                     }
 
                 } catch (JSONException e) {
