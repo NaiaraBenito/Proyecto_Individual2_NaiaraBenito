@@ -37,16 +37,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Data;
 import androidx.work.WorkManager;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Mapa;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.PedidoWorkManager;
 import com.example.proyecto_individual_naiarabenito.R;
-import com.example.proyecto_individual_naiarabenito.db.DBHelper;
-import com.google.android.gms.common.server.converter.StringToIntConverter;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -82,7 +92,10 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     final static int NOTIFICACION_ID = 0;       // Variable que contiene el id de la notificación
 
     private String idioma;          // String que contiene el idioma actual de la aplicación
-
+    private RequestQueue requestQueue;
+    private View v;
+    private CestaFragment cf;
+    private String nombreProd;
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -101,6 +114,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        requestQueue = Volley.newRequestQueue(getContext());
         // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
         if (savedInstanceState != null) {
             idioma = savedInstanceState.getString("idioma");
@@ -135,9 +149,6 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
         // Cargar la lista de pedidos
         cargarListaOrdenes(view);
-
-        // Actualizar los costes (Total producto, envio, impuestos y total)
-        cargarResumen(view);
 
         // Obtener los Objetos de la vista
         pagar = view.findViewById(R.id.btn_pagar_carrito);
@@ -195,16 +206,10 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 Este método carga el RecyclerView con los productos añadidos al carrito del usuario.
 */
     private void cargarListaOrdenes(View view) {
-
+        cf = this;
+        v = view;
         // Añadir los pedidos del usuario a la lista
-        DBHelper dbHelper = new DBHelper(getContext());
-        lista_ordenes = dbHelper.getOrdenes(datosUser[2]);
-
-        // Cargar las lista en el RecyclerView
-        recyclerViewOrdenes = view.findViewById(R.id.lista_carrito);
-        recyclerViewOrdenes.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser,this);
-        recyclerViewOrdenes.setAdapter(adapterOrdenes);
+        obtenerOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
     }
 
 // _________________________________________________________________________________________________
@@ -446,15 +451,14 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         }
 
         // Eliminar los productos comprados de la BBDD
-        DBHelper dbHelper = new DBHelper(getContext());
-
         for(int i = 0; i < lista_ordenes.size(); i++){  // Por cada producto
 
             // Obtener la Orden
             Orden o = lista_ordenes.get(i);
+            nombreProd = o.getNombreProd();
 
             // Eliminar la orden del la BBDD
-            dbHelper.borrarOrden(o.getNombreProd(), datosUser[2]);
+            eliminarOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
         }
 
         // Vaciar la lista de órdenes
@@ -876,5 +880,102 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 .putString("contenido",contenido)
                 .putInt("idnoti",id).build();
 
+    }
+
+
+    private void obtenerOrdenes(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
+                    ArrayList<Orden> lista_ordenesAux = new ArrayList<>();
+                    if(json.get("exist").toString().equals("true")){
+                        //Log.d("ORDENES",json.get("orders").toString());
+                        JSONArray listaJSON = (JSONArray) json.get("orders");
+
+                        for (int i = 0; i < listaJSON.length(); i++){
+                            JSONObject aux = (JSONObject) listaJSON.get(i);
+
+                            Orden orden = new Orden();                  // Crear una Órden
+                            orden.setId(aux.getInt("id"));                // Asignar id
+                            orden.setNombreProd(aux.getString("nombreProd"));     // Asignar nombre
+                            orden.setPrecioProd(aux.getDouble("precioProd"));     // Asignar precio
+                            orden.setImagenProd(aux.getInt("imagenProd"));        // Asignar foto
+                            orden.setCantidadProd(aux.getInt("cantidadProd"));      // Asignar cantidad
+                            orden.setEmailUsuario(aux.getString("emailUsuario"));   // Asignar email del usuario
+
+                            lista_ordenesAux.add(orden);       // Añadir la nueva orden al listado
+                        }
+
+                    }
+                    lista_ordenes = lista_ordenesAux;
+                    // Cargar las lista en el RecyclerView
+                    recyclerViewOrdenes = v.findViewById(R.id.lista_carrito);
+                    recyclerViewOrdenes.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+                    adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser,cf);
+                    recyclerViewOrdenes.setAdapter(adapterOrdenes);
+                    // Actualizar los costes (Total producto, envio, impuestos y total)
+                    cargarResumen(v);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText(getContext(),msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("operacion", "obtener");
+                parametros.put("email", datosUser[2]);
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
+    private void eliminarOrdenes(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
+                    if(json.get("done").toString().equals("true")){
+                        Log.d("ORDENES","HECHO");
+                    }
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText(getContext(),msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("operacion", "eliminar");
+                parametros.put("email", datosUser[2]);
+                parametros.put("nombre", nombreProd);
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }

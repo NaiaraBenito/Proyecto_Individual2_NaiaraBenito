@@ -6,17 +6,34 @@ package com.example.proyecto_individual_naiarabenito.ui.cesta;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /* ################################### CLASE LIST_ADAPTER_ORDENES ##################################
     *) Descripción:
@@ -31,9 +48,10 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     private final LayoutInflater inflater;    // Describir de que archivo proviene la lista
     private final Context context;            // Contexto de CestaFragment
     private final String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
-
+    private RequestQueue requestQueue;
     private InterfazActualizarCesta listenerActualizado; // Listener para utilizar el método notificarCambios()
-
+    private String nombreProd;
+    private int cantidadProd;
 
 // __________________________________________ Constructor __________________________________________
     public ListAdapter_Ordenes(List<Orden> pList_ele, Context pContext, String[] pDatosUser, InterfazActualizarCesta listenerActualizado){
@@ -72,7 +90,7 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         // Obtener la vista
         View view = inflater.inflate(R.layout.orden_cardview,parent,false);
-
+        requestQueue = Volley.newRequestQueue(context);
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion(view);
         return new ViewHolder(view);
@@ -107,9 +125,6 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                 // Comprobar que la cantidad sea superior a cero
                 if(cantidad > 0){       // Si todavía quedan elementos
 
-                    // Obtener el nombre del producto
-                    String producto = holder.nombre.getText().toString();
-
                     // Actualizar cantidad (Disminuir)
                     int nuevaCantidad = cantidad - 1;
 
@@ -124,9 +139,11 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                         // Actualizar lista
                         lista_orden.get(position).setCantidadProd(nuevaCantidad);
 
+
+                        nombreProd = holder.nombre.getText().toString();
+                        cantidadProd = -1;
                         // Actualizar la BBDD
-                        DBHelper dbHelper = new DBHelper(context);
-                        dbHelper.actualizarOrden(producto, -1, datosUser[2]);
+                        anadirOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
                     }
 
                     // Notificar al RecyclerView que la lista ha sido modificada
@@ -143,9 +160,6 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
             @Override
             public void onClick(View view) {    // Si se ha pulsado
 
-                // Consigue el nombre del producto
-                String producto = holder.nombre.getText().toString();
-
                 // Actualizar cantidad del producto (Aumentar)
                 int cantidad = Integer.parseInt(holder.cantidad.getText().toString()) + 1;
                 lista_orden.get(position).setCantidadProd(cantidad);
@@ -156,9 +170,10 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                 // Notificar a CestaFragment que la lista ha sido modificada
                 listenerActualizado.notificarCambios();
 
+                nombreProd = holder.nombre.getText().toString();
+                cantidadProd = 1;
                 // Actualizar la BBDD
-                DBHelper dbHelper = new DBHelper(context);
-                dbHelper.actualizarOrden(producto, 1, datosUser[2]);
+                anadirOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
             }
         });
     }
@@ -270,12 +285,13 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 */
     public void eliminar(int position){
         String producto = lista_orden.get(position).getNombreProd();
+        nombreProd = producto;
         // Eliminar producto de la lista
         lista_orden.remove(position);
+        Log.d("ORDENES","eliminar");
 
         // Eliminar producto de la BBDD
-        DBHelper dbHelper = new DBHelper(context);
-        dbHelper.borrarOrden(producto, datosUser[2]);
+        eliminarOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
 
         // Notificar al RecyclerView que la lista ha sido modificada
         notifyDataSetChanged();
@@ -283,5 +299,80 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         // Notificar a CestaFragment que la lista ha sido modificada
         listenerActualizado.notificarCambios();
 
+    }
+
+    private void eliminarOrdenes(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    Log.d("ORDENES","AQUI");
+                    json = new JSONObject(response);
+                    if(json.get("done").toString().equals("true")){
+                        Log.d("ORDENES","HECHO");
+                    }
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                Log.e("ERROR BBDD", error.toString());
+                String msg = context.getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText(context,msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("operacion", "eliminar");
+                parametros.put("email", datosUser[2]);
+                parametros.put("nombre", nombreProd);
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    private void anadirOrdenes(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
+                    if(json.get("done").toString().equals("true")){
+                        Log.d("ORDENES","HECHO");
+                    }
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = context.getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText( context,msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("operacion", "añadir");
+                parametros.put("email", datosUser[2]);
+                parametros.put("nombre", nombreProd);
+                parametros.put("cantidad", String.valueOf(cantidadProd));
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }

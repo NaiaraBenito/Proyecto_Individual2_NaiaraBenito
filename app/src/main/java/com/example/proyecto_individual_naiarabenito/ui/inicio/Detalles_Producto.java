@@ -10,15 +10,29 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /* ################################### CLASE DETALLES_PRODUCTO #####################################
@@ -44,6 +58,7 @@ public class Detalles_Producto extends AppCompatActivity {
     private int imagen;             // Id de la imagen del producto seleccionado
 
     private String idioma;          // String que contiene el idioma actual de la aplicación
+    private RequestQueue requestQueue;
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -59,6 +74,7 @@ public class Detalles_Producto extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestQueue = Volley.newRequestQueue(getBaseContext());
         // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
         if (savedInstanceState != null) {
             idioma = savedInstanceState.getString("idioma");
@@ -178,35 +194,8 @@ public class Detalles_Producto extends AppCompatActivity {
     public void anadirCarrito (View v){
 
         // Añadir pedido en la BBDD
-        DBHelper dbHelper = new DBHelper(this);
-        boolean insertado = dbHelper.anadirOrden(nombreProd.getText().toString(),
-                Double.parseDouble(precioProd.getText().toString()),
-                imagen,
-                Integer.parseInt(cantidadProd.getText().toString()),
-                eUser);
+        anadirOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
 
-        // Comprobar si el pedido se ha añadido correctamente
-        if(insertado){      // Si se ha añadido: Imprimir mensaje informativo
-            String msg = getResources().getString(R.string.t_pedidoAnadido);
-            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
-        } else{             // Si no se ha añadido: Imprimir mensaje de error
-            String msg = getResources().getString(R.string.t_errorBBDD);
-            Toast.makeText(this,msg, Toast.LENGTH_LONG).show();
-        }
-
-        // Crear el intent que redirige la ejecución al Menú Principal
-        Intent intent = new Intent(this, Menu_Principal.class);
-
-        // Guardar los datos del usuario (mantener la sesión)
-        intent.putExtra("nombreUsuario", nUser);
-        intent.putExtra("apellidoUsuario", aUser);
-        intent.putExtra("emailUsuario", eUser);
-
-        // Guardar el idioma actual de la aplicación
-        intent.putExtra("idioma", idioma);
-
-        startActivity(intent);
-        finish();
     }
 
 // _________________________________________________________________________________________________
@@ -307,5 +296,62 @@ public class Detalles_Producto extends AppCompatActivity {
 
         // Guardar en el Bundle el idioma actual de la aplicación
         outState.putString("idioma",idioma);
+    }
+
+    private void anadirOrdenes(String pUrl){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(response);
+                    if(json.get("done").toString().equals("true")){
+                        Log.d("ORDENES","HECHO");
+                        String msg = getResources().getString(R.string.t_pedidoAnadido);
+                        Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+
+                        // Crear el intent que redirige la ejecución al Menú Principal
+                        Intent intent = new Intent(getApplicationContext(), Menu_Principal.class);
+
+                        // Guardar los datos del usuario (mantener la sesión)
+                        intent.putExtra("nombreUsuario", nUser);
+                        intent.putExtra("apellidoUsuario", aUser);
+                        intent.putExtra("emailUsuario", eUser);
+
+                        // Guardar el idioma actual de la aplicación
+                        intent.putExtra("idioma", idioma);
+
+                        startActivity(intent);
+                        finish();
+                    } else{             // Si no se ha añadido: Imprimir mensaje de error
+                        String msg = getResources().getString(R.string.t_errorBBDD);
+                        Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Imprimir estado del registro
+                String msg = getResources().getString(R.string.t_errorBBDD);
+                Toast.makeText(getBaseContext(),msg, Toast.LENGTH_LONG).show();
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("operacion", "añadir");
+                parametros.put("nombre", nombreProd.getText().toString());
+                parametros.put("precio", precioProd.getText().toString());
+                parametros.put("imagen", String.valueOf(imagen));
+                parametros.put("cantidad", cantidadProd.getText().toString());
+                parametros.put("email", eUser);
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }
