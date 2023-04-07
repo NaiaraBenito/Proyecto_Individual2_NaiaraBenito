@@ -3,11 +3,13 @@
 package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,7 +19,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Data;
-import androidx.work.WorkManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -47,7 +47,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.Mapa;
 import com.example.proyecto_individual_naiarabenito.Menu_Principal;
-import com.example.proyecto_individual_naiarabenito.PedidoWorkManager;
+import com.example.proyecto_individual_naiarabenito.PedidoAlarmReceiver;
 import com.example.proyecto_individual_naiarabenito.R;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,7 +57,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 
 /* ####################################### CLASE CESTA_FRAGMENT ####################################
@@ -96,6 +95,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     private View v;
     private CestaFragment cf;
     private String nombreProd;
+    private AlarmManager alarmManager;
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -388,29 +388,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 gestionarNotificacion();
 
                 // Añadir una tarea para notificar cuando el pedido está listo
-
-                // Crear un objeto Calendar para obtener la fecha actual
-                Calendar alertaCal = Calendar.getInstance();
-
-                // Sumar 5 minutos a la fecha actual
-                alertaCal.add(Calendar.MINUTE,5);
-
-                // Crear un tag random
-                String tag = UUID.randomUUID().toString();
-
-                // Calcular la duración para que se lance la notificación
-                Long duracion  = alertaCal.getTimeInMillis() - System.currentTimeMillis();
-
-                // Generar un id random
-                int random = (int)(Math.random()*50+1);
-
-                // Obtener el titulo y el contenido de la notificación
-                String pedTitulo = getResources().getString(R.string.n_PNotifTitulo);
-                String pedContenido = getResources().getString(R.string.n_PNotifContenido);
-                Data data = guardarData(pedTitulo,pedContenido, random);
-
-                // Ejecutar el servicio en segundo plano
-                PedidoWorkManager.NotificarPedido(duracion,data,tag);
+                gestionarAlarma();
             }
         });
 
@@ -423,6 +401,25 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
         // Crear y mostrar el diálogo
         confirmacion.create().show();
+    }
+
+    private void gestionarAlarma() {
+        crearNotificationChannelPedido();
+
+        Intent i = new Intent(getContext(), PedidoAlarmReceiver.class);
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getContext(),0,i,0);
+
+        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        // Crear un objeto Calendar para obtener la fecha actual
+        Calendar alertaCal = Calendar.getInstance();
+
+        // Sumar 10 segundos a la fecha actual
+        alertaCal.add(Calendar.SECOND,10);
+
+        // Calcular la duración para que se lance la notificación
+        Long duracion  = alertaCal.getTimeInMillis();
+        alarmManager.set(AlarmManager.RTC_WAKEUP, duracion,pendingIntent2);
     }
 
 // _________________________________________________________________________________________________
@@ -489,6 +486,17 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){  // Si es igual o superior: Crear canal
             CharSequence name = "Notificacion";
             NotificationChannel nc = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager nm = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
+            nm.createNotificationChannel(nc);
+        }
+    }
+
+    public void crearNotificationChannelPedido(){
+
+        // Comprobar que el dispositivo tenga una versión igual o superior a Oreo
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){  // Si es igual o superior: Crear canal
+            CharSequence name = "Pedido";
+            NotificationChannel nc = new NotificationChannel("Pedido", name, NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager nm = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
             nm.createNotificationChannel(nc);
         }
