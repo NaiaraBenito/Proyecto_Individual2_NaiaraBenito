@@ -7,6 +7,10 @@
     <!-- CALL_PHONE: Para llamar al teléfono de atención al cliente de las empresa -->
     <!-- POST_NOTIFICATIONS: Para las notificaciones que agradecen la compra -->
     <!-- INTERNET: Para poder conectarse a la BBDD remota -->
+    <!-- ACCESS_COARSE_LOCATION: Para obtener la localizacion del dispositivo en el mapa -->
+    <!-- ACCESS_FINE_LOCATION: Para obtener la localizacion del dispositivo en el mapa -->
+    <!-- CAMERA: Para acceder a la camara de fotos -->
+    <!-- WAKE_LOCK: Para trabajar con los widgets -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -15,6 +19,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-feature android:name="android.hardware.camera2.full" android:required="true"/>
 
     <application
@@ -102,6 +107,18 @@
         </service>
 
         <receiver android:name=".PedidoAlarmReceiver"/>
+
+        <receiver android:name=".WidgetAplicacion"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info"/>
+        </receiver>
+        <receiver android:name=".WidgetService"
+            android:enabled="true"/>
     </application>
 
 </manifest>

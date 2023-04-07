@@ -54,7 +54,7 @@ public class ServicioFirebase extends FirebaseMessagingService {
             manager.createNotificationChannel(channel);
         }
 
-        Intent i = new Intent (this, Login.class);
+        Intent i = new Intent (this, Launch_Screen.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,i,0);
 

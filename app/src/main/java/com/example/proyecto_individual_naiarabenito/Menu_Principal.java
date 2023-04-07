@@ -212,7 +212,7 @@ public class Menu_Principal extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             Log.d("TOKEN",response.toString());
-                            Toast.makeText(getApplicationContext(),"Se registro correctamente", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(),"Se registro correctamente", Toast.LENGTH_LONG).show();
                         }
                     }, new Response.ErrorListener() {
                         @Override

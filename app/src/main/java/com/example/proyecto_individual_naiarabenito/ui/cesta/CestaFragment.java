@@ -418,7 +418,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         alertaCal.add(Calendar.SECOND,10);
 
         // Calcular la duración para que se lance la notificación
-        Long duracion  = alertaCal.getTimeInMillis();
+        long duracion = alertaCal.getTimeInMillis();
         alarmManager.set(AlarmManager.RTC_WAKEUP, duracion,pendingIntent2);
     }
 

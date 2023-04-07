@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/w_widgetImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:src="@drawable/widget_design" />
+
+    <TextView
+        android:id="@+id/w_widgetText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:text="FIN DE LA PROMOCIÓN\n0d 0h 0m 0s"
+        android:textColor="@color/rosa"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
