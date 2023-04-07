@@ -6,6 +6,8 @@ package com.example.proyecto_individual_naiarabenito;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import  androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -24,7 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.proyecto_individual_naiarabenito.db.DBHelper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -276,6 +280,7 @@ public class Registro extends AppCompatActivity {
                 parametros.put("apellido", et_apellido.getText().toString());
                 parametros.put("email", et_email.getText().toString());
                 parametros.put("password", et_password1.getText().toString());
+                parametros.put("foto", "https://cdn-icons-png.flaticon.com/512/5087/5087579.png");
                 return parametros;
             }
         };
@@ -319,4 +324,5 @@ public class Registro extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
+
 }

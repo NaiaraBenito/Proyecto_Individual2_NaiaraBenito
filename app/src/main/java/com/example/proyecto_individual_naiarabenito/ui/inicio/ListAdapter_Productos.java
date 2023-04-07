@@ -109,6 +109,7 @@ public class ListAdapter_Productos extends RecyclerView.Adapter<ListAdapter_Prod
                 intent.putExtra("nombreUsuario", datosUser[0]);
                 intent.putExtra("apellidoUsuario", datosUser[1]);
                 intent.putExtra("emailUsuario", datosUser[2]);
+                intent.putExtra("fotoUsuario", datosUser[3]);
 
                 // Guardar el idioma actual de la aplicación
                 intent.putExtra("idioma", idioma);

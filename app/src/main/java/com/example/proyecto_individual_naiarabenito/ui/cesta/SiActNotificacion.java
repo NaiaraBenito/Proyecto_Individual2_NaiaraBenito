@@ -83,10 +83,12 @@ public class SiActNotificacion extends AppCompatActivity {
 
         if(extras != null){
             // Obtener los datos del usuario para mantener la sesión
-            datosUser = new String[3];
+            datosUser = new String[4];
             datosUser[0] = extras.getString("nombreUsuario");
             datosUser[1] = extras.getString("apellidoUsuario");
             datosUser[2] = extras.getString("emailUsuario");
+            datosUser[3] = extras.getString("fotoUsuario");
+
             tituloPDF = extras.getString("tituloFactura");
             descripcionPDF = extras.getString("descripcionFactura");
 
@@ -100,6 +102,7 @@ public class SiActNotificacion extends AppCompatActivity {
             intent.putExtra("nombreUsuario", datosUser[0]);
             intent.putExtra("apellidoUsuario", datosUser[1]);
             intent.putExtra("emailUsuario", datosUser[2]);
+            intent.putExtra("fotoUsuario", datosUser[3]);
 
             // Enviar el idioma actual
             intent.putExtra("idioma",idioma);

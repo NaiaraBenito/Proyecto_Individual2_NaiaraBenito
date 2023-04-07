@@ -93,10 +93,11 @@ public class InicioFragment extends Fragment implements SearchView.OnQueryTextLi
         cargar_configuracion(view);
 
         // Obtener los datos del usuario para mantener la sesión
-        datosUser = new String[3];
+        datosUser = new String[4];
         datosUser[0] = getActivity().getIntent().getExtras().getString("nombreUsuario");
         datosUser[1] = getActivity().getIntent().getExtras().getString("apellidoUsuario");
         datosUser[2] = getActivity().getIntent().getExtras().getString("emailUsuario");
+        datosUser[3] = getActivity().getIntent().getExtras().getString("fotoUsuario");
 
         // Añadir el nombre del usuario en la vista de la aplicación
         TextView nombreUser = view.findViewById(R.id.tv_nombreUsuario_inicio);

@@ -47,6 +47,7 @@ public class Detalles_Producto extends AppCompatActivity {
     private String nUser;       // Nombre del usuario logueado
     private String aUser;       // Apellido del usuario logueado
     private String eUser;       // Email del usuario logueado
+    private String fUser;       // Foto de perfil del usuario logueado
 
     private ImageView imgProd;         // Imagen del producto seleccionado
     private TextView nombreProd;       // Nombre del producto seleccionado
@@ -142,9 +143,10 @@ public class Detalles_Producto extends AppCompatActivity {
             precioProd.setText(String.valueOf(precio));
 
             // Obtener la información del usuario logueado
-            nUser = extras.getString("nombreUsuario");
+            nUser = extras.getString("nombreUsuarionombreUsuario");
             aUser = extras.getString("apellidoUsuario");
             eUser = extras.getString("emailUsuario");
+            fUser = extras.getString("fotoUsuario");
         }
     }
 
@@ -168,6 +170,7 @@ public class Detalles_Producto extends AppCompatActivity {
         intent.putExtra("nombreUsuario", nUser);
         intent.putExtra("apellidoUsuario", aUser);
         intent.putExtra("emailUsuario", eUser);
+        intent.putExtra("fotoUsuario", fUser);
 
         // Guardar el idioma actual de la aplicación
         intent.putExtra("idioma", idioma);
@@ -315,6 +318,7 @@ public class Detalles_Producto extends AppCompatActivity {
                         intent.putExtra("nombreUsuario", nUser);
                         intent.putExtra("apellidoUsuario", aUser);
                         intent.putExtra("emailUsuario", eUser);
+                        intent.putExtra("fotoUsuario", fUser);
 
                         // Guardar el idioma actual de la aplicación
                         intent.putExtra("idioma", idioma);

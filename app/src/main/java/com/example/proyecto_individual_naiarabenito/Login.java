@@ -23,7 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.proyecto_individual_naiarabenito.db.DBHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -305,6 +304,7 @@ public class Login extends AppCompatActivity {
                         intent.putExtra("nombreUsuario", json.get("nombre").toString());
                         intent.putExtra("apellidoUsuario", json.get("apellido").toString());
                         intent.putExtra("emailUsuario", json.get("email").toString());
+                        intent.putExtra("fotoUsuario", json.get("foto").toString());
 
                         // Guardar el idioma actual de la aplicación
                         intent.putExtra("idioma",idioma);
@@ -341,4 +341,6 @@ public class Login extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
+
+
 }

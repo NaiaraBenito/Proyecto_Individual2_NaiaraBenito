@@ -4,6 +4,7 @@ package com.example.proyecto_individual_naiarabenito;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -11,7 +12,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +24,21 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.databinding.ActivityMenuPrincipalBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /* ###################################### CLASE MENU_PRINCIPAL #####################################
@@ -75,6 +92,8 @@ public class Menu_Principal extends AppCompatActivity {
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
 
+        registrarDispositivo();
+
         // Crear la vista
         super.onCreate(savedInstanceState);
 
@@ -88,6 +107,7 @@ public class Menu_Principal extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu_principal);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
 
     }
 
@@ -174,5 +194,51 @@ public class Menu_Principal extends AppCompatActivity {
 
         // Guardar en el Bundle el idioma actual de la aplicación
         outState.putString("idioma",idioma);
+    }
+
+    private void registrarDispositivo(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.getException());
+                    Log.w("TOKEN", "PROBLEMAS PARA OBTENER EL TOKEN");
+                    return;
+                }
+                String email = getIntent().getExtras().getString("emailUsuario");
+                String token = task.getResult();
+                if (token != null && email != null){
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_token.php", new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("TOKEN",response.toString());
+                            Toast.makeText(getApplicationContext(),"Se registro correctamente", Toast.LENGTH_LONG).show();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Imprimir estado del registro
+                            String msg = getResources().getString(R.string.t_errorBBDD);
+                            Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    ){
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> parametros = new HashMap<String, String>();
+                            parametros.put("token", token);
+                            parametros.put("email", email);
+                            return parametros;
+                        }
+                    };
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                    requestQueue.add(stringRequest);
+                } else{
+                    Log.d("TOKEN","Token o email null");
+                }
+
+            }
+        });
     }
 }

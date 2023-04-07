@@ -68,10 +68,11 @@ public class NoActNotificacion extends AppCompatActivity {
 
         if(extras != null){
             // Obtener los datos del usuario para mantener la sesión
-            String[] datosUser = new String[3];
+            String[] datosUser = new String[4];
             datosUser[0] = getIntent().getExtras().getString("nombreUsuario");
             datosUser[1] = getIntent().getExtras().getString("apellidoUsuario");
             datosUser[2] = getIntent().getExtras().getString("emailUsuario");
+            datosUser[3] = getIntent().getExtras().getString("fotoUsuario");
 
             // Crear el intent que redirige la ejecución al Menú Principal
             Intent intent = new Intent(this, Menu_Principal.class);
@@ -80,6 +81,7 @@ public class NoActNotificacion extends AppCompatActivity {
             intent.putExtra("nombreUsuario", datosUser[0]);
             intent.putExtra("apellidoUsuario", datosUser[1]);
             intent.putExtra("emailUsuario", datosUser[2]);
+            intent.putExtra("fotoUsuario", datosUser[3]);
 
             // Enviar el idioma actual
             intent.putExtra("idioma",idioma);

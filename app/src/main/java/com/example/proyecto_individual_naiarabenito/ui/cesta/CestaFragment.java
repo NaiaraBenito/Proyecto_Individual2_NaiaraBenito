@@ -142,10 +142,11 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         cargar_configuracion(view);
 
         // Obtener los datos del usuario para mantener la sesión
-        datosUser = new String[3];
+        datosUser = new String[4];
         datosUser[0] = getActivity().getIntent().getExtras().getString("nombreUsuario");
         datosUser[1] = getActivity().getIntent().getExtras().getString("apellidoUsuario");
         datosUser[2] = getActivity().getIntent().getExtras().getString("emailUsuario");
+        datosUser[3] = getActivity().getIntent().getExtras().getString("fotoUsuario");
 
         // Cargar la lista de pedidos
         cargarListaOrdenes(view);
@@ -184,6 +185,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 intent.putExtra("nombreUsuario", datosUser[0]);
                 intent.putExtra("apellidoUsuario", datosUser[1]);
                 intent.putExtra("emailUsuario", datosUser[2]);
+                intent.putExtra("fotoUsuario", datosUser[3]);
 
                 // Guardar el idioma actual de la aplicación
                 intent.putExtra("idioma", idioma);
@@ -564,6 +566,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         i.putExtra("nombreUsuario", datosUser[0]);
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
+        i.putExtra("fotoUsuario", datosUser[3]);
 
         // Enviar el idioma actual
         i.putExtra("idioma",idioma);
@@ -592,6 +595,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         i.putExtra("nombreUsuario", datosUser[0]);
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
+        i.putExtra("fotoUsuario", datosUser[3]);
 
         // Enviar el idioma actual
         i.putExtra("idioma",idioma);
@@ -624,6 +628,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         i.putExtra("nombreUsuario", datosUser[0]);
         i.putExtra("apellidoUsuario", datosUser[1]);
         i.putExtra("emailUsuario", datosUser[2]);
+        i.putExtra("fotoUsuario", datosUser[3]);
 
         // Enviar el idioma actual
         i.putExtra("idioma",idioma);

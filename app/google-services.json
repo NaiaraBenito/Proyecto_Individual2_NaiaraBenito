@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "864371536873",
+    "project_id": "das-proyecto2-naiarabenito",
+    "storage_bucket": "das-proyecto2-naiarabenito.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864371536873:android:a45d12a9a7e05572101178",
+        "android_client_info": {
+          "package_name": "com.example.proyecto_individual_naiarabenito"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "864371536873-uqat49n24fret9p55nueq1qeh6iafsgh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCriZBpHifgMF-tr8PwGOHD1UEDUlH5L0E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "864371536873-uqat49n24fret9p55nueq1qeh6iafsgh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
