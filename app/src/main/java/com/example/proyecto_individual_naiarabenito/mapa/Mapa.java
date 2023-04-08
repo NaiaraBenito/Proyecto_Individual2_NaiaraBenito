@@ -1,4 +1,4 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.mapa;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +13,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+
+import com.example.proyecto_individual_naiarabenito.R;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;

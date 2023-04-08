@@ -1,6 +1,6 @@
 
 // _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.activities;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import android.content.Context;

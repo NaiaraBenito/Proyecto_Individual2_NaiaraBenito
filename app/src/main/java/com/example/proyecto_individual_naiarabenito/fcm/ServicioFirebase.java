@@ -1,4 +1,4 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.fcm;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -12,6 +12,9 @@ import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
+import com.example.proyecto_individual_naiarabenito.activities.Launch_Screen;
+import com.example.proyecto_individual_naiarabenito.R;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

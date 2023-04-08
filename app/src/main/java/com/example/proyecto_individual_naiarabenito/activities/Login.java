@@ -1,6 +1,6 @@
 
 // _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.activities;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.annotation.NonNull;
@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -23,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.proyecto_individual_naiarabenito.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.alarma;
 
 import android.app.Notification;
 import android.content.BroadcastReceiver;
@@ -10,6 +10,8 @@ import android.graphics.Color;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.example.proyecto_individual_naiarabenito.R;
 
 public class PedidoAlarmReceiver extends BroadcastReceiver {
     final static String CHANNEL_ID = "Pedido";

@@ -1,6 +1,6 @@
 
 // _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.activities;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.annotation.NonNull;
@@ -19,6 +19,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.proyecto_individual_naiarabenito.R;
 
 
 /* ###################################### CLASE LAUNCH_SCREEN ######################################

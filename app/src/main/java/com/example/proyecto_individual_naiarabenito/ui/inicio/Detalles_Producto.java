@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,8 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.proyecto_individual_naiarabenito.GestorIdioma;
-import com.example.proyecto_individual_naiarabenito.Menu_Principal;
+import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
+import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 
 import org.json.JSONException;

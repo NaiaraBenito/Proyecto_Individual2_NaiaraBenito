@@ -11,8 +11,8 @@ import androidx.core.app.NotificationManagerCompat;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.proyecto_individual_naiarabenito.GestorIdioma;
-import com.example.proyecto_individual_naiarabenito.Menu_Principal;
+import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
+import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 
 

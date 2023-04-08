@@ -1,4 +1,4 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,13 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.example.proyecto_individual_naiarabenito.activities.Launch_Screen;
+import com.example.proyecto_individual_naiarabenito.R;
+
 public class WidgetAplicacion  extends AppWidgetProvider {
 
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId){
         Intent i = new Intent(context, Launch_Screen.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,0,i,0);
 
-        RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.widget_diseno);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_diseno);
 
         // Obtener el valor del Widget
         SharedPreferences preferences = context.getSharedPreferences("PREFS",0);

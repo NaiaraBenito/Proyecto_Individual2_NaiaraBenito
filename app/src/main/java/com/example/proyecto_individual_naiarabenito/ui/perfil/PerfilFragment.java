@@ -5,15 +5,11 @@ package com.example.proyecto_individual_naiarabenito.ui.perfil;
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import static android.app.Activity.RESULT_OK;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,7 +29,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.AuthFailureError;
@@ -44,19 +39,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.example.proyecto_individual_naiarabenito.GestorIdioma;
-import com.example.proyecto_individual_naiarabenito.Login;
+import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
+import com.example.proyecto_individual_naiarabenito.activities.Login;
 import android.Manifest;
 import android.widget.Toast;
 
-import com.example.proyecto_individual_naiarabenito.Menu_Principal;
+import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,7 +58,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 
 /* ###################################### CLASE PERFIL_FRAGMENT ####################################

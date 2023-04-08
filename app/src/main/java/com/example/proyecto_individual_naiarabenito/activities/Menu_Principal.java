@@ -1,6 +1,6 @@
 
 // _____________________________________ UBICACIÓN DEL PAQUETE _____________________________________
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.activities;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import android.Manifest;
@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.proyecto_individual_naiarabenito.R;
 import com.example.proyecto_individual_naiarabenito.databinding.ActivityMenuPrincipalBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

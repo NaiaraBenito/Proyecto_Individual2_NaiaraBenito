@@ -20,8 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.proyecto_individual_naiarabenito.GestorIdioma;
-import com.example.proyecto_individual_naiarabenito.Menu_Principal;
+import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
+import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import java.io.File;
 import java.io.FileOutputStream;

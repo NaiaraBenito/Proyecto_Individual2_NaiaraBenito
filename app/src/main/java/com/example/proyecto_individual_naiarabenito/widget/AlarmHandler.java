@@ -1,4 +1,4 @@
-package com.example.proyecto_individual_naiarabenito;
+package com.example.proyecto_individual_naiarabenito.widget;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
