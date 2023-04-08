@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,10 +24,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +54,7 @@ public class Detalles_Producto extends AppCompatActivity {
     private int imagen;             // Id de la imagen del producto seleccionado
 
     private String idioma;          // String que contiene el idioma actual de la aplicación
-    private RequestQueue requestQueue;
+    private RequestQueue requestQueue;  // Variable que gestiona el envío de peticiones a la BBDD remota
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -73,7 +70,9 @@ public class Detalles_Producto extends AppCompatActivity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Inicializar la variable que realiza las peticiones a la BBDD remota
         requestQueue = Volley.newRequestQueue(getBaseContext());
+
         // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
         if (savedInstanceState != null) {
             idioma = savedInstanceState.getString("idioma");
@@ -189,8 +188,7 @@ public class Detalles_Producto extends AppCompatActivity {
                 void
         *) Descripción:
                 Este método se ejecuta cuando el usuario pulsa el botón "AÑADIR AL CARRITO".
-                Se encarga de actualizar al BBDD y añadir el producto al carrito. Por último
-                redirige la ejecución al Menú Principal.
+                Se encarga de actualizar al BBDD y añadir el producto al carrito.
 */
     public void anadirCarrito (View v){
 
@@ -299,14 +297,32 @@ public class Detalles_Producto extends AppCompatActivity {
         outState.putString("idioma",idioma);
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método anadirOrdenes:
+    ----------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que añade los pedidos a la BBDD
+                   y redirige la ejecución al inicio dde la aplicación.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta al pulsar el botón "AÑADIR AL CARRITO". Carga en la cesta del
+                usuario el producto.
+*/
     private void anadirOrdenes(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {   // Si la petición ha sido exitosa
                 JSONObject json = null;
                 try {
+                    // Parsear la respuesta a JSON
                     json = new JSONObject(response);
+
+                    // Comprobar que el producto se haya añadido a la BBDD
                     if(json.get("done").toString().equals("true")){
+
+                        // Notificar al usuario
                         String msg = getResources().getString(R.string.t_pedidoAnadido);
                         Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
 
@@ -334,17 +350,17 @@ public class Detalles_Producto extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) { // Si ha ocurriddo un erro
+                // Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getBaseContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("operacion", "añadir");
+            protected Map<String, String> getParams() throws AuthFailureError {// Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("operacion", "añadir");  // Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("nombre", nombreProd.getText().toString());
                 parametros.put("precio", precioProd.getText().toString());
                 parametros.put("imagen", String.valueOf(imagen));
@@ -353,6 +369,7 @@ public class Detalles_Producto extends AppCompatActivity {
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 }

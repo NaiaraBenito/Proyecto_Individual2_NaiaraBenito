@@ -4,19 +4,17 @@ package com.example.proyecto_individual_naiarabenito.ui.cesta;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import static com.example.proyecto_individual_naiarabenito.ui.cesta.CestaFragment.NOTIFICACION_ID;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 
 
-/* ################################### CLASE NO_ACT_NOTIFICACION ##################################
+/* ################################### CLASE NO ACT NOTIFICACION ##################################
     *) Descripción:
         La función de esta clase es gestionar el proceso de haber pulsado No en la notificación
         que aparece al terminar un pedido y pregunta por la factura.

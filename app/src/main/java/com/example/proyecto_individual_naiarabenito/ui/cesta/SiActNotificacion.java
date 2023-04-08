@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 
-/* ################################### CLASE SI_ACT_NOTIFICACION ##################################
+/* ################################### CLASE SI ACT NOTIFICACION ##################################
     *) Descripción:
         La función de esta clase es gestionar el proceso de haber pulsado Si en la notificación
         que aparece al terminar un pedido y pregunta por la factura.

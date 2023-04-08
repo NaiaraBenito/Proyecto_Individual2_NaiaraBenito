@@ -14,10 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,12 +24,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.R;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/* ################################### CLASE LIST_ADAPTER_ORDENES ##################################
+/* ################################### CLASE LIST ADAPTER ORDENES ##################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar la lista de pedidos.
 
@@ -46,8 +43,8 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
     private final String[] datosUser;  // Lista que contiene los datos del usuario para mantener la sesión
     private RequestQueue requestQueue;
     private InterfazActualizarCesta listenerActualizado; // Listener para utilizar el método notificarCambios()
-    private String nombreProd;
-    private int cantidadProd;
+    private String nombreProd;      // Variable que contiene el nombre del producto que se quiere modificar
+    private int cantidadProd;   // Variable que contiene la cantidad del producto que se está modificando
 
 // __________________________________________ Constructor __________________________________________
     public ListAdapter_Ordenes(List<Orden> pList_ele, Context pContext, String[] pDatosUser, InterfazActualizarCesta listenerActualizado){
@@ -135,8 +132,10 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                         // Actualizar lista
                         lista_orden.get(position).setCantidadProd(nuevaCantidad);
 
-
+                        // Obtener el nombre del producto que se quiere actualizar
                         nombreProd = holder.nombre.getText().toString();
+
+                        // Asignar cantidad -1 para indicar que se quiere decrementar
                         cantidadProd = -1;
                         // Actualizar la BBDD
                         anadirOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
@@ -166,7 +165,10 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
                 // Notificar a CestaFragment que la lista ha sido modificada
                 listenerActualizado.notificarCambios();
 
+                // Obtener el nombre del producto que se quiere actualizar
                 nombreProd = holder.nombre.getText().toString();
+
+                // Asignar cantidad -1 para indicar que se quiere incrementar
                 cantidadProd = 1;
                 // Actualizar la BBDD
                 anadirOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
@@ -296,16 +298,27 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
 
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método eliminarOrdenes:
+    -----------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que elimina un producto del
+                   pedido del usuario en la cesta en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta al reducir la cantidad de un producto a 0.Elimina el producto
+                seleccionado.
+*/
     private void eliminarOrdenes(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-
-            }
+            public void onResponse(String response) { } // Si la petición ha sido exitosa
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) {// Si ha ocurrido un erro
+                // Imprimir mensaje de error
                 Log.e("ERROR BBDD", error.toString());
                 String msg = context.getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(context,msg, Toast.LENGTH_LONG).show();
@@ -313,42 +326,56 @@ class ListAdapter_Ordenes extends RecyclerView.Adapter<ListAdapter_Ordenes.ViewH
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("operacion", "eliminar");
+            protected Map<String, String> getParams() throws AuthFailureError {// Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("operacion", "eliminar");// Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", datosUser[2]);
                 parametros.put("nombre", nombreProd);
                 return parametros;
             }
         };
+
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método anadirOrdenes:
+    ---------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que añade un producto al pedido
+                   del usuario en la cesta en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta al actualizar la cantidad de un pedido. Incrementa o
+                decrementa el valor de este.
+*/
     private void anadirOrdenes(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-
-            }
+            public void onResponse(String response) {}  // Si la petición ha sido exitosa
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) {    // Si ha ocurrido un error
+                // Imprimir mensaje de error
                 String msg = context.getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText( context,msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("operacion", "añadir");
+            protected Map<String, String> getParams() throws AuthFailureError { // Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("operacion", "añadir");// Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", datosUser[2]);
                 parametros.put("nombre", nombreProd);
                 parametros.put("cantidad", String.valueOf(cantidadProd));
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 }

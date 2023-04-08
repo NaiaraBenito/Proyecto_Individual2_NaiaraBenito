@@ -36,7 +36,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.Data;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 
-/* ####################################### CLASE CESTA_FRAGMENT ####################################
+/* ####################################### CLASE CESTA FRAGMENT ####################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar la configuración del carrito.
 
@@ -79,7 +78,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     private TextView impuestos;     // TextView que contiene los impuestos
     private TextView total;         // TextView que contiene el coste total del pedido
     private Button pagar;           // Botón para finalizar el pedido
-    private Button mapa;
+    private Button mapa;            // Botón para mostrar el mapa
 
     private String tituloPDF;       // Variable que contiene el título de la factura que se genera al finalizar el pedido
     private String descripcionPDF;  // Variable que contiene el cuerpo de la factura
@@ -91,11 +90,12 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     final static int NOTIFICACION_ID = 0;       // Variable que contiene el id de la notificación
 
     private String idioma;          // String que contiene el idioma actual de la aplicación
-    private RequestQueue requestQueue;
-    private View v;
-    private CestaFragment cf;
-    private String nombreProd;
-    private AlarmManager alarmManager;
+
+    private RequestQueue requestQueue;  // Variable que gestiona el envío de peticiones a la BBDD remota
+    private View v;   // View con la vista asignada a esta actividad
+    private CestaFragment cf;   // Instancia de la clase actual
+    private String nombreProd;     // Nombre del producto que se ha seleccionado
+    private AlarmManager alarmManager;  // Alarma que lanza la notificación para informar de que el pedido está en camino
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -113,8 +113,9 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                 apartado Cesta del menú.
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        // Inicializar la variable que realiza las peticiones a la BBDD remota
         requestQueue = Volley.newRequestQueue(getContext());
+
         // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
         if (savedInstanceState != null) {
             idioma = savedInstanceState.getString("idioma");
@@ -173,12 +174,12 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         // Obtener los Objetos de la vista
         mapa = view.findViewById(R.id.btn_mapa);
 
-        // Gestionar el proceso de compra del usuario y asignar acción al pulsar el botón "PAGAR"
+        // Asignar acción al pulsar el botón "MAPA"
         mapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // Crear el intent que redirige la ejecución al Menú Principal
+                // Crear el intent que redirige la ejecución al Mapa
                 Intent intent = new Intent(getContext(), Mapa.class);
 
                 // Guardar los datos del usuario (mantener la sesión)
@@ -189,7 +190,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
                 // Guardar el idioma actual de la aplicación
                 intent.putExtra("idioma", idioma);
-
+                // Inicial la actividad
                 startActivity(intent);
             }
         });
@@ -210,6 +211,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
     private void cargarListaOrdenes(View view) {
         cf = this;
         v = view;
+
         // Añadir los pedidos del usuario a la lista
         obtenerOrdenes("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/gestionar_ordenes.php");
     }
@@ -301,7 +303,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 // _________________________________________________________________________________________________
 
 /*  Método calcularEnvio:
-    -------------------------
+    ---------------------
         *) Parámetros (Input):
                 1) (double) pPrecio: Contiene el coste total de los productos de la cesta.
         *) Parámetro (Output):
@@ -328,7 +330,7 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 // _________________________________________________________________________________________________
 
 /*  Método calcularTotal:
-    -------------------------
+    ---------------------
         *) Parámetros (Input):
                 1) (double) pPrecioProd: Contiene el coste total de los productos de la cesta.
                 2) (double) pImpuestos: Contiene el coste por impuestos del pedido.
@@ -403,12 +405,26 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         confirmacion.create().show();
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método gestionarAlarma:
+    -----------------------
+        *) Parámetros (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método gestiona la alarma que notifica al usuario que tras 10s de terminar la
+                compra que su pedido está en camino.
+*/
     private void gestionarAlarma() {
+        // Crear el canal de la notificación
         crearNotificationChannelPedido();
 
+        // Crear un intent a la clase que controla el AlarmReceiver
         Intent i = new Intent(getContext(), PedidoAlarmReceiver.class);
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getContext(),0,i,0);
 
+        // Obtener el AlarmManager
         alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
         // Crear un objeto Calendar para obtener la fecha actual
@@ -417,8 +433,10 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         // Sumar 10 segundos a la fecha actual
         alertaCal.add(Calendar.SECOND,10);
 
-        // Calcular la duración para que se lance la notificación
+        // Obtener la fecha para que se lance la notificación
         long duracion = alertaCal.getTimeInMillis();
+
+        // Inicial la alarma
         alarmManager.set(AlarmManager.RTC_WAKEUP, duracion,pendingIntent2);
     }
 
@@ -491,6 +509,16 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         }
     }
 
+// _________________________________________________________________________________________________
+
+    /*  Método crearNotificationChannelPedido:
+        --------------------------------------
+            *) Parámetros (Input):
+            *) Parámetro (Output):
+                    void
+            *) Descripción:
+                    Este método crea la un canal para poder añadir una notificación.
+    */
     public void crearNotificationChannelPedido(){
 
         // Comprobar que el dispositivo tenga una versión igual o superior a Oreo
@@ -578,7 +606,6 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
 
         // Enviar el idioma actual
         i.putExtra("idioma",idioma);
-
 
         pendingIntent = PendingIntent.getActivity(getActivity(),0,i,PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -885,31 +912,43 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
         outState.putString("idioma",idioma);
     }
 
+// _________________________________________________________________________________________________
 
-//-----------------------------------------------------------------------------------------------------------------------------------
-    private Data guardarData(String titulo, String contenido, int id){
-        return new Data.Builder()
-                .putString("titulo", titulo)
-                .putString("contenido",contenido)
-                .putInt("idnoti",id).build();
-
-    }
-
-
+/*  Método obtenerOrdenes:
+    ----------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que obtiene el listado de los
+                   pedidos del usuario en la cesta en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta al acceder a la sección de la cesta. Carga la cesta de la
+                aplicación con todos los productos que el usuario ha añadido a la cesta.
+*/
     private void obtenerOrdenes(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {   // Si la petición ha sido exitosa
                 JSONObject json = null;
                 try {
+                    // Parsear la respuesta a JSON
                     json = new JSONObject(response);
+
+                    // Crear un auxiliar de la lista
                     ArrayList<Orden> lista_ordenesAux = new ArrayList<>();
+
+                    // Comprobar que el usuario tenga productos en la lista
                     if(json.get("exist").toString().equals("true")){
+
+                        // Obtener la lista con los pedidos
                         JSONArray listaJSON = (JSONArray) json.get("orders");
 
+                        // Iterar la lista y guardarla en el auxiliar
                         for (int i = 0; i < listaJSON.length(); i++){
+                            // Obtener una elemento de la lista
                             JSONObject aux = (JSONObject) listaJSON.get(i);
 
+                            // Crear la orden
                             Orden orden = new Orden();                  // Crear una Órden
                             orden.setId(aux.getInt("id"));                // Asignar id
                             orden.setNombreProd(aux.getString("nombreProd"));     // Asignar nombre
@@ -918,16 +957,20 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
                             orden.setCantidadProd(aux.getInt("cantidadProd"));      // Asignar cantidad
                             orden.setEmailUsuario(aux.getString("emailUsuario"));   // Asignar email del usuario
 
+                            // Añadir la orden a la lista auxiliar
                             lista_ordenesAux.add(orden);       // Añadir la nueva orden al listado
                         }
-
                     }
+
+                    // Asignar el valor de la lista de ordenes
                     lista_ordenes = lista_ordenesAux;
+
                     // Cargar las lista en el RecyclerView
                     recyclerViewOrdenes = v.findViewById(R.id.lista_carrito);
                     recyclerViewOrdenes.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
                     adapterOrdenes = new ListAdapter_Ordenes(lista_ordenes,getContext(),datosUser,cf);
                     recyclerViewOrdenes.setAdapter(adapterOrdenes);
+
                     // Actualizar los costes (Total producto, envio, impuestos y total)
                     cargarResumen(v);
                 } catch (JSONException e) {
@@ -936,34 +979,48 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) { // Si ha ocurrido un error
+                // Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("operacion", "obtener");
+            protected Map<String, String> getParams() throws AuthFailureError {// Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("operacion", "obtener");// Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", datosUser[2]);
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 
+// _________________________________________________________________________________________________
 
+/*  Método eliminarOrdenes:
+    -----------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que elimina un producto del
+                   pedido del usuario en la cesta en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta al terminar la compra. Elimina el producto seleccionado.
+*/
     private void eliminarOrdenes(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {   // Si la petición ha sido exitosa
                 JSONObject json = null;
                 try {
+                    // Parsear la respuesta a JSON
                     json = new JSONObject(response);
-                    if(json.get("done").toString().equals("true")){
-                    }
+
+                    // Comprobar que se ha eliminado la lista
+                    if(json.get("done").toString().equals("true")){}
 
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -971,22 +1028,23 @@ public class CestaFragment extends Fragment implements InterfazActualizarCesta {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) {    // Si ha ocurrido un error
+                // Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("operacion", "eliminar");
+            protected Map<String, String> getParams() throws AuthFailureError { // Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("operacion", "eliminar");// Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", datosUser[2]);
                 parametros.put("nombre", nombreProd);
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 }

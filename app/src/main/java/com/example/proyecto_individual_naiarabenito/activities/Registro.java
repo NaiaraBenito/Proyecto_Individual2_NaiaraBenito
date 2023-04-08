@@ -314,7 +314,7 @@ public class Registro extends AppCompatActivity {
     private void validarUsuario(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {// Si la petición ha sido exitosa
+            public void onResponse(String response) {   // Si la petición ha sido exitosa
                 JSONObject json = null;
                 try {
                     // Parsear la respuesta a JSON
