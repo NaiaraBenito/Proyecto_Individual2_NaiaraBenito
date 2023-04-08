@@ -8,7 +8,7 @@ import android.content.res.Configuration;
 import java.util.Locale;
 
 
-/* ################################ CLASE GESTOR_IDIOMA ###################################
+/* ################################ CLASE GESTOR IDIOMA ###################################
     *) Descripción:
         La función de esta clase auxiliar es cambiar el idioma de la aplicación.
 

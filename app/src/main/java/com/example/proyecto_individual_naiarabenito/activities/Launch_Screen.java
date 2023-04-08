@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.example.proyecto_individual_naiarabenito.R;
 
 
-/* ###################################### CLASE LAUNCH_SCREEN ######################################
+/* ###################################### CLASE LAUNCH SCREEN ######################################
     *) Descripción:
         La función de esta clase es mostrar una animación al abrir la aplicación donde se muestra el
         logo y el nombre de la autora de la aplicación.

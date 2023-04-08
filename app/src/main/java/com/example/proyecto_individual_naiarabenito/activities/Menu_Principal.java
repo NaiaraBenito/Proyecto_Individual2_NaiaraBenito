@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/* ###################################### CLASE MENU_PRINCIPAL #####################################
+/* ###################################### CLASE MENU PRINCIPAL #####################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar la vista de toda la aplicación.
 
