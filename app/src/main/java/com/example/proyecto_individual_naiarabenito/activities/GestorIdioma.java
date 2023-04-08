@@ -32,10 +32,12 @@ public class GestorIdioma {
                 Este método se ejecuta cada vez que se quiere establecer el idioma de la aplicación.
 */
     public void cambiarIdioma(Context pContext, String pIdioma){
+
+        // Obtener la nueva localización
         Locale nuevaloc = new Locale(pIdioma);
         Locale.setDefault(nuevaloc);
 
-        // Crear una configuración para la localización inglesa
+        // Crear una configuración para la nueva localización
         Configuration configuration = pContext.getResources().getConfiguration();
         configuration.setLocale(nuevaloc);
         configuration.setLayoutDirection(nuevaloc);

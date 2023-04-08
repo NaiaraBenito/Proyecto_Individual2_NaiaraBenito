@@ -15,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -24,7 +23,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,7 +35,6 @@ import com.example.proyecto_individual_naiarabenito.databinding.ActivityMenuPrin
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +50,6 @@ public class Menu_Principal extends AppCompatActivity {
 // ___________________________________________ Variables ___________________________________________
     private static final int REQUEST_CALL = 1;      // ID para realizar llamadas telefónicas
     private ActivityMenuPrincipalBinding binding;   // Variable para gestionar los fragmentos del menú
-
     private String idioma;          // String que contiene el idioma actual de la aplicación
 
 // ____________________________________________ Métodos ____________________________________________
@@ -93,6 +89,7 @@ public class Menu_Principal extends AppCompatActivity {
         // Cargar las preferencias configuradas por el usuario
         cargar_configuracion();
 
+        // Asignar el token del dispositivo al usuario logueado (para que reciba los mensajes FCM)
         registrarDispositivo();
 
         // Crear la vista
@@ -108,14 +105,12 @@ public class Menu_Principal extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_menu_principal);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
-
     }
 
 // _________________________________________________________________________________________________
 
 /*  Método llamada:
-    -------------------
+    ---------------
         *) Parámetros (Input):
             1) (View) v: Vista asociada al Activity actual
         *) Parámetro (Output):
@@ -180,7 +175,7 @@ public class Menu_Principal extends AppCompatActivity {
 // _________________________________________________________________________________________________
 
 /*  Método onSaveInstanceState:
-    ------------------------
+    ---------------------------
         *) Parámetros (Input):
                 1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
         *) Parámetro (Output):
@@ -197,48 +192,65 @@ public class Menu_Principal extends AppCompatActivity {
         outState.putString("idioma",idioma);
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método registrarDispositivo:
+    ----------------------------
+        *) Parámetros (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Actualiza el token del usuario logueado con el del dispositivo actual para que
+                reciba las notificaciones FCM en este aparato.
+*/
     private void registrarDispositivo(){
+
+        // Obtener el token del dispositivo actual
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
-            public void onComplete(@NonNull Task<String> task) {
+            public void onComplete(@NonNull Task<String> task) {       //Al completar el proceso
+                // Comprobar si se ha conseguido el token
                 if (!task.isSuccessful()) {
-                    Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.getException());
-                    Log.w("TOKEN", "PROBLEMAS PARA OBTENER EL TOKEN");
+                    Log.d(ContentValues.TAG, "Fetching FCM registration token failed", task.getException());
+                    Log.d("TOKEN", "PROBLEMAS PARA OBTENER EL TOKEN");
                     return;
                 }
+                // Obtener el email del usuario y el token
                 String email = getIntent().getExtras().getString("emailUsuario");
                 String token = task.getResult();
-                if (token != null && email != null){
+
+                // Comprobar que tanto el email como el token tengan valor
+                if (token != null && email != null){    // Si no son null --> Actualizar la BBDD
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_token.php", new Response.Listener<String>() {
                         @Override
-                        public void onResponse(String response) {
+                        public void onResponse(String response) {  // Si la petición ha sido exitosa
                             Log.d("TOKEN",response.toString());
-                            //Toast.makeText(getApplicationContext(),"Se registro correctamente", Toast.LENGTH_LONG).show();
                         }
                     }, new Response.ErrorListener() {
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // Imprimir estado del registro
+                        public void onErrorResponse(VolleyError error) { // Si ha ocurriddo un error
+                            // Mostrar un mensaje de error
                             String msg = getResources().getString(R.string.t_errorBBDD);
                             Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
                         }
                     }
                     ){
                         @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> parametros = new HashMap<String, String>();
+                        protected Map<String, String> getParams() throws AuthFailureError { // Parámetros que enviar con la petición
+                            Map<String, String> parametros = new HashMap<>();
                             parametros.put("token", token);
                             parametros.put("email", email);
                             return parametros;
                         }
                     };
 
+                    // Añadir petición a la cola
                     RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                     requestQueue.add(stringRequest);
-                } else{
+
+                } else{     // Si son null --> Notificar error
                     Log.d("TOKEN","Token o email null");
                 }
-
             }
         });
     }

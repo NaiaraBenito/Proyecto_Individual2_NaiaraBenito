@@ -19,7 +19,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.proyecto_individual_naiarabenito.R;
 
 
@@ -130,8 +129,8 @@ public class Launch_Screen extends AppCompatActivity {
         *) Parámetro (Output):
                 void
         *) Descripción:
-                Este método realiza el cambio Activity a la pantalla del Login con un retraso de 5s
-                para darle tiempo de cargar a las animaciones.
+                Este método realiza el cambio de Activity a la pantalla del Login con un retraso de
+                5s para darle tiempo de cargar a las animaciones.
 */
     private void cargarLogin(){
         new Handler().postDelayed(() -> {
@@ -141,7 +140,7 @@ public class Launch_Screen extends AppCompatActivity {
             // Guardar el idioma actual de la aplicación
             intent.putExtra("idioma", idioma);
 
-            // Conectar el este Activity (Launch Screen) con el Login mediante una animación
+            // Conectar este Activity (Launch Screen) con el Login mediante una animación
             Pair[] pairs = new Pair[2];
             pairs[0] = new Pair<View, String>(logo, "logoImageTrans");
             pairs[1] = new Pair<View, String>(autora, "textTrans");
@@ -180,7 +179,7 @@ public class Launch_Screen extends AppCompatActivity {
         // Comprobar el estado de la preferencia del modo oscuro
         boolean modoOscuro = sp.getBoolean("modo_oscuro", false);
 
-        if(modoOscuro){     // Si el modo oscuro está activado: Pintar el fondo de gris
+        if(modoOscuro){     // Si el modo oscuro está activado: Pintar el fondo de negro
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
         } else{             // Si el modo oscuro está desactivado: Pintar el fondo de blanco
             getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));

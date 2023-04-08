@@ -5,7 +5,6 @@ package com.example.proyecto_individual_naiarabenito.activities;
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import androidx.annotation.NonNull;
 import  androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,10 +22,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -52,8 +48,8 @@ public class Registro extends AppCompatActivity {
 
     private String idioma;          // String que contiene el idioma actual de la aplicación
 
-    private RequestQueue requestQueue;
-    private View v;
+    private RequestQueue requestQueue; // Variable que gestiona el envío de peticiones a la BBDD remota
+    private View v;     // View con la vista asignada a esta actividad
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -65,7 +61,7 @@ public class Registro extends AppCompatActivity {
                 void
         *) Descripción:
                 Este método se ejecuta la primera vez que se crea el Activity y crea la vista del
-                registro
+                registro.
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +99,7 @@ public class Registro extends AppCompatActivity {
         et_password1 = findViewById(R.id.et_passwordRegistro1);
         et_password2 = findViewById(R.id.et_passwordRegistro2);
 
+        // Inicializar la variable que realiza las peticiones a la BBDD remota
         requestQueue = Volley.newRequestQueue(this);
     }
 
@@ -111,7 +108,7 @@ public class Registro extends AppCompatActivity {
 /*  Método volverLogin:
     -------------------
         *) Parámetros (Input):
-                1) (View) v: Vista asociada al Activity actual
+                1) (View) v: Vista asociada al Activity actual.
         *) Parámetro (Output):
                 void
         *) Descripción:
@@ -140,7 +137,8 @@ public class Registro extends AppCompatActivity {
         *) Descripción:
                 Este método se ejecuta cuando el usuario pulsa el botón "REGISTRAR".
                 Valida la entrada de datos:
-                    - Si los datos son válidos: Registra al usuario y redirige la ejecución al Login.
+                    - Si los datos son válidos: Llama al método que comprueba si el usuario ya está
+                      registrado.
                     - Si los datos no son válidos: Muestra un mensaje de error.
 */
     public void registrarUsuario(View v){
@@ -177,7 +175,7 @@ public class Registro extends AppCompatActivity {
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
                 this.v = v;
-                // Registrar el usuario en la BBDD
+                // Comprobar si el usuario ya se encuentra registrado en la BBDD remota.
                 validarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/validar_usuario.php");
 
             } else {     // El email ingresado es inválido: Imprimir mensaje de error
@@ -231,7 +229,7 @@ public class Registro extends AppCompatActivity {
 // _________________________________________________________________________________________________
 
 /*  Método onSaveInstanceState:
-    ------------------------
+    ---------------------------
         *) Parámetros (Input):
                 1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
         *) Parámetro (Output):
@@ -248,11 +246,25 @@ public class Registro extends AppCompatActivity {
         outState.putString("idioma",idioma);
     }
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// _________________________________________________________________________________________________
+
+/*  Método añadirUsuario:
+    ---------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que registra al usuario en la
+                    BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta tras comprobar que el usuario no se encuentra registrado.
+                Se encarga de añadir al usuario en la BBDD remota y redirigir la ejecución al Login.
+*/
     private void añadirUsuario(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {    // Si la petición ha sido exitosa
+
+                // Mostrar mensaje informativo
                 String msg = getResources().getString(R.string.t_registroCompletado);
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 
@@ -261,16 +273,16 @@ public class Registro extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) {   // Si ha ocurriddo un error
+                // Mostrar un mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
+            protected Map<String, String> getParams() throws AuthFailureError {// Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
                 parametros.put("nombre", et_nombre.getText().toString());
                 parametros.put("apellido", et_apellido.getText().toString());
                 parametros.put("email", et_email.getText().toString());
@@ -279,20 +291,40 @@ public class Registro extends AppCompatActivity {
                 return parametros;
             }
         };
+
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método validarUsuario:
+    ----------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que valida al usuario en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta tras validar los datos introducidos en el formulario.
+                Se encarga de comprobar si el usuario se encuentra registrado en la app:
+                    - Si está registrado: Muestra un mensaje de error.
+                    - Si no está registrado: Llama al método que registra al usuario en la BBDD y
+                      redirige la ejecución al Login.
+*/
     private void validarUsuario(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {// Si la petición ha sido exitosa
                 JSONObject json = null;
                 try {
+                    // Parsear la respuesta a JSON
                     json = new JSONObject(response);
 
+                    // Comprobar que el usuario no se encuentre registrado
                     if(json.get("exist").toString().equals("false")){
+                        // Llamar al método que registra al usuario en la BBDD
                         añadirUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_usuario.php");
-                    } else{
+                    } else{ // Si el usuario se encuentra registrado --> Imprimir mensaje de error
                         String msg = getResources().getString(R.string.t_errorRegistro);
                         Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
                     }
@@ -302,22 +334,22 @@ public class Registro extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) { // Si ha ocurriddo un error
+                // Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("id", "registro");
+            protected Map<String, String> getParams() throws AuthFailureError {// Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("id", "registro"); // Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", et_email.getText().toString());
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
-
 }

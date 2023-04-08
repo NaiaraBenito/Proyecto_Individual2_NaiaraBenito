@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,10 +22,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyecto_individual_naiarabenito.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -46,8 +43,7 @@ public class Login extends AppCompatActivity {
     private EditText et_email;      // EditText que contiene el email del usuario que intenta loguearse
     private EditText et_password;   // EditText que contiene la contraseña del usuario que intenta loguearse
     private String idioma;          // String que contiene el idioma actual de la aplicación
-
-    private RequestQueue requestQueue;
+    private RequestQueue requestQueue;  // Variable que gestiona el envío de peticiones a la BBDD remota
 // ____________________________________________ Métodos ____________________________________________
 
 /*  Método onCreate:
@@ -94,6 +90,7 @@ public class Login extends AppCompatActivity {
         et_email = findViewById(R.id.et_emailLogin);
         et_password = findViewById(R.id.et_passwordLogin);
 
+        // Inicializar la variable que realiza las peticiones a la BBDD remota
         requestQueue = Volley.newRequestQueue(this);
     }
 
@@ -102,7 +99,7 @@ public class Login extends AppCompatActivity {
 /*  Método crearCuenta:
     -------------------
         *) Parámetros (Input):
-                1) (View) v: Vista asociada al Activity actual
+                1) (View) v: Vista asociada al Activity actual.
         *) Parámetro (Output):
                 void
         *) Descripción:
@@ -131,7 +128,8 @@ public class Login extends AppCompatActivity {
         *) Descripción:
                 Este método se ejecuta cuando el usuario pulsa el botón "INGRESAR".
                 Valida la entrada de datos:
-                    - Si los datos son válidos: Redirige la ejecución al Activity Menu_Principal.
+                    - Si los datos son válidos: Llama a la función que comprueba si el usuario está
+                      registrado en la BBDD.
                     - Si los datos no son válidos: Muestra un mensaje de error.
 */
     public void ingresar(View v){
@@ -155,6 +153,7 @@ public class Login extends AppCompatActivity {
 
             // Comprobar que el email sea válido
             if (mather.find()) {    // El email ingresado es válido
+                // Validar registro del usuario
                 validarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/validar_usuario.php");
             } else {        // El email ingresado es inválido: Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_emailInvalido);
@@ -231,6 +230,7 @@ public class Login extends AppCompatActivity {
 
         // Recargar de nuevo la actividad
         Intent intent = new Intent(this, Login.class);
+
         // Enviar el idioma actual
         intent.putExtra("idioma",idioma);
         startActivity(intent);
@@ -261,6 +261,7 @@ public class Login extends AppCompatActivity {
 
         // Recargar de nuevo la actividad
         Intent intent = new Intent(this, Login.class);
+
         // Enviar el idioma actual
         intent.putExtra("idioma",idioma);
         finish();
@@ -270,14 +271,14 @@ public class Login extends AppCompatActivity {
 // _________________________________________________________________________________________________
 
 /*  Método onSaveInstanceState:
-    ------------------------
+    ---------------------------
         *) Parámetros (Input):
                 1) (Bundle) outState: Contiene el diseño predeterminado del Activity.
         *) Parámetro (Output):
                 void
         *) Descripción:
                 Este método se ejecuta antes de eliminar la actividad. Guarda el idioma actual en el
-                Bundle, para que al refrescar la actividad se mantenga.
+                Bundle, para que al refrescar, la actividad se mantenga.
 */
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -287,16 +288,34 @@ public class Login extends AppCompatActivity {
         outState.putString("idioma",idioma);
     }
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------
-    private void validarUsuario(String pUrl){
+// _________________________________________________________________________________________________
+
+/*  Método validarUsuario:
+    ----------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que valida al usuario en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta tras validar los datos introducidos en el formulario.
+                Se encarga de comprobar si el usuario se encuentra registrado en la app:
+                    - Si está registrado: Redirige la ejecución al menú principal de la aplicación.
+                    - Si no está registrado: Muestra un mensaje de error.
+
+*/
+   private void validarUsuario(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response) {   // Si la petición ha sido exitosa
+
                 JSONObject json = null;
                 try {
+                    // Parsear la respuesta a JSON
                     json = new JSONObject(response);
 
+                    // Comprobar que el usuario se encuentre registrado
                     if(json.get("exist").toString().equals("true")){
+
                         // Crear un intent para pasar a la Actividad Menu_Principal
                         Intent intent = new Intent(getApplicationContext(), Menu_Principal.class);
 
@@ -313,7 +332,7 @@ public class Login extends AppCompatActivity {
                         startActivity(intent);
                         finish();
 
-                    } else{
+                    } else{ // Si el usuario no se encuentra registrado --> Imprimir mensaje de error
                         String msg = getResources().getString(R.string.t_loginIncorrecto);
                         Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
                     }
@@ -323,22 +342,23 @@ public class Login extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) {    // Si ha ocurriddo un error
+                // Mostrar un mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("id", "login");
+            protected Map<String, String> getParams() throws AuthFailureError { // Parámetros que enviar con la petición
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("id", "login");  // Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", et_email.getText().toString());
                 parametros.put("password", et_password.getText().toString());
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
 
