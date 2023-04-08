@@ -4,8 +4,4 @@
     <external-files-path
         name="externo"
         path="/"/>
-
-    <!--<external-path
-        name="mis imagenes"
-        path="Android/data/com.example.proyecto_individual_naiarabenito/fotos"/>-->
 </paths>

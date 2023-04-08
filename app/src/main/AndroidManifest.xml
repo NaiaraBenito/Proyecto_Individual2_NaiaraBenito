@@ -2,26 +2,34 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- _________________________________ UTILIZAR PERMISOS: __________________________________ -->
+
     <!-- WRITE_EXTERNAL_STORAGE: Para crear las facturas de las compras en formato PDF -->
     <!-- READ_EXTERNAL_STORAGE: Para crear las facturas de las compras en formato PDF -->
-    <!-- CALL_PHONE: Para llamar al teléfono de atención al cliente de las empresa -->
-    <!-- POST_NOTIFICATIONS: Para las notificaciones que agradecen la compra -->
-    <!-- INTERNET: Para poder conectarse a la BBDD remota -->
-    <!-- ACCESS_COARSE_LOCATION: Para obtener la localizacion del dispositivo en el mapa -->
-    <!-- ACCESS_FINE_LOCATION: Para obtener la localizacion del dispositivo en el mapa -->
-    <!-- CAMERA: Para acceder a la camara de fotos -->
-    <!-- WAKE_LOCK: Para trabajar con los widgets -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- CALL_PHONE: Para llamar al teléfono de atención al cliente de las empresa -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- POST_NOTIFICATIONS: Para las notificaciones que agradecen la compra -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- INTERNET: Para poder conectarse a la BBDD remota -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- ACCESS_COARSE_LOCATION: Para obtener la localizacion del dispositivo en el mapa -->
+    <!-- ACCESS_FINE_LOCATION: Para obtener la localizacion del dispositivo en el mapa -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- CAMERA: Para acceder a la camara de fotos -->
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-feature android:name="android.hardware.camera2.full" android:required="true"/>
 
+    <!-- WAKE_LOCK: Para trabajar con los widgets -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- _________________________________ APLICACIÓN __________________________________ -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -44,39 +52,45 @@
             android:name=".ui.inicio.Detalles_Producto"
             android:exported="false"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ui.cesta.SiActNotificacion"
             android:exported="false"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ui.cesta.NoActNotificacion"
             android:exported="false"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".activities.Menu_Principal"
             android:exported="false"
             android:label="@string/title_activity_menu_principal"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".activities.Launch_Screen"
             android:exported="true"
             android:theme="@style/LaunchScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.Registro"
             android:exported="false"
             android:theme="@style/LoginTheme" />
+
         <activity
             android:name=".activities.Login"
             android:exported="false"
             android:theme="@style/LoginTheme" />
 
+        <!-- Para trabajar con el almacenamiento de la cámara -->
         <provider
             android:authorities="com.example.proyecto_individual_naiarabenito.provider"
             android:name="androidx.core.content.FileProvider"
@@ -87,6 +101,7 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
+        <!-- Para trabajar con Firebase y el servicio de mensajería FCM -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/fcm_icon" />
@@ -106,8 +121,10 @@
             </intent-filter>
         </service>
 
+        <!-- Para trabajar con AlarmManager -->
         <receiver android:name=".alarma.PedidoAlarmReceiver"/>
 
+        <!-- Para trabajar con Widgets -->
         <receiver android:name=".widget.WidgetAplicacion"
             android:exported="true">
             <intent-filter>
@@ -119,6 +136,6 @@
         </receiver>
         <receiver android:name=".widget.WidgetService"
             android:enabled="true"/>
-    </application>
 
+    </application>
 </manifest>
