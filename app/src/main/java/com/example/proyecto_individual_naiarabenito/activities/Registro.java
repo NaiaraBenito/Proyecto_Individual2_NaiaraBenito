@@ -248,7 +248,7 @@ public class Registro extends AppCompatActivity {
 
 // _________________________________________________________________________________________________
 
-/*  Método añadirUsuario:
+/*  Método anadirUsuario:
     ---------------------
         *) Parámetros (Input):
                 1) (String) pUrl: Contiene la dirección URL del PHP que registra al usuario en la
@@ -259,7 +259,7 @@ public class Registro extends AppCompatActivity {
                 Este método se ejecuta tras comprobar que el usuario no se encuentra registrado.
                 Se encarga de añadir al usuario en la BBDD remota y redirigir la ejecución al Login.
 */
-    private void añadirUsuario(String pUrl){
+    private void anadirUsuario(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {    // Si la petición ha sido exitosa
@@ -323,7 +323,7 @@ public class Registro extends AppCompatActivity {
                     // Comprobar que el usuario no se encuentre registrado
                     if(json.get("exist").toString().equals("false")){
                         // Llamar al método que registra al usuario en la BBDD
-                        añadirUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_usuario.php");
+                        anadirUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/registrar_usuario.php");
                     } else{ // Si el usuario se encuentra registrado --> Imprimir mensaje de error
                         String msg = getResources().getString(R.string.t_errorRegistro);
                         Toast.makeText(getApplicationContext(),msg, Toast.LENGTH_LONG).show();

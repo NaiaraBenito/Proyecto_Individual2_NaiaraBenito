@@ -18,7 +18,7 @@ import com.example.proyecto_individual_naiarabenito.R;
 /* ################################### CLASE PEDIDO ALARM RECEIVER #################################
     *) Descripción:
         La función de esta clase es recibir la alarma lanzada para informar al usuario de que su
-        pedido está listo mostrar una notificación.
+        pedido está listo mediante una notificación.
 
     *) Tipo: BroadcastReceiver
 */

@@ -41,7 +41,9 @@ import java.util.Map;
 
 /* ###################################### CLASE MENU PRINCIPAL #####################################
     *) Descripción:
-        La función de esta clase es mostrar y gestionar la vista de toda la aplicación.
+        La función de esta clase es mostrar y gestionar la vista de toda la aplicación. Además,
+         brinda un número de atención al cliente y le asigna al usuario recién logueado un token
+         generado en el dispositivo para poder recibir mensajes FCM.
 
     *) Tipo: Activity
 */

@@ -4,7 +4,6 @@ package com.example.proyecto_individual_naiarabenito.ui.perfil;
 
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import static android.app.Activity.RESULT_OK;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -23,14 +22,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,11 +40,9 @@ import com.example.proyecto_individual_naiarabenito.activities.GestorIdioma;
 import com.example.proyecto_individual_naiarabenito.activities.Login;
 import android.Manifest;
 import android.widget.Toast;
-
 import com.example.proyecto_individual_naiarabenito.activities.Menu_Principal;
 import com.example.proyecto_individual_naiarabenito.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,7 +55,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-/* ###################################### CLASE PERFIL_FRAGMENT ####################################
+/* ###################################### CLASE PERFIL FRAGMENT ####################################
     *) Descripción:
         La función de esta clase es mostrar y gestionar la configuración del perfil de usuario.
 

@@ -120,7 +120,7 @@ public class Login extends AppCompatActivity {
 // _________________________________________________________________________________________________
 
 /*  Método ingresar:
-    -------------------
+    ----------------
         *) Parámetros (Input):
             1) (View) v: Vista asociada al Activity actual
         *) Parámetro (Output):
