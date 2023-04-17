@@ -287,7 +287,7 @@ public class Registro extends AppCompatActivity {
                 parametros.put("apellido", et_apellido.getText().toString());
                 parametros.put("email", et_email.getText().toString());
                 parametros.put("password", et_password1.getText().toString());
-                parametros.put("foto", "https://cdn-icons-png.flaticon.com/512/5087/5087579.png");
+                parametros.put("foto", "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/upload/" + et_email.getText().toString() + ".jpg");
                 return parametros;
             }
         };
@@ -342,7 +342,7 @@ public class Registro extends AppCompatActivity {
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {// Parámetros que enviar con la petición
+            protected Map<String, String> getParams() throws AuthFailureError { // Parámetros que enviar con la petición
                 Map<String, String> parametros = new HashMap<>();
                 parametros.put("id", "registro"); // Identificador para que el PHP sepa qué función ejecutar
                 parametros.put("email", et_email.getText().toString());

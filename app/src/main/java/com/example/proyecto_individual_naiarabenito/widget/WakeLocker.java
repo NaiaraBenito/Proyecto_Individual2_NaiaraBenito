@@ -5,6 +5,7 @@ package com.example.proyecto_individual_naiarabenito.widget;
 // ______________________________________ PAQUETES IMPORTADOS ______________________________________
 import android.content.Context;
 import android.os.PowerManager;
+import android.util.Log;
 
 
 /* ###################################### CLASE WAKE LOCKER ########################################

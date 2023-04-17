@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,12 +29,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -48,6 +52,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -69,57 +76,12 @@ public class PerfilFragment extends Fragment {
     private TextView tv_nombre;         // TextView que contiene el nombre del usuario
     private TextView tv_apellido;         // TextView que contiene el apellido del usuario
     private TextView tv_email;         // TextView que contiene el email del usuario
-    private ImageView iv_foto;
+    private ImageView iv_foto;          // ImageView que contiene la foto de perfil del usuario
     private FloatingActionButton btn_foto;    // Botón para cerrar la sesión
     private String idioma;          // String que contiene el idioma actual de la aplicación
-    private RequestQueue requestQueue;
-    private Bitmap laminiatura;
-    private ActivityResultLauncher<Intent> takePictureLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData()!= null) {
-                    Bundle bundle = result.getData().getExtras();
-                    laminiatura = (Bitmap) bundle.get("data");
-                    iv_foto.setImageBitmap(laminiatura);
-                    //GUARDAR COMO FICHERO
-                    // Memoria externa
-                    File eldirectorio = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                    String nombrefichero = "IMG_" + timeStamp + "_";
-                    File imagenFich = new File(eldirectorio, nombrefichero + ".jpg");
-                    OutputStream os;
-                    try {
-                        os = new FileOutputStream(imagenFich);
-                        laminiatura.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                        /*ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                        imagen = BitmapFactory.decodeStream(new ByteArrayInputStream(bytes.toByteArray()));
-                        iv_foto.setImageBitmap(imagen);*/
-                        os.flush();
-                        os.close();
-                        actualizarUsuario("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/actualizar_usuario.php");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else{
-                    Log.d("FOTO","ENTRA AQUI");
-                }
-            });
+    private RequestQueue requestQueue; // Variable que gestiona el envío de peticiones a la BBDD remota
+    private Bitmap laminiatura; // Bitmap que contiene la imagen de perfil
 
-    /*private ActivityResultLauncher<Intent> takePictureLauncher =
-            registerForActivityResult(new
-                    ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData()!= null) {
-                    Bundle bundle = result.getData().getExtras();
-                    ImageView elImageView = getActivity().findViewById(R.id.pf_foto);
-                    Bitmap laminiatura = (Bitmap) bundle.get("data");
-                    elImageView.setImageBitmap(laminiatura);
-
-                    try{
-                        FileOutputStream fos = getActivity().openFileOutput();
-                    } catch (Exception e){}
-                } else {
-                    Log.d("TakenPicture", "No photo taken");
-                }
-            });*/
 
 // ____________________________________________ Métodos ____________________________________________
 
@@ -137,7 +99,7 @@ public class PerfilFragment extends Fragment {
                 apartado Perfil del menú.
 */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
         // Obtener el idioma de la aplicación del Bundle (mantener idioma al girar la pantalla)
         if (savedInstanceState != null) {
@@ -185,9 +147,8 @@ public class PerfilFragment extends Fragment {
         tv_apellido.setText(datosUser[1]);
         tv_email.setText(datosUser[2]);
 
-        Glide.with(getContext())
-                .load(datosUser[3])
-                        .into(iv_foto);
+        // Cargar la imagen de perfil
+        cargarImagen();
 
         // Asignar acción al pulsar el botón "CERRAR SESIÓN"
         btn_cerrarSesion.setOnClickListener(new View.OnClickListener() {
@@ -261,11 +222,11 @@ public class PerfilFragment extends Fragment {
             }
         });
 
-
         // Asignar acción al pulsar el botón para cambiar la imagen de perfil
         btn_foto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Pedir permisos para usar la cámara
                 checkPermission();
             }
         });
@@ -372,115 +333,208 @@ public class PerfilFragment extends Fragment {
         outState.putString("idioma",idioma);
     }
 
-    String currentPhotoPath;
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+// _________________________________________________________________________________________________
 
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
+/*  Método actualizarFotoPerfil:
+    ----------------------------
+        *) Parámetros (Input):
+                1) (String) pUrl: Contiene la dirección URL del PHP que actualiza la foto de perfil
+                   del usuario en la BBDD.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta tras sacar una foto con la cámara. Se encarga de comprobar
+                actualizar la foto del servidor.
+*/
 
-    }
-
-    static final int REQUEST_TAKE_PHOTO = 1;
-
-    private void sacarFoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-
-            takePictureLauncher.launch(takePictureIntent);
-            //photoFile = createImageFile();
-
-            // Continue only if the File was successfully created
-            /*if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getContext(),"com.example.proyecto_individual_naiarabenito.provider",photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                //startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }*/
-        }
-    }
-
-    /*static final int REQUEST_IMAGE_CAPTURE = 1;
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data.getExtras() != null) {
-            Bundle extras = data.getExtras();
-            Log.d("FOTO","DATA"+data.getExtras().toString());
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            iv_foto.setImageBitmap(imageBitmap);
-        }
-    }*/
-
-    private void actualizarUsuario(String pUrl){
+    private void actualizarFotoPerfil(String pUrl){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, pUrl, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
-                Log.d("FOTO","onResponse");
-                Log.d("FOTO",response);
-            }
+            public void onResponse(String response) {}   // Si la petición ha sido exitosa
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // Imprimir estado del registro
+            public void onErrorResponse(VolleyError error) { // Si ha ocurriddo un error
+                // Imprimir mensaje de error
                 String msg = getResources().getString(R.string.t_errorBBDD);
                 Toast.makeText(getContext(),msg, Toast.LENGTH_LONG).show();
             }
         }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                //Log.d("FOTO","getParams");
-                //Log.d("FOTO",getStringImagen(laminiatura));
-                //Log.d("FOTO","out getParams");
-
+            protected Map<String, String> getParams() throws AuthFailureError { // Parámetros que enviar con la petición
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("email", tv_email.getText().toString());
                 parametros.put("foto", getStringImagen(laminiatura));
                 return parametros;
             }
         };
+        // Añadir petición a la cola
         requestQueue.add(stringRequest);
     }
+
+// _________________________________________________________________________________________________
+
+/*  Método getStringImagen:
+    -----------------------
+        *) Parámetros (Input):
+                1) (Bitmap) bmp: Contiene el bitmap con la imagen obtenida con la camara.
+        *) Parámetro (Output):
+                (String) encodedImage: Contiene la imagen codificada en Base64.
+        *) Descripción:
+                Este método se ejecuta tras sacar una foto con la cámara. Se encarga de prerarar
+                la imagen en un String codificado en Base64 para poder subirla al servidor.
+*/
     public String getStringImagen(Bitmap bmp){
-        Log.d("FOTO","getStringImagen");
+        // Comprimir la imagen
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
+
+        // Codificar la imagen en Base64
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método checkPermission:
+    -----------------------
+    *) Parámetros (Input):
+    *) Parámetro (Output):
+            void
+    *) Descripción:
+            Este método se encarga de comprobar que la app tenga permisos para utilizar la cámara.
+*/
     public void checkPermission(){
+        // Comprobar la versión Android del dispositivo
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            // Comprobar si tiene permisos
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                // Pedir permiso
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 100);
             } else{
-                sacarFoto();
+                // Abrir la cámara
+                abrirCamara();
             }
         } else{
-            sacarFoto();
+            // Abrir la cámara
+            abrirCamara();
         }
-
     }
 
+// _________________________________________________________________________________________________
+
+/*  Método onRequestPermissionResult:
+    ---------------------------------
+        *) Parámetos (Input):
+                (int) requestCode: Contiene el código de la petición (identificador).
+                (String[]) permissions: Contiene la lista de los permisos que se piden.
+                (int[]) grantResults: Contiene el resultado de las peticiones.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta cuando se ha realizado la petición de permisos de la
+                aplicación.
+*/
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == 100){
             if(permissions.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                sacarFoto();
+                abrirCamara();
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método abrirCamara:
+    -------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta cuando se ha pulsado el botón con el icono de la cámara.
+                Abre la cámara para poder realizar una foto
+*/
+    public void abrirCamara(){
+        // Crear un intent que redirija la ejecución a la cámara del dispositivo
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(i.resolveActivity(getContext().getPackageManager()) != null){
+            startActivityForResult(i,1);
+        }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método onActivityResult:
+    ------------------------
+        *) Parámetos (Input):
+                (int) requestCode: Contiene el código de la petición (identificador).
+                (int) resultCode: Contiene el código del resultado de la petición.
+                (Intent) data: Contiene el intent donde se guarda la foto recién sacada.
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta tras realizar la foto con la cámara del dispositivo. Guarda
+                la imagen en el dispositivo y actualiza la imagen del servidor.
+*/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Comprobar que a foto se ha realizado correctamente
+        if (requestCode == 1 && resultCode == RESULT_OK && data.getExtras() != null) {
+            // Obtener la imagen
+            Bundle extras = data.getExtras();
+            laminiatura = (Bitmap) extras.get("data");
+
+            // Poner la imagen en pantalla
+            iv_foto.setImageBitmap(laminiatura);
+
+            //Guardar la imagen en la memoria externa del dispositivo
+            File eldirectorio = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+            String nombrefichero = "IMG_" + timeStamp + "_";
+            File imagenFich = new File(eldirectorio, nombrefichero + ".jpg");
+            OutputStream os;
+            try {
+                os = new FileOutputStream(imagenFich);
+                laminiatura.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                os.flush();
+                os.close();
+
+                // Actializar la imagen del servidor
+                actualizarFotoPerfil("http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/nbenito012/WEB/actualizar_fotoPerfil.php");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+// _________________________________________________________________________________________________
+
+/*  Método cargarImagen:
+    --------------------
+        *) Parámetos (Input):
+        *) Parámetro (Output):
+                void
+        *) Descripción:
+                Este método se ejecuta cada vez que se crea la vista del fragmento. Se encarga de
+                obtener la foto de perfil del servidor y la pone en pantalla.
+*/
+    private void cargarImagen(){
+        ImageRequest imageRequest = new ImageRequest(datosUser[3],
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {   // Si la petición se ha realizado correctamente
+                        // Mostrar la imagen
+                        iv_foto.setImageBitmap(response);
+                    }
+                }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {   // Si ha ocurrido un error
+            }
+        });
+        // Añadir petición a la cola
+        requestQueue.add(imageRequest);
     }
 }
